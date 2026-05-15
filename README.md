@@ -2,7 +2,7 @@
 
 # 草诀歌个人说明书
 
-一个用于生成 `Personal OS` 的 Codex skill。
+一个用于生成 `Personal OS` 的 Agent Skill。
 
 它把一个人的已有材料、补充回答和可选采访，整理成两份资产：
 
@@ -37,19 +37,71 @@ caojuege-personal-manual/
     └── output-spec.md
 ```
 
-## 使用方式
+## 安装与使用
 
-在 Codex 中调用：
+### Codex
+
+把整个仓库目录放进本地 skills 目录，例如：
+
+```bash
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
+  ~/.codex/skills/caojuege-personal-manual
+```
+
+然后在 Codex 中调用：
 
 ```text
 $caojuege-personal-manual
 ```
 
-示例：
+### Claude Code
+
+Claude Code 支持基于 `SKILL.md` 的 skills。个人级安装可放在：
+
+```bash
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
+  ~/.claude/skills/caojuege-personal-manual
+```
+
+在 Claude Code 中可以直接调用：
+
+```text
+/caojuege-personal-manual
+```
+
+如果只想让某个项目使用，也可以把仓库放在：
+
+```text
+.claude/skills/caojuege-personal-manual/
+```
+
+### OpenClaw
+
+OpenClaw 也支持 `SKILL.md`。个人级安装可放在：
+
+```bash
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
+  ~/.agents/skills/caojuege-personal-manual
+```
+
+项目级或 workspace 级也可以分别放在：
+
+```text
+<project>/.agents/skills/caojuege-personal-manual/
+<workspace>/skills/caojuege-personal-manual/
+```
+
+### 其他支持 Agent Skills 的工具
+
+如果你的 agent 支持 `SKILL.md` / Agent Skills 约定，直接导入或复制整个仓库目录即可。
+
+## 调用示例
 
 ```text
 用 $caojuege-personal-manual 根据这些材料帮我生成个人说明书。
 ```
+
+Claude Code 中可以把 `$caojuege-personal-manual` 换成 `/caojuege-personal-manual`。
 
 ## 设计原则
 
@@ -63,3 +115,13 @@ $caojuege-personal-manual
 
 [草诀歌 AI Labs](https://www.caojuege.com/)
 
+## 版本
+
+当前版本：`v0.1.0`
+
+版本建议：
+
+- 用 Git tag / GitHub Release 管理公开版本
+- `v0.1.x`：工作流和输出结构仍在快速迭代
+- `v1.0.0`：当输入流程、采访框架和双资产输出都稳定后再发布
+- `SKILL.md` 里先不额外加入自定义 `version` 字段，避免不同 agent 的解析器行为不一致
