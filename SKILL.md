@@ -77,6 +77,7 @@ description: "Use when turning a person's existing materials, answers, or option
 - 关键张力
 - 能力结构
 - 合作接口
+- 未竟之处（反复出现但未解决的问题、当前身份里的张力、被吸引但还没踏入的方向、可承受的代价、不可失去之物）
 - 不确定项
 
 如果这些还说不清，继续补材料，不要急着写漂亮话。

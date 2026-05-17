@@ -23,6 +23,7 @@
 2. 只补最关键的信息缺口
 3. 按需做一轮采访，不强制
 4. 输出两份核心资产
+5. 在 persona 末尾留一节 `未竟之处`，标注尚未闭合的地方
 
 ## 文件结构
 
@@ -33,6 +34,9 @@ caojuege-personal-os/
 │   └── openai.yaml
 ├── assets/
 │   └── personal-homepage-template.html
+├── examples/
+│   ├── README.md
+│   └── david-persona-agent.public.md
 └── references/
     ├── intake-and-interview.md
     └── output-spec.md
