@@ -1,7 +1,7 @@
 <img width="1583" height="822" alt="image" src="https://github.com/user-attachments/assets/fe912f74-d6b7-4a4e-9fd8-4349165cab9e" />
 
 
-# 草诀歌个人说明书_V0.1.3
+# 草诀歌个人说明书_V0.1.4
 
 一个用于生成 `Personal OS` 的 Agent Skill。
 
@@ -27,7 +27,7 @@
 ## 文件结构
 
 ```text
-caojuege-personal-manual/
+caojuege-personal-os/
 ├── SKILL.md
 ├── agents/
 │   └── openai.yaml
@@ -45,14 +45,14 @@ caojuege-personal-manual/
 把整个仓库目录放进本地 skills 目录，例如：
 
 ```bash
-git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
-  ~/.codex/skills/caojuege-personal-manual
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-os.git \
+  ~/.codex/skills/caojuege-personal-os
 ```
 
 然后在 Codex 中调用：
 
 ```text
-$caojuege-personal-manual
+$caojuege-personal-os
 ```
 
 ### Claude Code
@@ -60,20 +60,20 @@ $caojuege-personal-manual
 Claude Code 支持基于 `SKILL.md` 的 skills。个人级安装可放在：
 
 ```bash
-git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
-  ~/.claude/skills/caojuege-personal-manual
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-os.git \
+  ~/.claude/skills/caojuege-personal-os
 ```
 
 在 Claude Code 中可以直接调用：
 
 ```text
-/caojuege-personal-manual
+/caojuege-personal-os
 ```
 
 如果只想让某个项目使用，也可以把仓库放在：
 
 ```text
-.claude/skills/caojuege-personal-manual/
+.claude/skills/caojuege-personal-os/
 ```
 
 ### OpenClaw
@@ -81,15 +81,15 @@ git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
 OpenClaw 也支持 `SKILL.md`。个人级安装可放在：
 
 ```bash
-git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
-  ~/.agents/skills/caojuege-personal-manual
+git clone https://github.com/ShaohuaDavidLee/caojuege-personal-os.git \
+  ~/.agents/skills/caojuege-personal-os
 ```
 
 项目级或 workspace 级也可以分别放在：
 
 ```text
-<project>/.agents/skills/caojuege-personal-manual/
-<workspace>/skills/caojuege-personal-manual/
+<project>/.agents/skills/caojuege-personal-os/
+<workspace>/skills/caojuege-personal-os/
 ```
 
 ### 其他支持 Agent Skills 的工具
@@ -99,10 +99,10 @@ git clone https://github.com/ShaohuaDavidLee/caojuege-personal-manual.git \
 ## 调用示例
 
 ```text
-用 $caojuege-personal-manual 根据这些材料帮我生成个人说明书。
+用 $caojuege-personal-os 根据这些材料帮我生成个人说明书。
 ```
 
-Claude Code 中可以把 `$caojuege-personal-manual` 换成 `/caojuege-personal-manual`。
+Claude Code 中可以把 `$caojuege-personal-os` 换成 `/caojuege-personal-os`。
 
 ## 设计原则
 
@@ -118,7 +118,7 @@ Claude Code 中可以把 `$caojuege-personal-manual` 换成 `/caojuege-personal-
 
 ## 版本
 
-当前版本：`v0.1.3`
+当前版本：`v0.1.4`
 
 版本建议：
 

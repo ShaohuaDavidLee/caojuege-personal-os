@@ -1,4 +1,4 @@
 interface:
   display_name: "草诀歌个人说明书"
   short_description: "采集材料、可选采访，并生成给人和 AI 使用的个人说明书资产"
-  default_prompt: "Use $caojuege-personal-manual to turn my materials into a concise personal homepage and an AI persona document."
+  default_prompt: "Use $caojuege-personal-os to turn my materials into a concise personal homepage and an AI persona document."

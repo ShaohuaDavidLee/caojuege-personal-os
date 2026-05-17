@@ -1,5 +1,5 @@
 ---
-name: caojuege-personal-manual
+name: caojuege-personal-os
 description: "Use when turning a person's existing materials, answers, or optional interview into a concise Personal OS: one Markdown persona document for AI agents and one polished HTML personal homepage for humans. Trigger on requests such as 个人说明书、个人主页、bio 页面、personal OS、persona pack、给 AI 的个人 skill、采访后生成个人档案."
 ---
 
