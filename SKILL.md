@@ -103,6 +103,18 @@ description: "Use when turning a person's existing materials, answers, or option
 
 生成 HTML 时，优先复用 [assets/personal-homepage-template.html](assets/personal-homepage-template.html)，再根据对象气质调整颜色、文案和内容密度。
 
+`persona-agent.md` 里的 `盲区` 一节必须最后写。完成其他所有段落后，回头审视整份草稿，主动标出 2–4 处可能写偏的地方。这一步是这份文档不沦为自我美化的关键。
+
+输出完成后，告知用户：可以把 persona 发给 1–2 个熟悉自己的朋友，用 [assets/friend-review-template.md](assets/friend-review-template.md) 帮自己做一次“第三人视角”校对。这是这套方法里**少数能突破自我形象限制**的环节，强烈推荐但不强制。
+
+### 6. 支持迭代修订
+
+把 `persona-agent.md` 视为唯一的源文件。
+
+- 用户改了 markdown → 你可以基于新版本重新生成 HTML。
+- 用户拿到朋友反馈 → 你可以把反馈合并进 persona，再一并更新 homepage。
+- 不要鼓励用户直接手动改 HTML。文案、视觉、结构的变化，都优先回到 markdown 或告诉你需求，由你重新渲染。
+
 ## 质量标准
 
 - **准确**：事实不足时写“待确认”，不要编。
