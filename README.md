@@ -28,7 +28,7 @@
 把下面这段粘进 Claude Code 或 Codex：
 
 ```text
-帮我跑 github.com/ShaohuaDavidLee/simaqian.skill 这个 skill。
+帮我跑 github.com/ShaohuaDavidLee/simaqian 这个 skill。
 如果还没装，先 clone 到 ~/.claude/skills/simaqian.skill。
 我的材料放在 ./me/ 里。如果我没材料，访谈我就行。
 ```
@@ -40,7 +40,7 @@ agent 会自己 clone 仓库、读 SKILL.md、按工作流跑。
 把下面这段粘进任何 AI 聊天窗口：
 
 ```text
-请按 github.com/ShaohuaDavidLee/simaqian.skill 这个仓库的 SKILL.md
+请按 github.com/ShaohuaDavidLee/simaqian 这个仓库的 SKILL.md
 帮我跑一份个人小传。读完仓库的 README、SKILL.md 和 references/
 就能开始。我的材料下面给你。
 ```
