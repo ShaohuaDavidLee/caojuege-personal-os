@@ -1,9 +1,9 @@
 ---
-name: caojuege-personal-os
-description: "Use when turning a person's existing materials, answers, or optional interview into a concise Personal OS: one Markdown persona document for AI agents and one polished HTML personal homepage for humans. Trigger on requests such as 个人说明书、个人主页、bio 页面、personal OS、persona pack、给 AI 的个人 skill、采访后生成个人档案."
+name: simaqian.skill
+description: "Use when turning a person's existing materials, answers, or optional interview into a concise Personal OS: one Markdown persona document for AI agents and one polished HTML personal homepage for humans. Trigger on requests such as 个人说明书、个人主页、bio 页面、personal OS、persona pack、给 AI 的个人 skill、采访后生成个人档案、司马迁."
 ---
 
-# 草诀歌个人说明书
+# 司马迁.skill
 
 ## 目标
 
@@ -13,6 +13,30 @@ description: "Use when turning a person's existing materials, answers, or option
 2. `personal-homepage.html`：给人看，帮助合作方快速知道这个人是谁、能提供什么、正在寻找什么合作、如何继续了解他。
 
 默认不做完整传记，不做人格测试，不做营销包装。目标是低摩擦、够准确、可继续迭代。
+
+## 隐私默认
+
+这个 skill 默认采取“公开行为对齐”原则：
+
+**默认规则**：如果一项信息只在简历或私下材料里出现，但本人的公开文章、播客、社媒、官网从未提及，**默认不写进 persona**。用户明确同意后才纳入。
+
+具体跳过的字段（除非用户明确要求加入）：
+
+- 家庭成员姓名、子女信息、配偶细节
+- 年龄、生日、具体年龄段
+- 收入、薪资、融资金额（除已公开者）
+- 电话、邮箱、家庭住址
+- 身份证 / 护照 / 证件号
+- 健康、医疗、心理状态细节
+- 未公开的商业合作、NDA 信息
+- 公司内部薪酬、人事、未公开战略
+
+判断方法：
+
+- 先看本人的公开渠道（官网、文章、社媒、播客）是否提到过类似信息。
+- 公开渠道有 → 可以写。
+- 公开渠道没有，只有简历或私聊里出现 → 默认跳过。
+- 拿不准时，直接问用户。
 
 ## 工作流
 

@@ -2,7 +2,7 @@
 
 > 这是草诀歌 AI Labs 主理人 David 的 persona 公开版样例。完整版本里还包含更具体的事实、判断和边界，只放在私有 context 中使用。
 >
-> 这份文件用于演示 `caojuege-personal-os` skill 跑完之后会产出什么样的 `persona-agent.md`。
+> 这份文件用于演示 `司马迁.skill` 跑完之后会产出什么样的 `persona-agent.md`。
 
 ## 使用说明
 
