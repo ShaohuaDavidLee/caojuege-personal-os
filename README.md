@@ -19,6 +19,42 @@
 - 想让合作方更快理解"我是谁 / 我能提供什么 / 我在找什么"
 - 想把深度访谈沉淀成可复用的身份资产
 
+## 如何使用
+
+不用 git clone，不用编辑配置文件。**粘一段话给 agent，它会自己搞定剩下的**。
+
+### 用 Claude Code / Codex（推荐）
+
+把下面这段粘进 Claude Code 或 Codex：
+
+```text
+帮我跑 github.com/ShaohuaDavidLee/simaqian.skill 这个 skill。
+如果还没装，先 clone 到 ~/.claude/skills/simaqian.skill。
+我的材料放在 ./me/ 里。如果我没材料，访谈我就行。
+```
+
+agent 会自己 clone 仓库、读 SKILL.md、按工作流跑。
+
+### 用 claude.ai / ChatGPT / 豆包 / Kimi
+
+把下面这段粘进任何 AI 聊天窗口：
+
+```text
+请按 github.com/ShaohuaDavidLee/simaqian.skill 这个仓库的 SKILL.md
+帮我跑一份个人小传。读完仓库的 README、SKILL.md 和 references/
+就能开始。我的材料下面给你。
+```
+
+然后把你的材料粘在后面（文章、简历、播客转写、社媒长贴都行）。
+
+### 完全没有材料？
+
+直接说"我没有材料，访谈我吧"。skill 会切到访谈模式，30 分钟左右问完。
+
+---
+
+想先看跑完是什么样？→ [examples/david-persona-agent.public.md](./examples/david-persona-agent.public.md)
+
 ## 工作流
 
 1. 先读取已有材料
@@ -46,72 +82,6 @@ simaqian.skill/
     ├── intake-and-interview.md
     └── output-spec.md
 ```
-
-## 安装与使用
-
-### Codex
-
-把整个仓库目录放进本地 skills 目录，例如：
-
-```bash
-git clone https://github.com/ShaohuaDavidLee/simaqian.skill.git \
-  ~/.codex/skills/simaqian.skill
-```
-
-然后在 Codex 中调用：
-
-```text
-$simaqian.skill
-```
-
-### Claude Code
-
-Claude Code 支持基于 `SKILL.md` 的 skills。个人级安装可放在：
-
-```bash
-git clone https://github.com/ShaohuaDavidLee/simaqian.skill.git \
-  ~/.claude/skills/simaqian.skill
-```
-
-在 Claude Code 中可以直接调用：
-
-```text
-/simaqian.skill
-```
-
-如果只想让某个项目使用，也可以把仓库放在：
-
-```text
-.claude/skills/simaqian.skill/
-```
-
-### OpenClaw
-
-OpenClaw 也支持 `SKILL.md`。个人级安装可放在：
-
-```bash
-git clone https://github.com/ShaohuaDavidLee/simaqian.skill.git \
-  ~/.agents/skills/simaqian.skill
-```
-
-项目级或 workspace 级也可以分别放在：
-
-```text
-<project>/.agents/skills/simaqian.skill/
-<workspace>/skills/simaqian.skill/
-```
-
-### 其他支持 Agent Skills 的工具
-
-如果你的 agent 支持 `SKILL.md` / Agent Skills 约定，直接导入或复制整个仓库目录即可。
-
-## 调用示例
-
-```text
-用 $simaqian.skill 根据这些材料帮我生成个人说明书。
-```
-
-Claude Code 中可以把 `$simaqian.skill` 换成 `/simaqian.skill`。
 
 ## 设计原则
 
