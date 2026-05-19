@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>司马迁.skill · 30 秒给自己写一篇《史记·列传》</title>
+<meta name="description" content="让你常用的 AI 用《史记·列传》文体给你写一段小传，截图就能发朋友圈。">
+<meta property="og:title" content="司马迁.skill · 让 AI 用列传体写写你">
+<meta property="og:description" content="30 秒生成你的史记列传。你的 AI 已经认识你了，让它告诉你它眼里的你。">
+<meta property="og:type" content="website">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#e5e5e5;--ink:#1a1a1a;--dark:#47494b;--muted:#5c5e60;
+  --border:rgba(71,73,75,.2);--seal:#b22222;--paper:#f5efe1;
+  --font-serif:"Noto Serif CJK SC","Songti SC","STSong","SimSun",Georgia,serif;
+  --font-sans:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);line-height:1.6;font-size:15px}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px}
+
+/* Nav */
+.nav{padding:28px 0;border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{font-family:var(--font-serif);font-weight:700;font-size:18px;letter-spacing:.12em;display:flex;align-items:center;gap:10px}
+.brand .dot{width:8px;height:8px;background:var(--seal);display:inline-block}
+.nav-links{display:flex;gap:24px;font-size:13px;color:var(--muted);letter-spacing:.04em}
+.nav-links a:hover{color:var(--ink)}
+
+/* Hero */
+.hero{padding:80px 0 56px}
+.eyebrow{font-size:12px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:22px}
+h1{font-family:var(--font-serif);font-weight:700;font-size:clamp(34px,5.4vw,56px);line-height:1.15;letter-spacing:-.01em;margin-bottom:24px;max-width:18ch}
+.lead{font-size:18px;line-height:1.7;color:var(--muted);max-width:42ch;margin-bottom:36px}
+.lead strong{color:var(--ink);font-weight:500}
+
+/* Steps */
+.steps{padding:32px 0 64px}
+.step{margin-bottom:56px}
+.step-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px}
+.step-num{font-family:var(--font-serif);font-size:36px;color:var(--seal);font-weight:400;line-height:1}
+.step-title{font-family:var(--font-serif);font-size:22px;font-weight:700;letter-spacing:-.005em}
+.step-hint{font-size:14px;color:var(--muted);margin-left:auto}
+
+/* Model picker */
+.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.pick{padding:18px 12px;background:#fff;border:1px solid var(--border);font-family:var(--font-serif);font-size:17px;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .15s;text-align:center;color:var(--ink)}
+.pick:hover{border-color:var(--dark)}
+.pick.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.pick .sub{display:block;font-family:var(--font-sans);font-size:11px;font-weight:400;letter-spacing:.06em;margin-top:5px;opacity:.6;text-transform:uppercase}
+@media(max-width:640px){.picker{grid-template-columns:repeat(2,1fr)}}
+
+.pick-note{background:#fff5e0;border-left:3px solid #b27e3e;padding:12px 16px;font-size:13px;color:#6b4a2c;line-height:1.55;margin-bottom:20px;display:none}
+.pick-note.show{display:block}
+
+/* Prompt block */
+.prompt-wrap{position:relative;background:var(--dark);color:#e5e5e5;border-radius:0}
+.prompt-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-size:12px;letter-spacing:.18em;color:rgba(229,229,229,.6);text-transform:uppercase}
+.copy-btn{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff;font-family:var(--font-sans);font-size:12px;padding:6px 14px;letter-spacing:.06em;cursor:pointer;transition:all .15s}
+.copy-btn:hover{background:rgba(255,255,255,.08)}
+.copy-btn.copied{background:var(--seal);border-color:var(--seal);color:#fff}
+.prompt-body{padding:20px 18px;font-family:"SF Mono","Monaco","Menlo",monospace;font-size:12.5px;line-height:1.65;white-space:pre-wrap;max-height:380px;overflow-y:auto;color:#dcd0a8}
+.prompt-body::-webkit-scrollbar{width:6px}
+.prompt-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15)}
+
+/* Next CTA */
+.cta-row{display:flex;align-items:center;gap:16px;margin-top:14px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.cta{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;background:var(--ink);color:#fff;font-family:var(--font-serif);font-size:15px;font-weight:600;letter-spacing:.04em;transition:background .2s}
+.cta:hover{background:var(--seal)}
+.cta .arrow{transition:transform .2s}
+.cta:hover .arrow{transform:translateX(4px)}
+
+/* Sample */
+.sample{margin:50px 0;padding:40px;background:var(--paper);position:relative;overflow:hidden}
+.sample::before{content:"列";position:absolute;font-family:var(--font-serif);font-size:520px;font-weight:700;color:rgba(0,0,0,.04);right:-80px;top:-80px;line-height:.9;letter-spacing:-.04em;pointer-events:none}
+.sample-label{font-size:11px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:18px;position:relative}
+.sample-title{font-family:var(--font-serif);font-weight:700;font-size:64px;letter-spacing:.02em;line-height:1;margin-bottom:18px;position:relative}
+.sample-quote{font-family:var(--font-serif);font-style:italic;font-size:17px;color:var(--dark);margin-bottom:24px;position:relative}
+.sample-body{font-family:var(--font-serif);font-size:17px;line-height:1.85;max-width:560px;position:relative;margin-bottom:22px;color:var(--ink)}
+.sample-body p{margin-bottom:10px}
+.sample-taishi{font-family:var(--font-serif);font-size:14px;line-height:1.7;background:var(--dark);color:#e5e5e5;padding:18px 22px;position:relative;max-width:580px}
+.sample-taishi .lbl{font-size:11px;letter-spacing:.22em;color:rgba(229,229,229,.6);display:block;margin-bottom:8px}
+
+/* Footer */
+.footer{padding:48px 0;border-top:1px solid var(--border);font-size:13px;color:var(--muted);margin-top:40px}
+.footer-inner{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;align-items:center}
+.footer a{color:var(--dark);border-bottom:1px solid var(--border);padding-bottom:1px}
+.footer a:hover{border-color:var(--dark)}
+
+/* Misc */
+.tip{font-size:13px;color:var(--muted);line-height:1.65;background:#fff;padding:14px 16px;border-left:3px solid var(--dark);margin-top:16px}
+.tip code{font-family:"SF Mono",Monaco,monospace;background:rgba(0,0,0,.05);padding:1px 5px;font-size:12px}
+
+@media(max-width:640px){
+  .hero{padding:48px 0 32px}
+  .sample{padding:28px;margin:32px 0}
+  .sample-title{font-size:42px}
+  .sample::before{font-size:380px}
+  .step-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-inner">
+    <a href="/" class="brand"><span class="dot"></span>司马迁.skill</a>
+    <div class="nav-links">
+      <a href="./render.html">渲染器</a>
+      <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">司马迁.skill — Personal Annal</div>
+    <h1>30 秒，给自己写一篇<br>《史记·列传》。</h1>
+    <p class="lead">你常用的 AI 已经认识你了。<br>让它用列传体告诉你<strong>它眼里的你</strong>——截图就能发朋友圈。</p>
+  </div>
+</header>
+
+<section class="sample">
+  <div class="wrap" style="max-width:680px">
+    <div class="sample-label">PERSONAL ANNAL · 样张</div>
+    <div class="sample-title">韶華列傳</div>
+    <div class="sample-quote">「以产品为笔，和世界对话」</div>
+    <div class="sample-body">
+      <p>韶华者，华夏人也。少习语言之事，后与人共立 LanguageX，治机器翻译。逢 AI 之兴，去其执事，自结草诀歌 AI 之社，聚非技之士，授以 AI 为笔，造作品而不逐风。</p>
+      <p>其所求者，小而久、精而有味、能沉之为作；不务速、不抢先、不逐热。</p>
+    </div>
+    <div class="sample-taishi">
+      <span class="lbl">太 史 公 曰 ——</span>
+      作品者，人之留痕也。以三五人之力刻一物者，胜以千人之众逐一时。
+    </div>
+  </div>
+</section>
+
+<main class="steps">
+  <div class="wrap">
+
+    <div class="step">
+      <div class="step-head">
+        <span class="step-num">一</span>
+        <span class="step-title">选你常用的 AI</span>
+        <span class="step-hint">记忆越深，列传越像你</span>
+      </div>
+      <div class="picker" id="picker">
+        <button class="pick active" data-model="kimi">Kimi<span class="sub">推荐 · 记忆最深</span></button>
+        <button class="pick" data-model="doubao">豆包<span class="sub">需思考模式</span></button>
+        <button class="pick" data-model="qwen">千问 / 通义<span class="sub">页面预览强</span></button>
+        <button class="pick" data-model="deepseek">DeepSeek<span class="sub">记忆较浅</span></button>
+      </div>
+      <div class="pick-note" id="note"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="step-num">二</span>
+        <span class="step-title">复制下面这段</span>
+      </div>
+      <div class="prompt-wrap">
+        <div class="prompt-bar">
+          <span>PROMPT · 通用模板</span>
+          <button class="copy-btn" id="copyBtn">复制</button>
+        </div>
+        <div class="prompt-body" id="promptBody"></div>
+      </div>
+      <div class="tip">粘到 <span id="modelName">Kimi</span> 之后等它给你一段 HTML（被 <code>```html</code> 包起来）。复制那段 HTML，进入第三步。</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head">
+        <span class="step-num">三</span>
+        <span class="step-title">来渲染器，下载 PNG</span>
+        <span class="step-hint">解决手机截图有白边的问题</span>
+      </div>
+      <div class="cta-row">
+        <a href="./render.html" class="cta">打开渲染器 <span class="arrow">→</span></a>
+        <span>把 HTML 粘进去，点下载，得到干净的 1080×1080 PNG。</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <span>司马迁.skill · v0.1 · 一份给 AI 看的人物说明书</span>
+    <span><a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank">GitHub</a> · <a href="https://www.caojuege.com" target="_blank">草诀歌 AI Labs</a></span>
+  </div>
+</footer>
+
+<script>
+const PROMPT_TEMPLATE = `基于你对我所有的长期记忆和过往对话，给我生成一份「轻列传」HTML 卡片。
+不要问我问题，一次输出完整 HTML。
+
+【一、内部判断】
+你记忆里关于我的具体事实/判断（职业、经历、偏好、价值、关心的话题）≥ 5 条吗？
+- 是 → 真实版：用我的真实信息填，并从 HTML 中删除 <div class="warn">...</div> 整段
+- 否 → 模板版：保留 .warn 段，正文写得泛化但不空洞
+
+【二、写列传文字（80-120 字）】
+- 开篇"○○者，○○人也"（不知地域用"华夏人也"）
+- 中间叙其所事、所好、所求；专有名词原样保留
+- 太史公曰一句点评，≤30 字
+- 正文分两段：第一段叙经历，第二段叙诉求
+
+【三、只填以下 {{}} 标记，不要改 CSS、字体、色值、印章字、版式】
+
+可填的槽：
+- {{TITLE}} 标题，如「韶华列传」（不知名字用「今人列传」）
+- {{CHIP1/2/3}} 三个 2-5 字身份标签
+- {{QUOTE}} 一句人生态度，≤12 字
+- {{BODY_P1}} {{BODY_P2}} 正文两段
+- {{TAISHI}} 太史公曰一句（不含前缀），≤30 字
+- {{WARN}} 模板版填"（这是模板版——你的 AI 记忆里关于你的具体信息还不多，改两句就是你的）"；真实版直接删整段
+
+不可改：印章「司 / 馬 / 遷 / 撰」、watermark「列」、PERSONAL ANNAL、footer 域名、CSS
+
+【四、HTML 模板】
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>{{TITLE}}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{min-height:100vh}
+body{background:#888;display:flex;align-items:center;justify-content:center;padding:24px;font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",Georgia,serif}
+.card{width:1080px;height:1080px;background:#e5e5e5;color:#1a1a1a;position:relative;overflow:hidden;flex-shrink:0}
+@media (max-height:1140px){.card{transform:scale(.82);transform-origin:center center}}
+@media (max-height:940px){.card{transform:scale(.7)}}
+.watermark{position:absolute;right:-60px;top:30px;font-size:540px;font-weight:700;color:rgba(0,0,0,.05);line-height:.9;user-select:none;pointer-events:none;letter-spacing:-.04em}
+.kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:48px 80px 0;position:relative;z-index:1}
+.chips{display:flex;gap:8px}
+.chip{display:inline-flex;align-items:center;padding:6px 13px;border:1px solid rgba(71,73,75,.3);font-size:13px;letter-spacing:.06em;font-family:-apple-system,sans-serif}
+.right-kicker{font-size:12px;color:#5c5e60;letter-spacing:.22em;font-family:-apple-system,sans-serif}
+.headline{padding:18px 80px 0;position:relative;z-index:1}
+h1{font-size:96px;font-weight:700;line-height:1;letter-spacing:.02em}
+.quote{font-size:23px;color:#47494b;font-style:italic;margin-top:16px}
+.underline{width:88px;height:2px;background:#47494b;margin-top:8px}
+.body-text{padding:24px 80px 0;font-size:24px;line-height:1.72;max-width:820px;letter-spacing:.03em}
+.body-text p{margin-bottom:14px}.body-text p:last-child{margin-bottom:0}
+.dark-block{margin:18px 80px 0;padding:22px 30px;background:#47494b;color:#e5e5e5;position:relative}
+.dark-block .label{font-size:14px;letter-spacing:.22em;color:rgba(229,229,229,.6);margin-bottom:12px}
+.dark-block .lines{font-size:20px;line-height:1.55}
+.dark-block .qm{position:absolute;right:18px;top:-42px;font-size:190px;color:rgba(255,255,255,.08);font-family:Georgia,serif;line-height:1}
+.seal{position:absolute;top:140px;right:80px;width:124px;height:124px;background:#b22222;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;z-index:2;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18)}
+.seal span{color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;font-family:"Heiti SC","PingFang SC","Noto Sans CJK SC",sans-serif}
+.footer{position:absolute;bottom:46px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end}
+.url{font-size:17px;color:#1a1a1a}
+.sub{font-size:13px;color:#5c5e60;margin-top:5px;letter-spacing:.08em;font-family:-apple-system,sans-serif}
+.qr{width:100px;height:100px;background:#fff;padding:4px}
+.qr img{width:100%;height:100%;display:block}
+.warn{background:#fff5e0;border-left:3px solid #b27e3e;padding:8px 16px;margin:12px 80px 0;font-size:12px;color:#6b4a2c;font-family:-apple-system,sans-serif;letter-spacing:.04em}
+</style></head>
+<body>
+<div class="card">
+<div class="watermark">列</div>
+<div class="kicker-bar">
+  <div class="chips">
+    <span class="chip">一 · {{CHIP1}}</span>
+    <span class="chip">二 · {{CHIP2}}</span>
+    <span class="chip">三 · {{CHIP3}}</span>
+  </div>
+  <span class="right-kicker">PERSONAL ANNAL · 列 傳</span>
+</div>
+<div class="headline">
+  <h1>{{TITLE}}</h1>
+  <div class="quote">「{{QUOTE}}」</div>
+  <div class="underline"></div>
+</div>
+<div class="warn">{{WARN}}</div>
+<div class="body-text">
+  <p>{{BODY_P1}}</p>
+  <p>{{BODY_P2}}</p>
+</div>
+<div class="dark-block">
+  <div class="qm">"</div>
+  <div class="label">太 史 公 曰 ——</div>
+  <div class="lines">{{TAISHI}}</div>
+</div>
+<div class="seal"><span>司</span><span>馬</span><span>遷</span><span>撰</span></div>
+<div class="footer">
+  <div>
+    <div class="url">simaqian.caojuege.com</div>
+    <div class="sub">司馬遷.skill · v0.1 · 扫码访问</div>
+  </div>
+  <div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=120x120&margin=0" alt=""/></div>
+</div>
+</div>
+</body></html>
+
+【五、输出格式】
+把整段 HTML 用 \`\`\`html 开头、\`\`\` 结尾 包裹，前后不要任何说明文字。
+
+我叫：__________`;
+
+const MODEL_NOTES = {
+  kimi: '推荐用 Kimi+ 模式，开启长期记忆后再粘 prompt。Kimi 的中文记忆和文白处理是四家里最好的。',
+  doubao: '务必先切到"深度思考"模式（普通模式 memory 调用不稳）。如果它说"无记忆"，可能你这个账号还没攒东西——会自动走"模板版"。',
+  qwen: '千问的页面预览能力最强，会直接在右侧出 1080×1080 卡片预览。粘 prompt 之前确认下记忆设置已开启。',
+  deepseek: 'DeepSeek 没有跨对话长期记忆，几乎一定走模板版。如果你想要真实版，先用一段聊天把自己介绍清楚，再用同一对话粘 prompt。'
+};
+
+const MODEL_NAMES = {
+  kimi: 'Kimi', doubao: '豆包', qwen: '千问', deepseek: 'DeepSeek'
+};
+
+document.getElementById('promptBody').textContent = PROMPT_TEMPLATE;
+
+document.querySelectorAll('.pick').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pick').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const m = btn.dataset.model;
+    const note = document.getElementById('note');
+    note.textContent = MODEL_NOTES[m];
+    note.classList.add('show');
+    document.getElementById('modelName').textContent = MODEL_NAMES[m];
+  });
+});
+// Init default note
+document.querySelector('.pick.active').click();
+
+document.getElementById('copyBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('copyBtn');
+  try{
+    await navigator.clipboard.writeText(PROMPT_TEMPLATE);
+    btn.textContent = '已复制 ✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='复制';btn.classList.remove('copied')},2000);
+  }catch(e){
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = PROMPT_TEMPLATE;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '已复制 ✓';
+    setTimeout(()=>{btn.textContent='复制'},2000);
+  }
+});
+</script>
+
+</body>
+</html>
