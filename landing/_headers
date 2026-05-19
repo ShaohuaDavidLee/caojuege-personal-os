@@ -1,0 +1,16 @@
+/*
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/html2canvas.min.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/og-card.png
+  Cache-Control: public, max-age=86400
+
+/favicon.png
+  Cache-Control: public, max-age=86400
+
+/favicon-32.png
+  Cache-Control: public, max-age=86400
