@@ -12,6 +12,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<script>if(location.hash.indexOf('#render')===0){document.documentElement.classList.add('poster-mode');}</script>
 <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
 <link rel="dns-prefetch" href="//fonts.googleapis.com">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -37,6 +38,19 @@ tailwind.config = {
 <style>
 ::selection{background-color:#47494b;color:#e5e5e5}
 .editorial-border{border:1px solid rgba(71,73,75,.15)}
+/* Poster mode (hash route #render) */
+html.poster-mode body>nav,html.poster-mode body>main,html.poster-mode body>footer{display:none!important}
+#poster-overlay{display:none;position:fixed;inset:0;z-index:100;background:#d9d2c5;flex-direction:column;align-items:center;justify-content:center;padding:24px;overflow:auto}
+html.poster-mode #poster-overlay{display:flex}
+#poster-stage{position:relative;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+#posterFrame{width:1080px;height:1080px;border:0;transform-origin:top left;display:block;background:#e5e5e5}
+.poster-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+.poster-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;font-family:var(--pf,"Noto Serif SC",serif);font-weight:600;font-size:15px;letter-spacing:.04em;cursor:pointer;border:0;transition:all .2s;text-decoration:none}
+.poster-btn.primary{background:#1a1a1a;color:#fff}
+.poster-btn.primary:hover{background:#b22222}
+.poster-btn.ghost{background:transparent;color:#1a1a1a;border:1px solid #1a1a1a}
+.poster-btn.ghost:hover{background:#1a1a1a;color:#fff}
+.poster-hint{margin-top:16px;font-size:12.5px;color:#6b5d49;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;max-width:30ch}
 .fade-in-up{animation:fadeInUp .8s ease-out forwards;opacity:0;transform:translateY(20px)}
 .delay-100{animation-delay:100ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}
 @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
@@ -59,6 +73,16 @@ tailwind.config = {
 </style>
 </head>
 <body class="bg-c-bg text-c-text font-sans antialiased min-h-screen flex flex-col">
+
+<!-- Poster overlay (shown when URL has #render?...) -->
+<div id="poster-overlay">
+  <div id="poster-stage"><iframe id="posterFrame" sandbox="allow-same-origin allow-scripts"></iframe></div>
+  <div class="poster-actions">
+    <button id="poster-download" class="poster-btn primary"><iconify-icon icon="lucide:download"></iconify-icon><span>下载 PNG</span></button>
+    <a href="./" class="poster-btn ghost"><iconify-icon icon="lucide:pen-line"></iconify-icon><span>我也要写一份</span></a>
+  </div>
+  <div class="poster-hint" id="poster-hint">长按图片也可保存 · 由 司马迁.skill 生成</div>
+</div>
 
 <!-- Top Bar -->
 <nav class="w-full border-b editorial-border py-4 relative z-10">
@@ -180,20 +204,19 @@ tailwind.config = {
       <div class="mb-4">
         <div class="flex items-baseline gap-4 mb-5">
           <span class="font-serif text-4xl text-c-seal leading-none">三</span>
-          <h2 class="font-serif text-xl font-bold" data-text-light="拿到 HTML，进渲染器下载 PNG" data-text-pro="Agent 自动读材料或访谈你">拿到 HTML，进渲染器下载 PNG</h2>
+          <h2 class="font-serif text-xl font-bold" data-text-light="点开 AI 给的链接，就是你的列传" data-text-pro="Agent 自动读材料或访谈你">点开 AI 给的链接，就是你的列传</h2>
         </div>
 
-        <!-- light: renderer CTA -->
+        <!-- light: click the link -->
         <div class="fadeable" data-path-content="light">
-          <div class="bg-white border editorial-border p-6 flex flex-col md:flex-row md:items-center gap-4 justify-between">
-            <div class="text-sm text-c-text-muted leading-relaxed flex-1">
-              AI 给你返回一段 <code class="font-mono text-xs bg-black/5 px-1 py-0.5">&lt;!DOCTYPE html&gt;</code> 开头的 HTML，复制后到渲染器粘进去。<br>
-              得到精确 <strong class="text-c-text">1080×1080</strong> PNG，无白边，可直接发朋友圈、小红书。
+          <div class="bg-white border editorial-border p-6">
+            <div class="text-sm text-c-text-muted leading-relaxed">
+              AI 不会给你一堆代码，而是直接给你<strong class="text-c-text">一个链接</strong>。点开就是你的列传卡片，页面上直接<strong class="text-c-text">下载 1080×1080 PNG</strong>，无白边，发朋友圈、小红书都行。
             </div>
-            <a href="./render.html" class="inline-flex items-center gap-2 px-6 py-3 bg-c-text text-white font-serif font-semibold text-sm tracking-wide hover:bg-c-seal transition-colors group flex-shrink-0">
-              打开渲染器
-              <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
-            </a>
+            <div class="mt-4 flex items-start gap-2 text-xs text-c-text-muted bg-amber-50 border-l-2 border-amber-700/40 px-3 py-2 leading-relaxed">
+              <iconify-icon icon="lucide:info" class="mt-0.5 flex-shrink-0"></iconify-icon>
+              <span>如果链接在聊天框里点不开，把它整段复制到浏览器地址栏即可。链接较长是正常的——你的列传内容都在里面。</span>
+            </div>
           </div>
         </div>
 
@@ -392,46 +415,14 @@ tailwind.config = {
 </footer>
 
 <script>
-// ============ Prompt templates ============
-const LIGHT_PROMPT = `基于你对我所有的长期记忆和过往对话，给我生成一份「轻列传」HTML 卡片。
-不要问我问题，一次输出完整 HTML。
-
-【一、内部判断】
-你记忆里关于我的具体事实/判断（职业、经历、偏好、价值、关心的话题）≥ 5 条吗？
-- 是 → 真实版：用我的真实信息填，并从 HTML 中删除 <div class="warn">...</div> 整段
-- 否 → 模板版：保留 .warn 段，正文写得泛化但不空洞
-
-【二、写列传文字（80-120 字）】
-- 开篇"○○者，○○人也"（不知地域用"华夏人也"）
-- 中间叙其所事、所好、所求；专有名词原样保留
-- 太史公曰一句点评，≤30 字
-- 正文分两段：第一段叙经历，第二段叙诉求
-
-【三、只填以下 {{}} 标记，不要改 CSS、字体、色值、印章字、版式】
-
-可填的槽：
-- {{TITLE}} 标题，如「韶华列传」（不知名字用「今人列传」）
-- {{CHIP1/2/3}} 三个 2-5 字身份标签
-- {{QUOTE}} 一句人生态度，≤12 字
-- {{BODY_P1}} {{BODY_P2}} 正文两段
-- {{TAISHI}} 太史公曰一句（不含前缀），≤30 字
-- {{WARN}} 模板版填提示文字；真实版直接删整段
-
-不可改：印章「司 / 馬 / 遷 / 撰」、watermark「列」、PERSONAL ANNAL、footer 域名、CSS
-
-【四、HTML 模板】
-
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head><meta charset="UTF-8"><title>{{TITLE}}</title>
-<style>
+// ============ Poster mode (hash route #render?...) ============
+const H2C_URL = new URL('./html2canvas.min.js', location.href).href;
+const CARD_TEMPLATE = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{min-height:100vh}
-body{background:#888;display:flex;align-items:center;justify-content:center;padding:24px;font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",Georgia,serif}
-.card{width:1080px;height:1080px;background:#e5e5e5;color:#1a1a1a;position:relative;overflow:hidden;flex-shrink:0}
-@media (max-height:1140px){.card{transform:scale(.82);transform-origin:center center}}
-@media (max-height:940px){.card{transform:scale(.7)}}
-.watermark{position:absolute;right:-60px;top:30px;font-size:540px;font-weight:700;color:rgba(0,0,0,.05);line-height:.9;user-select:none;pointer-events:none;letter-spacing:-.04em}
+html,body{width:1080px;height:1080px}
+body{background:#e5e5e5;color:#1a1a1a;font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",Georgia,serif;position:relative;overflow:hidden}
+.card{width:1080px;height:1080px;background:#e5e5e5;position:relative;overflow:hidden}
+.watermark{position:absolute;right:-60px;top:30px;font-size:540px;font-weight:700;color:rgba(0,0,0,.05);line-height:.9;letter-spacing:-.04em}
 .kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:48px 80px 0;position:relative;z-index:1}
 .chips{display:flex;gap:8px}
 .chip{display:inline-flex;align-items:center;padding:6px 13px;border:1px solid rgba(71,73,75,.3);font-size:13px;letter-spacing:.06em;font-family:-apple-system,sans-serif}
@@ -454,48 +445,136 @@ h1{font-size:96px;font-weight:700;line-height:1;letter-spacing:.02em}
 .qr{width:100px;height:100px;background:#fff;padding:4px}
 .qr img{width:100%;height:100%;display:block}
 .warn{background:#fff5e0;border-left:3px solid #b27e3e;padding:8px 16px;margin:12px 80px 0;font-size:12px;color:#6b4a2c;font-family:-apple-system,sans-serif;letter-spacing:.04em}
-</style></head>
-<body>
+</style></head><body>
 <div class="card">
 <div class="watermark">列</div>
-<div class="kicker-bar">
-  <div class="chips">
-    <span class="chip">一 · {{CHIP1}}</span>
-    <span class="chip">二 · {{CHIP2}}</span>
-    <span class="chip">三 · {{CHIP3}}</span>
-  </div>
-  <span class="right-kicker">PERSONAL ANNAL · 列 傳</span>
-</div>
-<div class="headline">
-  <h1>{{TITLE}}</h1>
-  <div class="quote">「{{QUOTE}}」</div>
-  <div class="underline"></div>
-</div>
-<div class="warn">{{WARN}}</div>
-<div class="body-text">
-  <p>{{BODY_P1}}</p>
-  <p>{{BODY_P2}}</p>
-</div>
-<div class="dark-block">
-  <div class="qm">"</div>
-  <div class="label">太 史 公 曰 ——</div>
-  <div class="lines">{{TAISHI}}</div>
-</div>
+<div class="kicker-bar"><div class="chips"><span class="chip">一 · __CHIP1__</span><span class="chip">二 · __CHIP2__</span><span class="chip">三 · __CHIP3__</span></div><span class="right-kicker">PERSONAL ANNAL · 列 傳</span></div>
+<div class="headline"><h1>__TITLE__</h1><div class="quote">「__QUOTE__」</div><div class="underline"></div></div>
+__WARN_BLOCK__
+<div class="body-text"><p>__P1__</p><p>__P2__</p></div>
+<div class="dark-block"><div class="qm">"</div><div class="label">太 史 公 曰 ——</div><div class="lines">__TAISHI__</div></div>
 <div class="seal"><span>司</span><span>馬</span><span>遷</span><span>撰</span></div>
-<div class="footer">
-  <div>
-    <div class="url">simaqian.caojuege.com</div>
-    <div class="sub">司馬遷.skill · v0.1 · 扫码访问</div>
-  </div>
-  <div class="qr"><img src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=120x120&margin=0" alt=""/></div>
+<div class="footer"><div><div class="url">simaqian.caojuege.com</div><div class="sub">司馬遷.skill · v0.1 · 扫码访问</div></div><div class="qr"><img crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=120x120&margin=0" alt=""/></div></div>
 </div>
-</div>
-</body></html>
+<script src="${H2C_URL}"><\/script>
+</body></html>`;
 
-【五、输出格式】
-把整段 HTML 用 \`\`\`html 开头、\`\`\` 结尾 包裹，前后不要任何说明文字。
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function parseRenderHash(){
+  const h = location.hash;
+  const qi = h.indexOf('?');
+  const params = new URLSearchParams(qi >= 0 ? h.slice(qi+1) : '');
+  const get = (k, fb) => { const v = params.get(k); return (v === null || v === '') ? fb : v; };
+  return {
+    mode: get('mode','template'),
+    title: get('title','今人列传'),
+    chip1: get('chip1','行路人'), chip2: get('chip2','问学者'), chip3: get('chip3','造物者'),
+    quote: get('quote','向未知处行'),
+    p1: get('p1','今人者，华夏人也。'), p2: get('p2','其所求者，行远自迩，沉之为作。'),
+    taishi: get('taishi','志之所趋，无远弗届。'),
+    warn: get('warn','')
+  };
+}
+function fitPosterScale(){
+  const stage = document.getElementById('poster-stage');
+  const frame = document.getElementById('posterFrame');
+  if(!stage || !frame) return;
+  const scale = Math.min((window.innerWidth-48)/1080, (window.innerHeight-190)/1080, 1);
+  frame.style.transform = 'scale(' + scale + ')';
+  stage.style.width = (1080*scale)+'px';
+  stage.style.height = (1080*scale)+'px';
+}
+function renderPoster(d){
+  const warnBlock = (d.mode === 'template' && d.warn) ? '<div class="warn">' + escapeHtml(d.warn) + '</div>' : '';
+  const map = {
+    __CHIP1__:escapeHtml(d.chip1),__CHIP2__:escapeHtml(d.chip2),__CHIP3__:escapeHtml(d.chip3),
+    __TITLE__:escapeHtml(d.title),__QUOTE__:escapeHtml(d.quote),__WARN_BLOCK__:warnBlock,
+    __P1__:escapeHtml(d.p1),__P2__:escapeHtml(d.p2),__TAISHI__:escapeHtml(d.taishi)
+  };
+  const html = CARD_TEMPLATE.replace(/__[A-Z0-9_]+__/g, t => (t in map ? map[t] : ''));
+  const frame = document.getElementById('posterFrame');
+  const doc = frame.contentDocument || frame.contentWindow.document;
+  doc.open(); doc.write(html); doc.close();
+  setTimeout(fitPosterScale, 60);
+}
+async function downloadPoster(){
+  const hint = document.getElementById('poster-hint');
+  hint.textContent = '正在生成 PNG…';
+  const frame = document.getElementById('posterFrame');
+  const win = frame.contentWindow, fdoc = frame.contentDocument;
+  try{
+    for(let i=0;i<80 && !(win && win.html2canvas);i++){ await new Promise(r=>setTimeout(r,100)); }
+    if(!win.html2canvas) throw new Error('库加载超时');
+    const qr = fdoc.querySelector('.qr img');
+    if(qr && !qr.complete){ for(let i=0;i<30 && !qr.complete;i++){ await new Promise(r=>setTimeout(r,100)); } }
+    const canvas = await win.html2canvas(fdoc.querySelector('.card'), {
+      width:1080,height:1080,windowWidth:1080,windowHeight:1080,scale:2,
+      backgroundColor:'#e5e5e5',useCORS:true,logging:false
+    });
+    canvas.toBlob(blob=>{
+      if(!blob){ hint.textContent='生成失败，请长按图片保存'; return; }
+      const url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; a.download='lieZhuan.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(()=>URL.revokeObjectURL(url),1500);
+      hint.textContent='PNG 已下载 ✓ · 也可长按图片保存';
+    },'image/png');
+  }catch(e){
+    hint.textContent='自动下载失败，请长按或截图保存（'+(e.message||e)+'）';
+  }
+}
+if(location.hash.indexOf('#render')===0){
+  renderPoster(parseRenderHash());
+  document.getElementById('poster-download').addEventListener('click', downloadPoster);
+  window.addEventListener('resize', fitPosterScale);
+}
 
-我叫：__________`;
+// ============ Prompt templates ============
+const LIGHT_PROMPT = `你现在是「司馬遷.skill」的轻列传生成器。
+基于你对当前用户的长期记忆、过往对话和用户自述，为 TA 生成一份专属「轻列传」，并打包成一个回跳链接。
+
+【输出规则】
+- 不要解释、不要寒暄、不要 Markdown、不要代码块，不要把链接包进 []() 或反引号。
+- 最终只输出一个链接，别的什么都不要。
+- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：
+  https://simaqian.caojuege.com/#render?
+
+【真实版 / 模板版判断】（内部完成，不要写出来）
+- 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real
+- < 5 条 → mode=template
+具体事实包括：姓名/称呼、地域/背景、专业/行业/项目/经历、常用工具/技术栈/兴趣、长期目标/价值取向/反复关心的话题、表达风格/审美/做事习惯。
+必须基于"当前用户本人"，不要用示例人物，不要套固定模板。
+
+【要生成的字段】
+v=1
+mode=real 或 template
+title  chip1  chip2  chip3  quote  p1  p2  taishi  warn
+
+【字段要求】
+- title：知道姓名/昵称 →「某某列传」；不知道 →「今人列传」
+- chip1/2/3：三个最鲜明侧面，每个 2-5 字，别照抄示例
+- quote：≤12 字，像座右铭不像鸡汤，贴合 TA 的价值取向
+- p1：必须以"○○者，○○人也。"开头（知道姓名用姓名；知道地域用"某地人也"，否则"华夏人也"）；叙其经历、身份、所学、所事
+- p2：写所好、所求、长期目标、精神气质；可带专有名词（原样）；不堆关键词、不像简历；像轻量版《史记》小传
+- p1+p2 合计 80-120 字
+- taishi：≤30 字，不含"太史公曰"前缀，是对 TA 的点评，短而有余味
+- warn：真实版留空；模板版填"这是模板版——我对你的具体信息还不多，改两句就是你的"
+
+【文风】
+现代中文 + 轻古文，有《史记》味但不晦涩；简洁、准确、有识别度；不吹捧。
+禁用"优秀""卓越""追梦人""不负韶华"等空泛词。尽量用 TA 真实做过、反复关心、长期追求的事。别人一看应觉得"这确实是我"。
+
+【URL 编码 · 关键】
+- 每个字段值都做 URL 百分号编码（UTF-8）。例：标题"韶华列传"→ %E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0
+- 链接里不得出现空格、换行、未编码的中文，也不得出现未编码的 & = #
+- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）
+
+【最终格式示例】（仅示意结构，换成当前用户真实内容）
+https://simaqian.caojuege.com/#render?v=1&mode=real&title=%E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0&chip1=...&chip2=...&chip3=...&quote=...&p1=...&p2=...&taishi=...&warn=
+
+现在直接输出最终链接。`;
 
 const PRO_PROMPT = `帮我跑 github.com/ShaohuaDavidLee/simaqian 这个 skill。
 如果还没装，先 clone 到 ~/.claude/skills/simaqian.skill。
