@@ -465,8 +465,20 @@ function escapeHtml(s){
 function parseRenderHash(){
   const h = location.hash;
   const qi = h.indexOf('?');
-  const params = new URLSearchParams(qi >= 0 ? h.slice(qi+1) : '');
-  const get = (k, fb) => { const v = params.get(k); return (v === null || v === '') ? fb : v; };
+  const query = qi >= 0 ? h.slice(qi+1) : '';
+  // Manual parse + decodeURIComponent: handles raw-Chinese and percent-encoded
+  // alike, and (unlike URLSearchParams) does NOT turn "+" into a space.
+  const out = {};
+  query.split('&').forEach(pair => {
+    if(!pair) return;
+    const eq = pair.indexOf('=');
+    if(eq < 0) return;
+    const k = pair.slice(0, eq);
+    let v = pair.slice(eq + 1);
+    try { v = decodeURIComponent(v); } catch(e) { /* keep raw on malformed % */ }
+    out[k] = v;
+  });
+  const get = (k, fb) => (out[k] != null && out[k] !== '') ? out[k] : fb;
   return {
     mode: get('mode','template'),
     title: get('title','今人列传'),
@@ -566,13 +578,14 @@ title  chip1  chip2  chip3  quote  p1  p2  taishi  warn
 现代中文 + 轻古文，有《史记》味但不晦涩；简洁、准确、有识别度；不吹捧。
 禁用"优秀""卓越""追梦人""不负韶华"等空泛词。尽量用 TA 真实做过、反复关心、长期追求的事。别人一看应觉得"这确实是我"。
 
-【URL 编码 · 关键】
-- 每个字段值都做 URL 百分号编码（UTF-8）。例：标题"韶华列传"→ %E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0
-- 链接里不得出现空格、换行、未编码的中文，也不得出现未编码的 & = #
-- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）
+【链接写法 · 关键】
+- 直接写中文，不要做 URL 编码、不要转义、不要 base64。中文标点（，。、；：「」（））照常用。
+- 字段之间用 & 连接，字段名与值之间用 =。
+- 任何字段值里都不能出现这几个字符：空格、换行、& 、= 、# 、+（它们会破坏链接结构）。若内容里本来有 + 或 &，改成"与""和"等中文表达。
+- 整个链接是一行，不要换行、不要加引号、不要加 Markdown。
 
-【最终格式示例】（仅示意结构，换成当前用户真实内容）
-https://simaqian.caojuege.com/#render?v=1&mode=real&title=%E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0&chip1=...&chip2=...&chip3=...&quote=...&p1=...&p2=...&taishi=...&warn=
+【最终格式示例】（仅示意结构，换成当前用户真实内容，直接写中文）
+https://simaqian.caojuege.com/#render?v=1&mode=real&title=韶华列传&chip1=译事旧人&chip2=AI新客&chip3=社区主理&quote=以败为笔书己之传&p1=韶华者，燕人也。少习番语，历译员、记者诸业。&p2=逢AI之兴，创草诀歌，欲助世人成其作品。&taishi=译界旧臣，以败为笔，书己之传。&warn=
 
 现在直接输出最终链接。`;
 
