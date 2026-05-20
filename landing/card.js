@@ -27,7 +27,7 @@
     return [
       '*{margin:0;padding:0;box-sizing:border-box}',
       'html,body{width:' + W + 'px;height:' + H + 'px}',
-      'body{background:#e5e5e5;color:#1a1a1a;font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",Georgia,serif;position:relative;overflow:hidden}',
+      'body{background:#e5e5e5;color:#1a1a1a;font-family:"Songti SC","STSong","Source Han Serif SC","Source Han Serif CN","Noto Serif CJK SC","Noto Serif SC","SimSun","NSimSun",Georgia,serif;position:relative;overflow:hidden}',
       '.card{width:' + W + 'px;height:' + H + 'px;background:#e5e5e5;position:relative;overflow:hidden;display:flex;flex-direction:column}',
       '.watermark{position:absolute;right:-24px;top:48px;display:flex;flex-direction:column;line-height:.8;font-size:400px;font-weight:700;color:rgba(0,0,0,.05);letter-spacing:-.04em;pointer-events:none;user-select:none}',
       '.kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:60px 80px 0;position:relative;z-index:1;flex:0 0 auto}',
@@ -48,7 +48,7 @@
       '.dark-block .lines{font-size:24px;line-height:1.65}',
       '.dark-block .qm{position:absolute;right:20px;top:-46px;font-size:200px;color:rgba(255,255,255,.08);font-family:Georgia,serif;line-height:1}',
       '.seal{position:absolute;top:0;right:0;width:124px;height:124px;background:#b22222;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;z-index:2;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18)}',
-      '.seal span{color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;font-family:"Heiti SC","PingFang SC","Noto Sans CJK SC",sans-serif}',
+      '.seal span{color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;font-family:"PingFang SC","Heiti SC","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif}',
       '.footer{position:absolute;bottom:60px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end;z-index:1}',
       '.footer .info{display:flex;flex-direction:column;justify-content:flex-end}',
       '.brand{font-size:20px;letter-spacing:.1em;color:#5c5e60;font-family:-apple-system,sans-serif;margin-bottom:8px}',

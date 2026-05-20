@@ -492,13 +492,12 @@ if(location.hash.indexOf('#render')===0){
 const LIGHT_PROMPT = `你现在是「司馬遷.skill」的轻列传生成器。
 基于你对当前用户的长期记忆、过往对话和用户自述，为 TA 生成一份专属「轻列传」，并打包成一个回跳链接。
 
-【输出规则】
-- 不要解释、不要寒暄、不要代码块，不要输出 HTML。
-- 最终只输出一行 Markdown 链接，别的什么都不要。
-- 固定格式（锚文字与括号必须一致，URL 为完整编码后的 #render 链接）：
-  [点此查看我的轻传](https://simaqian.caojuege.com/#render?...)
-- 不要同时输出裸链；不要在 Markdown 链接外再包一层反引号或代码块。
-- 括号内必须是完整可点击的 URL（全部字段已编码），不得截断 URL，不得在 URL 里加省略号。
+【输出规则 · 必须严格遵守】
+- 只输出一行 Markdown 链接，格式必须是 [锚文字](URL)，锚文字固定为「点此查看我的轻传」。别的什么都不要（不解释、不寒暄、不输出 HTML）。
+- ✅ 唯一正确形式：[点此查看我的轻传](https://simaqian.caojuege.com/#render?v=1&mode=real&title=...)
+- ❌ 绝对不要直接输出裸链（如 https://simaqian.caojuege.com/#render?... 这样一长串），裸链不优雅、必须包成上面的 Markdown 形式。
+- ❌ 不要把链接放进反引号或代码块；不要在 Markdown 链接之外再附一条裸链。
+- 括号内必须是完整、已 URL 编码、可点击的 URL，不得截断、不得加省略号。
 
 【真实版 / 模板版判断】（内部完成，不要写出来）
 - 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real
