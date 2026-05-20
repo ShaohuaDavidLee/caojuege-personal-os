@@ -50,7 +50,7 @@ html.poster-mode #poster-overlay{display:flex}
 .poster-btn.primary:hover{background:#b22222}
 .poster-btn.ghost{background:transparent;color:#1a1a1a;border:1px solid #1a1a1a}
 .poster-btn.ghost:hover{background:#1a1a1a;color:#fff}
-.poster-hint{margin-top:16px;font-size:12.5px;color:#6b5d49;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;max-width:30ch}
+.poster-hint{margin-top:16px;font-size:14.5px;font-weight:600;color:#1a1a1a;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;max-width:34ch}
 .fade-in-up{animation:fadeInUp .8s ease-out forwards;opacity:0;transform:translateY(20px)}
 .delay-100{animation-delay:100ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}
 @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
@@ -79,9 +79,9 @@ html.poster-mode #poster-overlay{display:flex}
   <div id="poster-stage"><iframe id="posterFrame" sandbox="allow-same-origin allow-scripts"></iframe></div>
   <div class="poster-actions">
     <button id="poster-download" class="poster-btn primary"><iconify-icon icon="lucide:download"></iconify-icon><span>下载 PNG</span></button>
-    <a href="./" class="poster-btn ghost"><iconify-icon icon="lucide:pen-line"></iconify-icon><span>我也要写一份</span></a>
+    <a href="./" class="poster-btn ghost"><iconify-icon icon="lucide:pen-line"></iconify-icon><span>再写一份</span></a>
   </div>
-  <div class="poster-hint" id="poster-hint">✎ 点击卡片上的文字可直接修改 · 改完点「下载 PNG」</div>
+  <div class="poster-hint" id="poster-hint">✎ 点击修改文字 · 改完点「下载 PNG」</div>
 </div>
 
 <!-- Top Bar -->
