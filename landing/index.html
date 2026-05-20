@@ -51,6 +51,12 @@ html.poster-mode #poster-overlay{display:flex}
 .poster-btn.ghost{background:transparent;color:#1a1a1a;border:1px solid #1a1a1a}
 .poster-btn.ghost:hover{background:#1a1a1a;color:#fff}
 .poster-hint{margin-top:16px;font-size:12.5px;color:#6b5d49;font-family:-apple-system,sans-serif;text-align:center;line-height:1.6;max-width:30ch}
+.poster-toolbar{display:flex;gap:22px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.pt-group{display:flex;align-items:center;gap:6px}
+.pt-label{font-size:12px;color:#6b5d49;letter-spacing:.12em;font-family:-apple-system,sans-serif;margin-right:2px}
+.pt-group button{padding:7px 14px;font-size:13px;font-family:-apple-system,sans-serif;border:1px solid rgba(26,26,26,.25);background:transparent;color:#1a1a1a;cursor:pointer;transition:all .15s;border-radius:2px}
+.pt-group button:hover{border-color:#1a1a1a}
+.pt-group button[aria-selected="true"]{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
 .fade-in-up{animation:fadeInUp .8s ease-out forwards;opacity:0;transform:translateY(20px)}
 .delay-100{animation-delay:100ms}.delay-200{animation-delay:200ms}.delay-300{animation-delay:300ms}
 @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
@@ -76,12 +82,25 @@ html.poster-mode #poster-overlay{display:flex}
 
 <!-- Poster overlay (shown when URL has #render?...) -->
 <div id="poster-overlay">
+  <div class="poster-toolbar">
+    <div class="pt-group" id="ratio-group">
+      <span class="pt-label">比例</span>
+      <button data-ratio="3:4">3:4 小红书</button>
+      <button data-ratio="1:1">1:1 朋友圈</button>
+      <button data-ratio="9:16">9:16 竖屏</button>
+    </div>
+    <div class="pt-group" id="theme-group">
+      <span class="pt-label">皮肤</span>
+      <button data-theme="su">素白</button>
+      <button data-theme="zhusha">朱砂宣纸</button>
+    </div>
+  </div>
   <div id="poster-stage"><iframe id="posterFrame" sandbox="allow-same-origin allow-scripts"></iframe></div>
   <div class="poster-actions">
     <button id="poster-download" class="poster-btn primary"><iconify-icon icon="lucide:download"></iconify-icon><span>下载 PNG</span></button>
     <a href="./" class="poster-btn ghost"><iconify-icon icon="lucide:pen-line"></iconify-icon><span>我也要写一份</span></a>
   </div>
-  <div class="poster-hint" id="poster-hint">长按图片也可保存 · 由 司马迁.skill 生成</div>
+  <div class="poster-hint" id="poster-hint">✎ 点击卡片上的文字可直接修改 · 改完点「下载 PNG」</div>
 </div>
 
 <!-- Top Bar -->
@@ -414,109 +433,80 @@ html.poster-mode #poster-overlay{display:flex}
   </div>
 </footer>
 
+<script src="./card.js"></script>
 <script>
 // ============ Poster mode (hash route #render?...) ============
 const H2C_URL = new URL('./html2canvas.min.js', location.href).href;
-const CARD_TEMPLATE = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:1080px;height:1080px}
-body{background:#e5e5e5;color:#1a1a1a;font-family:"Songti SC","STSong","SimSun","Noto Serif CJK SC",Georgia,serif;position:relative;overflow:hidden}
-.card{width:1080px;height:1080px;background:#e5e5e5;position:relative;overflow:hidden}
-.watermark{position:absolute;right:-60px;top:30px;font-size:540px;font-weight:700;color:rgba(0,0,0,.05);line-height:.9;letter-spacing:-.04em}
-.kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:48px 80px 0;position:relative;z-index:1}
-.chips{display:flex;gap:8px}
-.chip{display:inline-flex;align-items:center;padding:6px 13px;border:1px solid rgba(71,73,75,.3);font-size:13px;letter-spacing:.06em;font-family:-apple-system,sans-serif}
-.right-kicker{font-size:12px;color:#5c5e60;letter-spacing:.22em;font-family:-apple-system,sans-serif}
-.headline{padding:18px 80px 0;position:relative;z-index:1}
-h1{font-size:96px;font-weight:700;line-height:1;letter-spacing:.02em}
-.quote{font-size:23px;color:#47494b;font-style:italic;margin-top:16px}
-.underline{width:88px;height:2px;background:#47494b;margin-top:8px}
-.body-text{padding:24px 80px 0;font-size:24px;line-height:1.72;max-width:820px;letter-spacing:.03em}
-.body-text p{margin-bottom:14px}.body-text p:last-child{margin-bottom:0}
-.dark-block{margin:18px 80px 0;padding:22px 30px;background:#47494b;color:#e5e5e5;position:relative}
-.dark-block .label{font-size:14px;letter-spacing:.22em;color:rgba(229,229,229,.6);margin-bottom:12px}
-.dark-block .lines{font-size:20px;line-height:1.55}
-.dark-block .qm{position:absolute;right:18px;top:-42px;font-size:190px;color:rgba(255,255,255,.08);font-family:Georgia,serif;line-height:1}
-.seal{position:absolute;top:140px;right:80px;width:124px;height:124px;background:#b22222;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;z-index:2;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18)}
-.seal span{color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;font-family:"Heiti SC","PingFang SC","Noto Sans CJK SC",sans-serif}
-.footer{position:absolute;bottom:46px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end}
-.url{font-size:17px;color:#1a1a1a}
-.sub{font-size:13px;color:#5c5e60;margin-top:5px;letter-spacing:.08em;font-family:-apple-system,sans-serif}
-.qr{width:100px;height:100px;background:#fff;padding:4px}
-.qr img{width:100%;height:100%;display:block}
-.warn{background:#fff5e0;border-left:3px solid #b27e3e;padding:8px 16px;margin:12px 80px 0;font-size:12px;color:#6b4a2c;font-family:-apple-system,sans-serif;letter-spacing:.04em}
-</style></head><body>
-<div class="card">
-<div class="watermark">列</div>
-<div class="kicker-bar"><div class="chips"><span class="chip">一 · __CHIP1__</span><span class="chip">二 · __CHIP2__</span><span class="chip">三 · __CHIP3__</span></div><span class="right-kicker">PERSONAL ANNAL · 列 傳</span></div>
-<div class="headline"><h1>__TITLE__</h1><div class="quote">「__QUOTE__」</div><div class="underline"></div></div>
-__WARN_BLOCK__
-<div class="body-text"><p>__P1__</p><p>__P2__</p></div>
-<div class="dark-block"><div class="qm">"</div><div class="label">太 史 公 曰 ——</div><div class="lines">__TAISHI__</div></div>
-<div class="seal"><span>司</span><span>馬</span><span>遷</span><span>撰</span></div>
-<div class="footer"><div><div class="url">simaqian.caojuege.com</div><div class="sub">司馬遷.skill · v0.1 · 扫码访问</div></div><div class="qr"><img crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=120x120&margin=0" alt=""/></div></div>
-</div>
-<script src="${H2C_URL}"><\/script>
-</body></html>`;
+let posterData = null;   // 当前文案 (含用户在卡片上的实时编辑)
+let curTheme = 'su';
+let curRatio = '3:4';
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
 function parseRenderHash(){
   const h = location.hash;
   const qi = h.indexOf('?');
   const params = new URLSearchParams(qi >= 0 ? h.slice(qi+1) : '');
   const get = (k, fb) => { const v = params.get(k); return (v === null || v === '') ? fb : v; };
+  const D = LieZhuanCard.DEFAULTS;
   return {
     mode: get('mode','template'),
-    title: get('title','今人列传'),
-    chip1: get('chip1','行路人'), chip2: get('chip2','问学者'), chip3: get('chip3','造物者'),
-    quote: get('quote','向未知处行'),
-    p1: get('p1','今人者，华夏人也。'), p2: get('p2','其所求者，行远自迩，沉之为作。'),
-    taishi: get('taishi','志之所趋，无远弗届。'),
-    warn: get('warn','')
+    title: get('title', D.title),
+    chip1: get('chip1', D.chip1), chip2: get('chip2', D.chip2), chip3: get('chip3', D.chip3),
+    quote: get('quote', D.quote),
+    p1: get('p1', D.p1), p2: get('p2', D.p2),
+    taishi: get('taishi', D.taishi),
+    warn: get('warn',''),
+    _theme: get('theme','su'), _ratio: get('ratio','3:4')
   };
 }
 function fitPosterScale(){
   const stage = document.getElementById('poster-stage');
   const frame = document.getElementById('posterFrame');
   if(!stage || !frame) return;
-  const scale = Math.min((window.innerWidth-48)/1080, (window.innerHeight-190)/1080, 1);
+  const rt = LieZhuanCard.RATIOS[curRatio] || LieZhuanCard.RATIOS['3:4'];
+  const scale = Math.min((window.innerWidth-48)/rt.w, (window.innerHeight-240)/rt.h, 1);
+  frame.style.width = rt.w + 'px';
+  frame.style.height = rt.h + 'px';
   frame.style.transform = 'scale(' + scale + ')';
-  stage.style.width = (1080*scale)+'px';
-  stage.style.height = (1080*scale)+'px';
+  stage.style.width = (rt.w*scale)+'px';
+  stage.style.height = (rt.h*scale)+'px';
 }
-function renderPoster(d){
-  const warnBlock = (d.mode === 'template' && d.warn) ? '<div class="warn">' + escapeHtml(d.warn) + '</div>' : '';
-  const map = {
-    __CHIP1__:escapeHtml(d.chip1),__CHIP2__:escapeHtml(d.chip2),__CHIP3__:escapeHtml(d.chip3),
-    __TITLE__:escapeHtml(d.title),__QUOTE__:escapeHtml(d.quote),__WARN_BLOCK__:warnBlock,
-    __P1__:escapeHtml(d.p1),__P2__:escapeHtml(d.p2),__TAISHI__:escapeHtml(d.taishi)
-  };
-  const html = CARD_TEMPLATE.replace(/__[A-Z0-9_]+__/g, t => (t in map ? map[t] : ''));
+function renderPoster(){
   const frame = document.getElementById('posterFrame');
+  const html = LieZhuanCard.html(posterData, curTheme, curRatio, { editable:true, h2cUrl:H2C_URL });
   const doc = frame.contentDocument || frame.contentWindow.document;
   doc.open(); doc.write(html); doc.close();
   setTimeout(fitPosterScale, 60);
+}
+function syncToggles(){
+  document.querySelectorAll('#ratio-group button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.ratio===curRatio)));
+  document.querySelectorAll('#theme-group button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.theme===curTheme)));
+}
+// 切换皮肤/比例前，先把卡片上已编辑的文案读回，避免改动丢失
+function captureEdits(){
+  const frame = document.getElementById('posterFrame');
+  const doc = frame && (frame.contentDocument || frame.contentWindow.document);
+  if(doc){ Object.assign(posterData, LieZhuanCard.readState(doc)); }
 }
 async function downloadPoster(){
   const hint = document.getElementById('poster-hint');
   hint.textContent = '正在生成 PNG…';
   const frame = document.getElementById('posterFrame');
   const win = frame.contentWindow, fdoc = frame.contentDocument;
+  const rt = LieZhuanCard.RATIOS[curRatio] || LieZhuanCard.RATIOS['3:4'];
+  const bg = (LieZhuanCard.THEMES[curTheme] || LieZhuanCard.THEMES.su).bg;
   try{
-    for(let i=0;i<80 && !(win && win.html2canvas);i++){ await new Promise(r=>setTimeout(r,100)); }
+    for(let i=0;i<80 && !(win && win.html2canvas);i++){ await new Promise(res=>setTimeout(res,100)); }
     if(!win.html2canvas) throw new Error('库加载超时');
     const qr = fdoc.querySelector('.qr img');
-    if(qr && !qr.complete){ for(let i=0;i<30 && !qr.complete;i++){ await new Promise(r=>setTimeout(r,100)); } }
+    if(qr && !qr.complete){ for(let i=0;i<30 && !qr.complete;i++){ await new Promise(res=>setTimeout(res,100)); } }
     const canvas = await win.html2canvas(fdoc.querySelector('.card'), {
-      width:1080,height:1080,windowWidth:1080,windowHeight:1080,scale:2,
-      backgroundColor:'#e5e5e5',useCORS:true,logging:false
+      width:rt.w,height:rt.h,windowWidth:rt.w,windowHeight:rt.h,scale:2,
+      backgroundColor:bg,useCORS:true,logging:false
     });
     canvas.toBlob(blob=>{
       if(!blob){ hint.textContent='生成失败，请长按图片保存'; return; }
       const url=URL.createObjectURL(blob), a=document.createElement('a');
-      a.href=url; a.download='lieZhuan.png';
+      a.href=url; a.download='lieZhuan-'+curRatio.replace(':','x')+'.png';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       setTimeout(()=>URL.revokeObjectURL(url),1500);
       hint.textContent='PNG 已下载 ✓ · 也可长按图片保存';
@@ -526,8 +516,18 @@ async function downloadPoster(){
   }
 }
 if(location.hash.indexOf('#render')===0){
-  renderPoster(parseRenderHash());
+  posterData = parseRenderHash();
+  if(LieZhuanCard.THEMES[posterData._theme]) curTheme = posterData._theme;
+  if(LieZhuanCard.RATIOS[posterData._ratio]) curRatio = posterData._ratio;
+  renderPoster();
+  syncToggles();
   document.getElementById('poster-download').addEventListener('click', downloadPoster);
+  document.querySelectorAll('#ratio-group button').forEach(b=>b.addEventListener('click',()=>{
+    captureEdits(); curRatio = b.dataset.ratio; renderPoster(); syncToggles();
+  }));
+  document.querySelectorAll('#theme-group button').forEach(b=>b.addEventListener('click',()=>{
+    captureEdits(); curTheme = b.dataset.theme; renderPoster(); syncToggles();
+  }));
   window.addEventListener('resize', fitPosterScale);
 }
 

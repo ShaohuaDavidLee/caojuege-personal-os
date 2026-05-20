@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>轻列传 · 比例 × 皮肤 预览</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#d9d2c5;color:#1a1a1a;font-family:-apple-system,"Noto Serif SC",sans-serif;padding:32px 24px 80px}
+h1{font-size:22px;letter-spacing:.04em;margin-bottom:6px}
+.lead{font-size:13px;color:#6b5d49;line-height:1.7;max-width:60ch;margin-bottom:28px}
+.lead code{background:rgba(0,0,0,.07);padding:1px 6px;border-radius:3px;font-family:monospace}
+.grid{display:flex;flex-wrap:wrap;gap:32px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:10px}
+.thumb{position:relative;overflow:hidden;background:#fff;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.thumb iframe{border:0;transform-origin:top left;display:block}
+.cap{font-size:12px;color:#47494b;letter-spacing:.06em;text-align:center}
+.cap b{color:#1a1a1a}
+</style>
+</head>
+<body>
+<h1>轻列传 · 比例 × 皮肤 预览</h1>
+<p class="lead">
+  下面是全部「比例 × 皮肤」组合（静态预览）。要测试<b>点击文字直接改文案 + 切换 + 下载 PNG</b>，
+  请打开 <code>index.html#render</code>（可带参数，如 <code>index.html#render?title=韶华列传&amp;theme=zhusha&amp;ratio=3:4</code>）。
+</p>
+<div class="grid" id="grid"></div>
+
+<script src="./card.js"></script>
+<script>
+const SAMPLE = {
+  mode:'real',
+  title:'韶华列传',
+  chip1:'创作者', chip2:'主理人', chip3:'陪跑教练',
+  quote:'以产品为笔，和世界对话',
+  p1:'韶华者，华夏人也。少习语言之事，后与人共立 LanguageX，治机器翻译。逢 AI 之兴，去其执事，自结草诀歌 AI 之社，聚非技之士，授以 AI 为笔，造作品而不逐风。',
+  p2:'其所求者，小而久、精而有味、能沉之为作；不务速、不抢先、不逐热。',
+  taishi:'作品者，人之留痕也。以三五人之力刻一物者，胜以千人之众逐一时。'
+};
+const THUMB_W = 280;
+const grid = document.getElementById('grid');
+
+Object.keys(LieZhuanCard.RATIOS).forEach(ratio => {
+  Object.keys(LieZhuanCard.THEMES).forEach(theme => {
+    const r = LieZhuanCard.RATIOS[ratio];
+    const scale = THUMB_W / r.w;
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    thumb.style.width = THUMB_W + 'px';
+    thumb.style.height = (r.h * scale) + 'px';
+
+    const f = document.createElement('iframe');
+    f.style.width = r.w + 'px';
+    f.style.height = r.h + 'px';
+    f.style.transform = 'scale(' + scale + ')';
+    f.setAttribute('scrolling', 'no');
+    thumb.appendChild(f);
+
+    const cap = document.createElement('div');
+    cap.className = 'cap';
+    cap.innerHTML = '<b>' + r.label + '</b><br>' + LieZhuanCard.THEMES[theme].name +
+                    ' · ' + r.w + '×' + r.h;
+
+    cell.appendChild(thumb);
+    cell.appendChild(cap);
+    grid.appendChild(cell);
+
+    const doc = f.contentDocument || f.contentWindow.document;
+    doc.open();
+    doc.write(LieZhuanCard.html(SAMPLE, theme, ratio, { editable: false }));
+    doc.close();
+  });
+});
+</script>
+</body>
+</html>
