@@ -59,7 +59,12 @@ html.poster-mode #poster-overlay{display:flex}
 /* Markdown syntax in mockup */
 .md-h{color:#569CD6;font-weight:bold}.md-list{color:#CE9178}.md-quote{color:#6A9955;font-style:italic}.md-bold{font-weight:bold;color:#D4D4D4}
 /* Card mockup */
-.card-mock-wrap{aspect-ratio:3/4;position:relative;background:#e5e5e5;overflow:hidden}
+.asset-lede{min-height:auto}
+.asset-visual{height:min(124vw,560px);display:flex;align-items:flex-start;justify-content:center}
+@media (min-width:768px){.asset-lede{min-height:78px}.asset-visual{height:440px}}
+@media (min-width:1024px){.asset-visual{height:500px}}
+@media (min-width:1280px){.asset-visual{height:540px}}
+.card-mock-wrap{height:100%;aspect-ratio:3/4;max-width:100%;position:relative;background:#e5e5e5;overflow:hidden}
 .card-mock-wrap .wm{position:absolute;right:-8%;top:0;font-family:'Noto Serif SC',serif;font-size:88%;font-weight:700;color:rgba(0,0,0,.05);line-height:.9;letter-spacing:-.04em;pointer-events:none}
 /* Path toggle */
 .path-btn{transition:all .2s;position:relative}
@@ -251,10 +256,10 @@ html.poster-mode #poster-overlay{display:flex}
     <div class="max-w-[1400px] mx-auto">
       <div class="text-center mb-14 md:mb-16">
         <h2 class="text-3xl md:text-4xl font-serif font-bold mb-3">三份资产，按需取用</h2>
-        <p class="text-c-text-muted text-sm md:text-base">朋友圈那张图给陌生人看；persona 给 AI 看；主页给合作方看。</p>
+        <p class="text-c-text-muted text-sm md:text-base">轻列传负责被看见；persona 负责让 AI 懂你；个人主页负责让合作方快速判断是否该找你。</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-9 items-start">
 
         <!-- ASSET A: 轻列传 card -->
         <div class="flex flex-col">
@@ -262,50 +267,57 @@ html.poster-mode #poster-overlay{display:flex}
             <span class="px-2 py-1 bg-c-seal text-white text-[10px] font-mono uppercase tracking-widest rounded-sm">Asset A</span>
             <h3 class="font-bold text-sm md:text-base">轻列传卡片</h3>
           </div>
-          <p class="text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">一张图，发朋友圈。AI 用列传体写写它眼里的你。</p>
+          <p class="asset-lede text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">一张图，发朋友圈。AI 用列传体写下它眼里的你：身份、气质、选择和一句太史公曰。</p>
 
           <!-- Card mockup -->
+          <div class="asset-visual">
           <div class="card-mock-wrap shadow-xl border editorial-border">
             <div class="wm">列</div>
             <!-- Header chips -->
-            <div class="absolute top-[4%] left-[6%] right-[6%] flex justify-between items-center z-10 text-[8px] md:text-[9px]">
+            <div class="absolute top-[4.5%] left-[6%] right-[6%] flex justify-between items-center z-10 text-[7px] lg:text-[9px]">
               <div class="flex gap-1">
-                <span class="px-1.5 py-0.5 border border-black/20 font-sans tracking-wider">一·創作者</span>
-                <span class="px-1.5 py-0.5 border border-black/20 font-sans tracking-wider hidden sm:inline">二·主理人</span>
+                <span class="px-1.5 py-0.5 border border-black/25 font-sans tracking-wider">一·創作者</span>
+                <span class="px-1.5 py-0.5 border border-black/25 font-sans tracking-wider">二·主理人</span>
+                <span class="px-1.5 py-0.5 border border-black/25 font-sans tracking-wider hidden xl:inline">三·陪跑教練</span>
               </div>
-              <span class="text-c-text-muted font-mono tracking-widest text-[8px] hidden md:inline">PERSONAL ANNAL</span>
+              <span class="text-c-text-muted font-mono tracking-widest text-[7px] lg:text-[8px] hidden lg:inline">PERSONAL ANNAL · 列傳</span>
             </div>
             <!-- Title -->
-            <div class="absolute top-[14%] left-[6%] right-[6%] z-10">
-              <h4 class="font-serif font-bold leading-none text-[12vw] md:text-[44px] lg:text-[52px] tracking-wide">韶華列傳</h4>
-              <div class="font-serif italic text-c-btn mt-1 text-[9px] md:text-[11px]">「以产品为笔，和世界对话」</div>
-              <div class="w-8 h-px bg-c-btn mt-1"></div>
+            <div class="absolute top-[15%] left-[6%] right-[6%] z-10">
+              <h4 class="font-serif font-black leading-none text-[44px] md:text-[43px] lg:text-[52px] xl:text-[60px] tracking-wide">韶華列傳</h4>
+              <div class="font-serif text-c-btn mt-3 text-[13px] lg:text-[15px]">「以产品为笔，和世界对话」</div>
+              <div class="w-12 h-px bg-c-btn mt-2"></div>
             </div>
             <!-- Body -->
-            <div class="absolute top-[45%] left-[6%] right-[6%] z-10 font-serif text-[8px] md:text-[10px] leading-relaxed text-c-text">
+            <div class="absolute top-[37.5%] left-[6%] right-[6%] z-10 font-serif text-[12px] md:text-[11px] lg:text-[14px] xl:text-[15px] leading-[1.85] text-c-text">
               <p>韶华者，华夏人也。少习语言之事，后与人共立 LanguageX，治机器翻译。</p>
-              <p class="mt-1">其所求者，小而久、精而有味、能沉之为作。</p>
+              <p class="mt-2">逢 AI 之兴，去其执事，自结草诀歌 AI 之社，聚非技术士，授以 AI 为笔，造作品而不逐风。</p>
+              <p class="mt-2">其所求者，小而久、精而有味、能沉之为作。</p>
             </div>
             <!-- Dark block -->
-            <div class="absolute bottom-[18%] left-[6%] right-[6%] bg-c-btn text-white p-2 md:p-2.5 z-10">
-              <div class="font-mono text-[7px] md:text-[8px] tracking-widest opacity-60 mb-1">太 史 公 曰 ——</div>
-              <div class="font-serif text-[9px] md:text-[10px] leading-snug">作品者，人之留痕也。胜以千人之众逐一时。</div>
+            <div class="absolute bottom-[12%] left-[6%] right-[6%] bg-c-btn text-white px-5 py-4 z-10">
+              <div class="font-mono text-[8px] lg:text-[9px] tracking-widest opacity-60 mb-2">太 史 公 曰 ——</div>
+              <div class="font-serif text-[14px] lg:text-[16px] leading-relaxed font-bold">作品者，人之留痕也。以三五人之力刻一物者，胜以千人之众逐一时。</div>
+              <div class="absolute -right-1 -top-3 font-serif text-[72px] leading-none text-white">”</div>
             </div>
             <!-- Seal -->
-            <div class="absolute top-[14%] right-[6%] w-[14%] aspect-square bg-c-seal grid grid-cols-2 grid-rows-2 z-20 text-white shadow-md" style="box-shadow:inset 0 0 0 2px rgba(255,255,255,.2)">
-              <span class="flex items-center justify-center font-black text-[10px] md:text-[14px]">司</span>
-              <span class="flex items-center justify-center font-black text-[10px] md:text-[14px]">馬</span>
-              <span class="flex items-center justify-center font-black text-[10px] md:text-[14px]">遷</span>
-              <span class="flex items-center justify-center font-black text-[10px] md:text-[14px]">撰</span>
+            <div class="absolute top-[15.5%] right-[6%] w-[16%] aspect-square bg-c-seal grid grid-cols-2 grid-rows-2 z-20 text-white shadow-md" style="box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)">
+              <span class="flex items-center justify-center font-black text-[13px] lg:text-[17px]">司</span>
+              <span class="flex items-center justify-center font-black text-[13px] lg:text-[17px]">馬</span>
+              <span class="flex items-center justify-center font-black text-[13px] lg:text-[17px]">遷</span>
+              <span class="flex items-center justify-center font-black text-[13px] lg:text-[17px]">撰</span>
             </div>
             <!-- Footer -->
-            <div class="absolute bottom-[4%] left-[6%] right-[6%] flex justify-between items-end text-[7px] md:text-[8px] z-10">
+            <div class="absolute bottom-[4%] left-[6%] right-[6%] flex justify-between items-end text-[9px] z-10">
               <div>
                 <div class="text-c-text">simaqian.caojuege.com</div>
-                <div class="text-c-text-muted">司馬遷.skill · 扫码访问</div>
+                <div class="text-c-text-muted">司馬遷.skill · v0.1 · 扫码访问</div>
               </div>
-              <div class="w-[12%] aspect-square bg-white border editorial-border"></div>
+              <div class="w-[13%] aspect-square bg-white border editorial-border p-0.5">
+                <img class="w-full h-full object-contain" crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=120x120&margin=0" alt="simaqian.caojuege.com QR code">
+              </div>
             </div>
+          </div>
           </div>
 
           <p class="text-[11px] text-c-text-muted mt-4 px-1 font-mono tracking-wider">韶华列传.png — 1080×1440</p>
@@ -317,25 +329,37 @@ html.poster-mode #poster-overlay{display:flex}
             <span class="px-2 py-1 bg-c-btn text-white text-[10px] font-mono uppercase tracking-widest rounded-sm">Asset B</span>
             <h3 class="font-bold text-sm md:text-base">给 AI 的 Persona 文档</h3>
           </div>
-          <p class="text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">persona-agent.md — 让所有 AI Agent 一读就懂你。</p>
+          <p class="asset-lede text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">persona-agent.md 是给 AI 的人物档案：事实、动机、判断、边界、表达风格、禁区和校准题。</p>
 
-          <div class="bg-c-code rounded-md relative overflow-hidden border border-black/20 shadow-xl aspect-square">
-            <div class="p-5 md:p-6 font-mono text-[11px] md:text-[12px] leading-relaxed text-[#d4d4d4] select-none">
+          <div class="asset-visual">
+          <div class="bg-c-code rounded-md relative overflow-hidden border border-black/20 shadow-xl w-full h-full">
+            <div class="p-5 md:p-6 lg:p-7 font-mono text-[10px] md:text-[10.5px] lg:text-[12px] leading-relaxed text-[#d4d4d4] select-none">
               <span class="md-h">#</span> David Persona Agent<br><br>
               <span class="md-h">##</span> 核心定位<br>
-              <span class="md-quote">&gt; 探索"技术+人文"边界的独立开发者</span><br><br>
+              <span class="md-quote">&gt; 以产品和内容为笔，和世界对话的 AI 作品陪跑者</span><br><br>
               <span class="md-h">##</span> 已知事实<br>
-              <span class="md-list">-</span> 翻译、记者、产品经理出身<br>
-              <span class="md-list">-</span> 创立 LanguageX，草诀歌 AI Labs<br>
-              <span class="md-list">-</span> 信"创新就是遥远的连接"<br><br>
+              <span class="md-list">-</span> 前翻译、记者、产品经理，长期做 AI + 翻译创业<br>
+              <span class="md-list">-</span> LanguageX Co-founder，草诀歌 AI Labs 发起人<br>
+              <span class="md-list">-</span> 主理「David 的 AI 全景图」，关注技术、产业、历史和人的位置<br>
+              <span class="md-list">-</span> 现在帮助非技术背景的人做“作品型产品”<br><br>
               <span class="md-h">##</span> 判断原则<br>
-              <span class="md-bold">1. 作品优先：</span>做有印记的产品<br>
-              <span class="md-bold">2. 审美底线：</span>MVP 也要有排版品味<br>
-              <span class="md-bold">3. 人本导向：</span>技术服务人而非取代<br>
+              <span class="md-bold">1. 作品优先：</span>先问“是否像你、是否值得长期做”<br>
+              <span class="md-bold">2. 审美底线：</span>MVP 也要有排版、节奏和表达品味<br>
+              <span class="md-bold">3. 人本导向：</span>技术服务人，而不是替代人的判断<br>
+              <span class="md-bold">4. 克制叙事：</span>不要把探索写成成功学包装<br><br>
+              <span class="md-h">##</span> 协作偏好<br>
+              <span class="md-list">-</span> 适合讨论 AI Agent、Vibe Coding、社区和内容产品<br>
+              <span class="md-list">-</span> 喜欢真实、复杂、值得被做成作品的问题<br>
+              <span class="md-list">-</span> 不要替他说“颠覆”“遥遥领先”“all in 某风口”<br><br>
+              <span class="md-h">##</span> Agent 校准题<br>
+              <span class="md-list">-</span> 这个产品为什么必须由他做？<br>
+              <span class="md-list">-</span> 这个版本哪里不像他？<br>
+              <span class="md-list">-</span> 哪些表达过度营销，需要降噪？<br>
             </div>
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-c-code to-transparent flex items-end justify-center pb-5">
-              <span class="text-white/40 text-[10px] font-mono">… 已生成 2000+ 字</span>
+            <div class="absolute bottom-0 left-0 w-full h-28 bg-gradient-to-t from-c-code to-transparent flex items-end justify-center pb-5">
+              <span class="text-white/40 text-[10px] font-mono">… 已生成：事实 / 动机 / 边界 / 盲区 / 校准题</span>
             </div>
+          </div>
           </div>
 
           <p class="text-[11px] text-c-text-muted mt-4 px-1 font-mono tracking-wider">persona-agent.md — Markdown</p>
@@ -347,9 +371,10 @@ html.poster-mode #poster-overlay{display:flex}
             <span class="px-2 py-1 bg-white border editorial-border text-c-btn text-[10px] font-mono uppercase tracking-widest rounded-sm">Asset C</span>
             <h3 class="font-bold text-sm md:text-base">给人的个人主页</h3>
           </div>
-          <p class="text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">personal-homepage.html — 你的个人使用说明书何必是飞书文档。</p>
+          <p class="asset-lede text-xs md:text-sm text-c-text-muted mb-5 px-1 leading-relaxed">personal-homepage.html 是给合作方看的页面：你是谁、你能提供什么、你正在寻找什么合作。</p>
 
-          <div class="bg-white rounded-md relative overflow-hidden border editorial-border shadow-2xl aspect-square flex flex-col">
+          <div class="asset-visual">
+          <div class="bg-white rounded-md relative overflow-hidden border editorial-border shadow-2xl w-full h-full flex flex-col">
             <div class="h-7 border-b border-gray-100 bg-gray-50/50 flex items-center px-3 gap-2">
               <div class="flex gap-1">
                 <div class="w-2 h-2 rounded-full bg-gray-300"></div>
@@ -358,20 +383,26 @@ html.poster-mode #poster-overlay{display:flex}
               </div>
               <div class="bg-white border border-gray-200 rounded text-[9px] text-gray-400 font-mono px-2 py-0.5 flex-1 max-w-[180px] mx-auto">david.me/profile</div>
             </div>
-            <div class="p-5 md:p-6 overflow-hidden flex-1 relative">
+            <div class="p-5 md:p-6 lg:p-7 overflow-hidden flex-1 relative">
               <div class="text-[9px] font-mono text-gray-400 uppercase tracking-widest mb-3">Personal Manual / Vol.01</div>
-              <h4 class="text-2xl md:text-3xl font-serif font-bold text-gray-900 mb-3 leading-tight">韶华 David</h4>
+              <h4 class="text-2xl md:text-3xl lg:text-4xl font-serif font-black text-gray-900 mb-3 leading-tight">韶华 David</h4>
               <div class="flex flex-wrap gap-1 mb-4">
                 <span class="px-2 py-0.5 border border-gray-200 rounded-full text-[9px] text-gray-600">草诀歌 AI Labs</span>
                 <span class="px-2 py-0.5 border border-gray-200 rounded-full text-[9px] text-gray-600">LanguageX</span>
-                <span class="px-2 py-0.5 border border-gray-200 rounded-full text-[9px] text-gray-600">INFP</span>
+                <span class="px-2 py-0.5 border border-gray-200 rounded-full text-[9px] text-gray-600">作品型产品</span>
               </div>
-              <div class="space-y-2 text-gray-600 text-[11px] md:text-[12px] leading-relaxed">
-                <p><strong class="text-gray-900 font-medium">我是谁</strong><br>前翻译、记者、PM。致力于帮人做"作品型产品"。</p>
-                <p><strong class="text-gray-900 font-medium">我能提供</strong><br>AI Agent 设计 / 社区运营 / 企业 AI 咨询</p>
+              <div class="space-y-4 text-gray-600 text-[11px] md:text-[12px] lg:text-[13px] leading-relaxed">
+                <p class="font-serif text-[15px] lg:text-[17px] leading-relaxed text-gray-700">以产品和内容为笔，和世界对话。</p>
+                <p><strong class="text-gray-900 font-medium">我是谁</strong><br>前翻译、产品经理，LanguageX Co-founder，草诀歌 AI Labs 发起人，公众号和小宇宙「David 的 AI 全景图」主理人。</p>
+                <p><strong class="text-gray-900 font-medium">我能提供</strong><br>AI 产品判断 / Vibe Coding 陪跑 / 个人和企业 AI 咨询。</p>
+                <p><strong class="text-gray-900 font-medium">我正在寻找</strong><br>面向创作者、知识工作者、教育、语言和个人成长的作品型产品合作。</p>
+                <div class="border-t border-gray-100 pt-3">
+                  <p><strong class="text-gray-900 font-medium">代表作品</strong><br>草诀歌 AI Labs / David 的 AI 全景图 / LanguageX / Personal OS。</p>
+                </div>
               </div>
-              <div class="absolute bottom-0 left-0 w-full h-16 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
+              <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
             </div>
+          </div>
           </div>
 
           <p class="text-[11px] text-c-text-muted mt-4 px-1 font-mono tracking-wider">personal-homepage.html — 单文件</p>
