@@ -20,7 +20,7 @@
     quote: '向未知处行',
     p1: '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。',
     p2: '其所求者，行远自迩，沉之为作。所好者深文，所厌者喧嚣。',
-    taishi: '志之所趋，无远弗届。', warn: ''
+    taishi: '志之所趋，无远弗届。', warn: '', volume: '', volumeLabel: '列傳'
   };
 
   const THEMES = {
@@ -35,6 +35,12 @@
       chipBorder:'rgba(26,26,26,.45)', chipBg:'rgba(255,255,255,.32)', wm:'rgba(0,0,0,.05)',
       taishiBg:'#47494b', taishiFg:'#e5e5e5', taishiMuted:'rgba(229,229,229,.68)', qmark:'rgba(229,229,229,.16)',
       qrBorder:'rgba(71,73,75,.20)', seal:['司','馬','毒','撰']
+    },
+    diagnosis: {
+      bg:'#f1eadc', fg:'#1a1a1a', muted:'rgba(26,26,26,.58)', quote:'#755f3d',
+      chipBorder:'rgba(26,26,26,.34)', chipBg:'rgba(255,255,255,.34)', wm:'rgba(122,92,46,.10)',
+      taishiBg:'#3f3426', taishiFg:'#f4f0e8', taishiMuted:'rgba(244,240,232,.66)', qmark:'rgba(244,240,232,.14)',
+      qrBorder:'rgba(71,73,75,.20)', seal:['太','史','診','斷']
     },
     observer: {
       bg:'#1a1a1a', fg:'#e5e5e5', muted:'rgba(229,229,229,.55)', quote:'rgba(229,229,229,.72)',
@@ -140,6 +146,21 @@
     ctx.closePath();
   }
 
+  function normaliseVolume(v){
+    const raw = String(v || '').trim();
+    if(!raw || raw === 'auto') return '';
+    const digits = raw.match(/\d+/)?.[0];
+    if(!digits) return raw.slice(0, 8);
+    return String(Math.max(1, Math.min(999, parseInt(digits, 10)))).padStart(3, '0');
+  }
+
+  function styleDefaultWatermark(style){
+    if(style === 'roast') return '毒';
+    if(style === 'diagnosis') return '診';
+    if(style === 'observer') return '觀';
+    return '傳';
+  }
+
   function drawChip(ctx, text, x, y, theme){
     setFont(ctx, '500', 13, SERIF);
     const padX = 11;
@@ -207,7 +228,7 @@
     ctx.fillStyle = theme.bg;
     ctx.fillRect(0,0,W,H);
 
-    drawWatermark(ctx, d.watermark || (style === 'roast' ? '毒' : style === 'observer' ? '觀' : '正'), theme);
+    drawWatermark(ctx, d.watermark || styleDefaultWatermark(style), theme);
 
     // Meta row
     let x = 46;
@@ -220,6 +241,12 @@
     ctx.textAlign = 'right';
     ctx.textBaseline = 'top';
     ctx.fillText('PERSONAL ANNAL · 列傳', 554, 48);
+    const vol = normaliseVolume(d.volume);
+    if(vol){
+      setFont(ctx, '500', 10, MONO);
+      ctx.fillStyle = theme.muted;
+      ctx.fillText(`${d.volumeLabel || '列傳'}·第${vol}卷`, 554, 66);
+    }
     ctx.restore();
 
     drawSeal(ctx, d.sealChars || theme.seal);

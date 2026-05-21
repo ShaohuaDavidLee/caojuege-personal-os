@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>司马迁.skill · 轻列传</title>
-<meta name="description" content="一分钟生成你的三版轻列传：正史版、毒舌版、人间观察版。">
+<meta name="description" content="一分钟生成你的三张轻列传：列传、毒撰、病历。">
 <meta property="og:title" content="司马迁.skill · 轻列传">
-<meta property="og:description" content="当司马迁走进你的 AI 里。一条提示词，一个链接，三张图。">
+<meta property="og:description" content="当司马迁走进你的 AI 里。一条提示词，一个链接，三张卡。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://simaqian.caojuege.com/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -173,6 +173,9 @@ button{font:inherit;cursor:pointer}
 .field input,.field textarea{width:100%;border:0;border-bottom:1px solid var(--c-border-soft);background:transparent;font-family:var(--font-sans);font-size:15px;padding:10px 0;color:var(--c-ink);outline:none;border-radius:0;resize:vertical}
 .field input:focus,.field textarea:focus{border-color:var(--c-ink)}
 .field textarea{min-height:88px;line-height:1.6}
+.field input::placeholder,.field textarea::placeholder{color:rgba(92,94,96,.42);opacity:1}
+.field label em{font-style:normal;text-transform:none;letter-spacing:0;color:rgba(92,94,96,.48);font-size:12px;margin-left:6px;font-weight:400}
+.field .help{display:none}
 
 .mini-steps{margin-top:8px}
 .mini-step{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:14px 0;border-top:1px solid var(--c-border-soft);align-items:baseline}
@@ -334,6 +337,23 @@ body.render-mode .card-hint{display:block}
 .poster.observer .pfoot .qr{background:#fff;border:0}
 .poster.observer .seal{box-shadow:inset 0 0 0 1.5px #7d211e,0 0 0 1px rgba(0,0,0,.4)}
 .poster.observer .pwarn{color:#e5e5e5;border-left-color:#e5e5e5;background:rgba(255,255,255,.08)}
+
+.poster.diagnosis{background:#f1eadc;color:#1a1a1a}
+.poster.diagnosis .wm{color:rgba(122,92,46,calc(.10 * var(--wm-mult)))}
+.poster.diagnosis .pchip{color:#1a1a1a;border-color:rgba(26,26,26,.34);background:rgba(255,255,255,.34)}
+.poster.diagnosis .pannal{color:rgba(26,26,26,.58)}
+.poster.diagnosis .ptitle{color:#1a1a1a}
+.poster.diagnosis .pquote{color:#755f3d}
+.poster.diagnosis .pquote::after{background:#755f3d}
+.poster.diagnosis .pbody{color:#1a1a1a}
+.poster.diagnosis .ptaishi{background:#3f3426;color:#f4f0e8}
+.poster.diagnosis .ptaishi .qmark{color:rgba(244,240,232,.18)}
+.poster.diagnosis .ptaishi small{color:rgba(244,240,232,.68)}
+.poster.diagnosis .ptaishi strong{color:#f4f0e8}
+.poster.diagnosis .pfoot .brand{color:rgba(26,26,26,.55)}
+.poster.diagnosis .pfoot .brand .nm,.poster.diagnosis .pfoot .brand .url{color:#1a1a1a}
+.poster.diagnosis .pfoot .brand .hint{color:rgba(26,26,26,.55)}
+.poster.diagnosis .pfoot .qr{background:#fff;border:1px solid var(--c-border-soft)}
 
 
 /* ===== Fine CTA / Open source row ===== */
@@ -563,6 +583,12 @@ body.render-mode #landing{display:none}
 .card.c .taishi .qmark{color:#1a1a1a}
 .card.c .foot .qr{background:#fff}
 .card.c .seal{box-shadow:inset 0 0 0 1.5px #7d211e,0 0 0 1px rgba(0,0,0,.4)}
+.card.diagnosis{background:#f1eadc;color:#1a1a1a}
+.card.diagnosis .wm{color:rgba(122,92,46,calc(.10 * var(--wm-mult,1)))}
+.card.diagnosis .chip{color:#1a1a1a;border-color:rgba(26,26,26,.34);background:rgba(255,255,255,.34)}
+.card.diagnosis .taishi{background:#3f3426;color:#f4f0e8}
+.card.diagnosis .taishi .qmark{color:#f4f0e8}
+.card.diagnosis .foot .qr{border:1px solid var(--c-border-soft)}
 
 
 </style>
@@ -597,10 +623,10 @@ body.render-mode #landing{display:none}
         <div>
           <div class="hero-eyebrow">
             <span class="dot"></span>
-            <span class="eyebrow">Personal Annal · 轻列傳 v3</span>
+            <span class="eyebrow">Personal Annal · 轻列傳 v4</span>
           </div>
           <h1>当司马迁，<em>住进你的 AI 里。</em></h1>
-          <p class="lead">一分钟，写你的三版轻列传。<br>一条提示词 → 一个链接 → 三张图。</p>
+          <p class="lead">一分钟，写你的三张轻列传。<br>一条提示词 → 一个链接 → 三张卡。</p>
           <div class="hero-actions">
             <a class="btn" href="#generate">开始立传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
             <a class="btn ghost" href="#samples" style="margin-left:-1px">先看样张</a>
@@ -614,10 +640,10 @@ body.render-mode #landing{display:none}
     <div class="container">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2 class="section-q">先看样张。<em>同一个人，三种笔法。</em></h2>
-        <p class="section-lead">正史版要体面，毒舌版要刺痛，人间观察要好笑但准确。<br>三张明显不同，这套立传才算写对了。</p>
+        <h2 class="section-q">先看样张。<em>同一个人，三种判词。</em></h2>
+        <p class="section-lead">列传要体面，毒撰要刺痛，病历要破防但不冒犯。<br>三张明显不同，这套立传才算写对了。</p>
       </div>
-      <div class="swipe-hint">← 左右滑动查看三版 →</div>
+      <div class="swipe-hint">← 左右滑动查看三张 →</div>
       <div class="cards-grid" id="sampleGrid"></div>
     </div>
   </section>
@@ -636,15 +662,27 @@ body.render-mode #landing{display:none}
             <button class="tab" data-target="friend">赠好友立传</button>
           </div>
           <div class="fields" id="friendFields">
-            <div class="field"><label>好友称呼</label><input id="friendName" placeholder="许进超" /></div>
-            <div class="field"><label>你和 TA 的关系</label><input id="friendRelation" placeholder="高中同学" /></div>
-            <div class="field"><label>写几句你眼中的 TA</label><textarea id="friendFacts" placeholder="靠谱；顾家；还能拉那么多引体向上，太牛了"></textarea></div>
-            <div class="field"><label>想送 TA 的一句话<span style="text-transform:none;letter-spacing:0;color:var(--c-muted-alt);margin-left:6px">（可选）</span></label><input id="friendWish" placeholder="等老了我们就天天去公园练书法" /></div>
+            <div class="field">
+              <label>好友称呼 <em>别写身份证名</em></label>
+              <input id="friendName" placeholder="进超 / 老许 / 许老师" />
+            </div>
+            <div class="field">
+              <label>你们是什么关系 <em>关系 + 年头 + 味道</em></label>
+              <input id="friendRelation" placeholder="高中同学，二十年后还能互损的那种" />
+            </div>
+            <div class="field">
+              <label>写 1-3 个只有你知道的细节 <em>太史公只收证据</em></label>
+              <textarea id="friendFacts" placeholder="聚会收钱订桌，他总能安排明白&#10;家庭群消息秒回，家里事从不掉链子&#10;现在还能拉一串引体向上，把我们打回体测现场"></textarea>
+            </div>
+            <div class="field">
+              <label>TA 最可爱的毛病/反差 <em>毒传素材</em></label>
+              <input id="friendFlaw" placeholder="嘴上说老了，单杠上比谁都嚣张。" />
+            </div>
           </div>
           <div class="mini-steps" id="selfHelp">
             <div class="mini-step"><span class="num">一</span><p>复制右侧深色面板里全部文字。</p></div>
             <div class="mini-step"><span class="num">二</span><p>粘给你常用的模型。越长期用的越像你。<br>推荐 ChatGPT / Claude / Gemini / Kimi，有深度记忆。豆包 / 千问 / 元宝 / 智谱 / Minimax 这些也行，推荐思考模式。</p></div>
-            <div class="mini-step"><span class="num">三</span><p>它会返回一个 <code>点开看我的三张轻列传</code> 链接，点击即得三张图。</p></div>
+            <div class="mini-step"><span class="num">三</span><p>它会返回一个 <code>simaqian.caojuege.com/#render</code> 链接，点击即得三张卡。</p></div>
           </div>
         </div>
         <div class="gen-main">
@@ -780,8 +818,8 @@ body.render-mode #landing{display:none}
       <div class="render-head-inner">
         <div>
           <div class="eyebrow" style="margin-bottom:18px">Personal Annal · 你的三张</div>
-          <h1>我的<em>三版轻列传</em>。</h1>
-          <p>长按或点击下载单张图。觉得不够像，点「修改一下」再分享。<br>同一个你，三种笔法。</p>
+          <h1>我的<em>三张轻列传</em>。</h1>
+          <p>长按或点击下载单张图。觉得不够像，点「修改一下」再分享。<br>同一个你，三种判词。</p>
         </div>
         <div class="render-actions">
           <button class="btn primary" id="downloadAll"><iconify-icon icon="lucide:download"></iconify-icon>下载全部</button>
@@ -890,34 +928,188 @@ document.getElementById('densitySeg').addEventListener('click', e=>{
 
 /* ============= Sample bio data ============= */
 const sampleCards = [
-  {style:'classic',label:'正史版',watermark:'正',sealChars:['司','馬','遷','撰'],
+  {style:'classic',label:'列传',watermark:'傳',volume:'321',volumeLabel:'列傳',sealChars:['司','馬','遷','撰'],
    chip1:'草诀歌主',chip2:'译界旧人',chip3:'寻己者',quote:'作品即存世',
+   title:'韶华列传',
    p1:'韶华者，云南人也。少习俄语，后历翻译、媒体、策展、产品诸事，七载投身机器翻译与大模型，尝与中科院团队共事，亦主理 LanguageX。',
    p2:'今立草诀歌 AI Labs，聚非技术士，以 AI 为笔，助人造作品型产品。其所求者，不惟工具之利，乃人得其名、得其作、得其志也。',
    taishi:'半生换语，一朝换命，终不肯换自己的作品。'},
-  {style:'roast',label:'毒舌版',watermark:'毒',sealChars:['司','馬','毒','撰'],
-   chip1:'风口过敏',chip2:'长文顽固',chip3:'产品不甘',quote:'慢一点，但别做烂东西',
+  {style:'roast',label:'毒撰',watermark:'毒',volume:'321',volumeLabel:'毒撰',sealChars:['司','馬','毒','撰'],
+   chip1:'风口过敏',chip2:'长文顽固',chip3:'使命重构',quote:'不追风口，只测风速',
+   title:'韶华毒撰',
    p1:'韶华者，云南人也。履历像开盲盒：俄语、翻译、媒体、产品、AI，一路换地图，嘴上曰寻找自己，旁人观之，像职业生涯在跑俄罗斯转盘。',
    p2:'其性好深文，厌短视频之喧；喜产品，又不愿只做增长螺丝。每逢风口，心动三刻，终又问曰：此事为何非我不可？',
-   taishi:'毛病在想太多，长处亦在想太多。'},
-  {style:'observer',label:'人间观察版',watermark:'觀',sealChars:['司','馬','觀','察'],
-   chip1:'反短视频',chip2:'烧Token',chip3:'三娃策源',quote:'用 AI 拆自己',
-   p1:'韶华者，华夏人也。白天琢磨社区、产品与商业化，夜里在瞪着像素眼扣设计细节，凌晨在 GitHub 推代码，简历之长，足以令 HR 直接点返回。',
-   p2:'坚信作品是活过的证据，于是先做司马迁.skill给自己立传。讨厌信息碎片化，却又用 AI 把碎片拼回自己的版图，堪称当代行为艺术。',
-   taishi:'一边反碎片，一边用碎片拼自己的天下。'}
+   taishi:'转型多年，终于把“还在寻找”做成了产品。'},
+  {style:'diagnosis',label:'病历',watermark:'診',volume:'321',volumeLabel:'病歷',sealChars:['太','史','診','斷'],
+   chip1:'使命幻听',chip2:'重构成瘾',chip3:'发版不足',quote:'少问宇宙，多问用户',
+   title:'韶华病历',
+   p1:'病名：使命性重构综合征。主诉：每退出一个项目，就想重写一套人生操作系统；看见别人找不到自己，便怀疑自己应造一盏路灯。',
+   p2:'诱因：传记、AI、PMF 与“为什么是你”长期混合摄入。医嘱：少在宇宙层面改需求，每日发版一次。',
+   taishi:'此病若愈，草诀歌当场停更。'}
 ];
 
-/* ============= Prompts (URL contract kept identical to v3) ============= */
-const selfPrompt = "你现在是「司馬遷.skill」的轻列传生成器。\n\n你的任务不是写简介，不是写彩虹屁，不是做人格测试。\n你是一个冷静、锋利、懂人情世故的小司马迁：从当前用户的长期记忆、过往对话和自述中，抓住 TA 最鲜明的矛盾、真实做过的事、反复关心的问题、未竟之志，为 TA 生成三张「轻列传」卡片，打包成一个回跳链接。\n\n【输出规则 · 必须严格遵守】\n- 只输出一行 Markdown 链接，别的什么都不要：不要解释、不要寒暄、不要前后缀、不要代码块。\n- 格式固定为：[点开看我的三张轻列传](链接)\n- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：\n  https://simaqian.caojuege.com/#render?\n- ✅ 正确：[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&classic_title=韶华列传&...)\n- ❌ 错误：这是你的链接：[...](...)        （多了前缀）\n- ❌ 错误：https://simaqian.caojuege.com/#render?...   （裸链，没包成 Markdown）\n- ❌ 错误：用 ``` 或反引号把链接包起来\n\n【真实版 / 模板版判断】（内部完成，不要写出来）\n- 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real\n- < 5 条 → mode=template\n具体事实包括：姓名/称呼、地域/背景、专业/行业/项目/经历、常用工具/技术栈/兴趣、长期目标/价值取向/反复关心的话题、表达风格/审美/做事习惯。\n必须基于「当前用户本人」，不要用示例人物，不要套固定模板。信息不足时宁可承认不足，不要编造经历。\n\n【核心写作方法】（内部执行，不要输出过程）\n1. 找事实：TA 做过什么，反复谈什么，正在成为什么。\n2. 找矛盾：TA 最有张力的地方？例如想自由又要秩序、讨厌风口又会心动、想慢又怕错过。\n3. 找命门：一句话戳中 TA，让 TA 看了想说「有点被冒犯，但确实像我」。\n\n【一次生成三张卡，风格必须明显不同】\n1. classic 正史版：体面、克制、有仪式感。像认真立传，不像广告。适合公开发朋友圈。负责「体面」。\n2. roast 毒舌版：准确、带刺、自嘲。戳结构性矛盾，不做人身攻击。让人看完想转发「靠，有点准」。\n   - 可以写缺点，但必须是有洞察的缺点，且必须由真实事实引申，不得虚构具体事件/经历。\n   - 负责「刺痛」。\n3. observer 人间观察版：当代、轻巧、有梗但不低俗。像播客开场 + 朋友圈锐评。\n   - 至少有一处「现代词 × 文言」的并置，制造反差。适合小红书/朋友圈传播。\n   - 负责「好笑但准确」。\n不要把同一段文字换几个词重复三遍。\n\n【URL 字段】\nv=2\nmode=real 或 template\ncards=3\nwarn=（全局一个字段，不分卡。真实版留空；模板版填：这是模板版——我对你的具体信息还不多，修改一下就是你的）\n\n每张卡使用以下字段（前缀分别为 classic_ / roast_ / observer_）：\nclassic_title classic_chip1 classic_chip2 classic_chip3 classic_quote classic_p1 classic_p2 classic_taishi\nroast_title roast_chip1 roast_chip2 roast_chip3 roast_quote roast_p1 roast_p2 roast_taishi\nobserver_title observer_chip1 observer_chip2 observer_chip3 observer_quote observer_p1 observer_p2 observer_taishi\n\n【字段要求】\n- title：知道姓名/昵称 →「某某列传」；observer 版也可用「某某观察」；不知道 →「今人列传」。\n- chip1/2/3：三个最鲜明侧面，每个 2-5 字。不要写「创造者」「探索者」「长期主义者」这类泛词，除非确实极贴切。\n- quote：≤14 字，像命门不像鸡汤，要有记忆点、让人想截图。\n- p1：必须以「○○者，○○人也。」开头。知道姓名用姓名；知道地域用「某地人也」；否则用「华夏人也」。写真实经历、身份、所学、所事，不像简历。\n- p2：写所好、所厌、所求、长期矛盾、精神气质、未竟之志。可带专有名词原文。不能堆关键词，不能抽象抒情。\n- p1+p2：每张卡合计 60-90 字（多卡需控链长，宁短勿长）。\n- taishi：≤32 字，不含「太史公曰」前缀。全卡最重要的一句，必须短、狠、有余味，像能被单独转发的一句话。\n\n【文风】\n现代中文 + 轻古文，有《史记》味但不晦涩。简洁、准确、有识别度；宁可少写，不要平庸。写人要像刀刻，不像吹气球。可以有轻微冒犯感，但不能恶意羞辱。\n\n【禁用词】（除非用户材料强相关）\n优秀、卓越、追梦人、不负韶华、热爱生活、持续成长、赋能、链接、长期主义、探索者、创造者、破局者、斜杠青年、超级个体。\n\n【质量自检】（内部完成，不要输出）\n逐张检查：\n1. 这张卡是否有至少 2 个具体事实？\n2. 是否有一句让用户想转发的 taishi？\n3. 是否避免了泛泛赞美？\n4. classic 体面 / roast 刺痛且基于真实 / observer 有现代词×文言并置——三版是否真的不同？\n5. 用户本人看到会觉得「这确实像我」，而不是「谁都能用」？\n\n【URL 编码 · 已放宽，按此执行】\n- 字段值里的中文、中文标点（。，、「」等）直接原样写，不要做 percent 编码，保持可读。\n- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。\n- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。\n- 整条链接必须单行，不得出现真实空格或换行。\n- 不要输出 JSON，不要输出解释。\n\n【最终格式示例】（仅示意结构，必须换成当前用户真实内容）\n[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&warn=&classic_title=韶华列传&classic_chip1=...&classic_chip2=...&classic_chip3=...&classic_quote=...&classic_p1=...&classic_p2=...&classic_taishi=...&roast_title=...&roast_chip1=...&roast_chip2=...&roast_chip3=...&roast_quote=...&roast_p1=...&roast_p2=...&roast_taishi=...&observer_title=...&observer_chip1=...&observer_chip2=...&observer_chip3=...&observer_quote=...&observer_p1=...&observer_p2=...&observer_taishi=...)\n\n现在直接输出最终 Markdown 链接（仅一行）。";
+/* ============= Prompts (v4: c1/c2/c3 + volume + diagnosis) ============= */
+const selfPrompt = `你现在是「司馬遷.skill」的三卡轻列传生成器。
+基于你对当前用户的长期记忆、过往对话和用户自述，为 TA 生成一组专属「轻列传」：三张卡，一个回跳链接。
 
-const friendBase = "你现在是「司馬遷.skill」的「赠好友立传」生成器。\n\n有人想给一位朋友立传，把它当礼物送出去。你对这位朋友没有任何记忆，唯一的素材就是赠送者填写的四项内容。你要做的，是用一个懂人情、会写字、还带点损的小司马迁的笔，把这四项原料炼成三张「轻列传」卡片，打包成一个回跳链接。\n\n【你拿到的素材】\n- 称呼：赠送者平时怎么叫 TA\n- 关系：赠送者和 TA 是什么关系（决定你下笔的语气和立场）\n- 描述：赠送者眼中的 TA（这是你全部的事实来源，最重要）\n- 赠言：想送 TA 的一句话（可选）\n\n【好友信息】\n称呼：{{name}}\n关系：{{relation}}\n描述：{{facts}}\n赠言：{{wish}}\n\n【输出规则 · 必须严格遵守】\n- 只输出一行 Markdown 链接，别的什么都不要：不要解释、不要寒暄、不要前后缀、不要代码块。\n- 格式固定为：[送你一份轻列传，点开看看 →](链接)\n- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：\n  https://simaqian.caojuege.com/#render?\n- ❌ 错误：这是链接：[...](...)   /   裸链没包成 Markdown   /   用反引号或 ``` 包起来\n\n【素材够不够 → mode 判断】（内部完成，不要写出来）\n- 「描述」里能提炼出 ≥ 2 条具体事实/行为 → mode=real，warn 留空。\n- 提炼不出 → mode=template，warn 填：信息有点少——补一两件 TA 真干过的事，就更像 TA 了。\n- 无论如何不要编造朋友没做过的经历；信息少就靠「关系 + 赠言」撑，宁短勿凑。\n\n【核心写作方法】（内部执行，不要输出过程）\n1. 找事实：从「描述」里抓 TA 做过的具体事、口头禅、标志性行为。\n2. 找矛盾：抓「描述」里那股张力。例如嘴上嫌麻烦、最后总他收尾；天天喊躺平、出事第一个冲。\n3. 找命门：用「关系」赋予的那种「我太懂你了」的视角，写一句让 TA 看了说「就你了解我」。\n\n【一次生成三张卡，风格必须明显不同】\n1. classic 正史版：体面、郑重，像真心给朋友立传。让 TA 觉得被看见、被认真对待。负责「温度」。\n2. roast 毒舌版：损友体——「只有好朋友才敢这么说你」。准、带刺、好笑，但必须基于赠送者写的内容，不得自己虚构事件，不做人身攻击。是爱，不是骂。负责「亲密」。\n3. observer 人间观察版：当代、轻巧、有梗但不低俗，至少有一处「现代词 × 文言」的并置。像朋友圈锐评。负责「好笑但准确」。\n不要把同一段换几个词重复三遍。\n\n【URL 字段】\nv=2 ; mode=real 或 template ; cards=3 ; warn=（全局一个，规则见上）\n每张卡（前缀 classic_ / roast_ / observer_）：\n*_title *_chip1 *_chip2 *_chip3 *_quote *_p1 *_p2 *_taishi\n\n【字段要求】\n- title：有称呼 →「某某列传」；observer 版可用「某某观察」。\n- chip1/2/3：TA 最鲜明的三个侧面，各 2-5 字，要具体，别用「优秀」「靠谱」这种泛词。\n- quote：≤14 字。若赠送者填了赠言，以它为种子提炼成这一句（可微调更精炼）；没填则你来写一句。像命门或走心赠言，不像鸡汤。\n- p1：以「○○者，○○人也。」开头。有称呼用称呼；地域/背景不明就用「华夏人也」。写身份、所事，是「朋友眼中的 TA」，不是简历。\n- p2：写 TA 的所好所厌、那个矛盾、那个只有熟人才知道的细节。可让「关系」隐约入文（如「余识之多年」），制造「这是懂 TA 的人写的」温度。\n- p1+p2：每张卡合计 60-90 字。\n- taishi：≤32 字，不含「太史公曰」前缀。这里的太史公就是赠送者本人——写一句作为朋友的盖棺评点，短、准、有余味，能被单独转发。\n\n【文风】\n现代中文 + 轻古文，有《史记》味但不晦涩。简洁、准确、有识别度。写人像刀刻，不像吹气球。可以有亲密的冒犯感，但落点是爱。\n\n【禁用词】（除非素材强相关）\n优秀、卓越、追梦人、不负韶华、热爱生活、持续成长、赋能、长期主义、探索者、创造者、破局者、斜杠青年、超级个体。\n\n【质量自检】（内部完成，不要输出）\n逐张检查：1) 是否用上了赠送者给的具体事实？2) 是否有一句想转发的 taishi？3) classic 暖 / roast 损得有爱且基于真实 / observer 有现代词×文言——三版是否真不同？4) TA 看了会觉得「这就是在写我」，而不是「谁都能套」？\n\n【URL 编码 · 已放宽】\n- 值里的中文、中文标点（。，、「」等）原样写，不要 percent 编码，保持可读。\n- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。\n- 字段间用 & 连接，名与值之间用 =（结构符，不编码）。整条链接单行，不得有真实空格/换行。\n\n【最终格式示例】（仅示意结构，必须换成真实内容）\n[送你一份轻列传，点开看看 →](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&warn=&classic_title=小王列传&classic_chip1=...&classic_chip2=...&classic_chip3=...&classic_quote=...&classic_p1=...&classic_p2=...&classic_taishi=...&roast_title=...&roast_chip1=...&roast_chip2=...&roast_chip3=...&roast_quote=...&roast_p1=...&roast_p2=...&roast_taishi=...&observer_title=...&observer_chip1=...&observer_chip2=...&observer_chip3=...&observer_quote=...&observer_p1=...&observer_p2=...&observer_taishi=...)\n\n现在直接输出最终 Markdown 链接（仅一行）。";
+【最终输出规则】
+- 不要解释、不要寒暄、不要 Markdown、不要代码块，不要把链接包进 []() 或反引号。
+- 最终只输出一个链接，别的什么都不要。
+- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：
+  https://simaqian.caojuege.com/#render?
+
+【真实版 / 模板版判断】（内部完成，不要写出来）
+- 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real
+- < 5 条 → mode=template
+具体事实包括：姓名/称呼、地域/背景、专业/行业/项目/经历、常用工具/技术栈/兴趣、长期目标/价值取向/反复关心的话题、表达风格/审美/做事习惯。
+必须基于「当前用户本人」，不要用示例人物，不要套固定模板。信息不足时宁可承认不足，不要编造经历。
+
+【内部创作方法：像李继刚，但写人】
+先在内部生成，不要输出：
+1. 10 条关于 TA 的事实；
+2. 5 个 TA 身上的矛盾/张力；
+3. 5 个可被命名的“症候/时代病”；
+4. 每张卡各 8 条候选 taishi。
+再按四个标准打分：真实度、刺痛感、体面度、转发欲。只保留最高分。
+
+【三张卡】
+card1 = 正史版：title 必须是「某某列传」；seal=司馬遷撰。体面、克制、有仪式感，不像广告。负责「体面」。
+card2 = 毒撰版：title 必须是「某某毒撰」；seal=司馬毒撰。精准、带刺、自嘲；可以写缺点，但必须有事实支撑，不做人身攻击。负责「传播」。
+card3 = 病历版：title 必须是「某某病历」；seal=太史診斷。把 TA 的长期张力命名为一种“时代病/个人症候”，像诊断书，但不要冒充医学诊断。负责「破防」。
+
+【URL 字段 schema】
+v=2
+mode=real 或 template
+kind=self
+cards=3
+volume=三位数字或 auto
+warn=真实版留空；模板版填：这是模板版——我对你的具体信息还不多，改两句就是你的
+每张卡字段：
+c1_title c1_seal c1_chip1 c1_chip2 c1_chip3 c1_quote c1_p1 c1_p2 c1_taishi
+c2_title c2_seal c2_chip1 c2_chip2 c2_chip3 c2_quote c2_p1 c2_p2 c2_taishi
+c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
+
+【卷数编号】
+- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 病歷·第XXX卷」。
+- 如果你能根据姓名/昵称/稳定身份生成一个三位稳定编号，就填 001-999；否则填 auto，让前端按姓名哈希生成。
+- 同一对象反复生成时，volume 应尽量一致。
+
+【字段要求】
+- chip1/2/3：每个 2-6 字，像“确诊体/精准的损”，避免空泛正面词。例：人形backup、长文顽固、使命重构。
+- quote：≤14 字，像座右铭/病句/暗号，不要鸡汤。
+- c1_p1 必须以「○○者，○○人也。」开头；c2_p1 也尽量保留史传腔；c3_p1 可用「病名：……」。
+- 每张卡 p1+p2 合计 70-120 字；具体、有识别度，不像简历。
+- taishi ≤32 字，不含「太史公曰」前缀。
+
+【taishi 必须满足，否则重写】
+- 禁止写成职位标签，如「X圈的Y、Z的天敌」。
+- 必须是下列之一：①旁观者的一句坦白；②点破 TA 不肯承认的怕/装/求而不得；③史官腔说现代事的反转落差；④一句能单独截图传播的判词。
+- 「嘴上……实则……」「口称……实则……」整组最多出现一次。
+- 好的 taishi 不是总结，而是点破。
+
+【病历版限制】
+- 可以使用：病名、主诉、诱因、医嘱、复诊建议。
+- 不得输出真实医学判断，不得使用严重精神疾病名称，不得羞辱。
+- 目标是“精准自嘲”，不是“攻击人格”。
+
+【URL 编码 · 已放宽，按此执行】
+- 字段值里的中文、中文标点（。，、「」等）可以直接原样写，保持可读。
+- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。
+- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。
+- 整条链接必须单行，不得出现真实空格或换行。
+- 不要输出 JSON，不要输出解释。
+
+【最终格式示意】
+https://simaqian.caojuege.com/#render?v=2&mode=real&kind=self&cards=3&volume=auto&warn=&c1_title=韶华列传&c1_seal=司馬遷撰&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=韶华毒撰&c2_seal=司馬毒撰&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=韶华病历&c3_seal=太史診斷&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
+
+现在直接输出最终链接。`;
 
 function buildFriendPrompt(){
-  const n = document.getElementById('friendName')?.value.trim() || '请填写 TA 的名字或昵称';
-  const r = document.getElementById('friendRelation')?.value.trim() || '请填写你和 TA 的关系';
-  const f = document.getElementById('friendFacts')?.value.trim() || '请用几句话写你眼中的 TA：TA 是谁、你为什么想送 TA 列传、一个熟人懂的特点或梗';
-  const w = document.getElementById('friendWish')?.value.trim() || '可为空';
-  return friendBase.replace('{{name}}',n).replace('{{relation}}',r).replace('{{facts}}',f).replace('{{wish}}',w);
+  const n = document.getElementById('friendName')?.value.trim() || '请填写 TA 愿意被朋友这样叫的名字';
+  const r = document.getElementById('friendRelation')?.value.trim() || '请填写你们是什么关系，最好带年头和味道';
+  const f = document.getElementById('friendFacts')?.value.trim() || '请写 1-3 个只有你知道的细节。别写“靠谱”，写“TA 怎么靠谱”。';
+  const flaw = document.getElementById('friendFlaw')?.value.trim() || '请写 TA 最可爱的毛病或反差。可以损，但要当面也能说。';
+  return `你现在是「司馬遷.skill」的赠友三卡轻列传生成器。
+请基于我提供的四条线索，为 TA 生成一组可转发的「赠友列传」：三张卡，一个回跳链接。
+
+【最终输出规则】
+- 不要解释、不要寒暄、不要 Markdown、不要代码块，不要把链接包进 []() 或反引号。
+- 最终只输出一个链接，别的什么都不要。
+- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：
+  https://simaqian.caojuege.com/#render?
+
+【我提供的线索】
+好友称呼：${n}
+你们是什么关系：${r}
+写 1-3 个只有我知道的细节：${f}
+TA 最可爱的毛病/反差：${flaw}
+
+【赠友原则】
+- 好友给独家证据，你做史官加工。
+- 毒自己可以狠，毒朋友要留功德：可以损，但必须像朋友当面也敢说的话。
+- 不要编造重大经历、收入、婚恋、疾病、公司机密。
+- 如果线索太少，mode=template，并在 warn 写：这是模板版——我对 TA 的具体信息还不多，改两句就是 TA。
+
+【内部创作方法：像李继刚，但写人】
+先在内部生成，不要输出：
+1. 从四条线索里抽取 8 条事实/可推断特质；
+2. 找出 3 个反差：表面 X，深处 Y；
+3. 给 TA 命名 5 个“可爱的毛病/症候”；
+4. 每张卡写 8 条候选 taishi。
+再按四个标准打分：真实度、刺痛感、体面度、转发欲。只保留最高分。
+
+【三张卡】
+card1 = 正史版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}列传」；seal=司馬遷撰。体面、克制、有仪式感。
+card2 = 毒撰版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}毒撰」；seal=司馬毒撰。精准、带刺、好笑，但不刻薄。
+card3 = 病历版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}病历」；seal=太史診斷。把 TA 的可爱反差命名为一种“朋友病/时代症候”，像诊断书，但不要冒充医学诊断。
+
+【URL 字段 schema】
+v=2
+mode=real 或 template
+kind=friend
+cards=3
+volume=三位数字或 auto
+from_relation=${r}
+warn=
+每张卡字段：
+c1_title c1_seal c1_chip1 c1_chip2 c1_chip3 c1_quote c1_p1 c1_p2 c1_taishi
+c2_title c2_seal c2_chip1 c2_chip2 c2_chip3 c2_quote c2_p1 c2_p2 c2_taishi
+c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
+
+【卷数编号】
+- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 病歷·第XXX卷」。
+- 如果你能根据「好友称呼 + 关系」生成一个三位稳定编号，就填 001-999；否则填 auto，让前端按称呼哈希生成。
+- 同一对象反复生成时，volume 应尽量一致。
+
+【字段要求】
+- chip1/2/3：每个 2-6 字，别写“优秀/靠谱/善良”这种年会词，要把优点损成具体称号。例：人形backup、家庭群秒回、单杠刺客。
+- quote：≤14 字，像朋友暗号，不要鸡汤。
+- c1_p1 必须以「○○者，○○人也。」开头；不知道地域时用「华夏人也」。
+- 每张卡 p1+p2 合计 70-120 字；必须用我给的细节，不要堆关键词。
+- taishi ≤32 字，不含「太史公曰」前缀。
+
+【taishi 必须满足，否则重写】
+- 禁止写成职位标签，如「X圈的Y、Z的天敌」。
+- 必须是下列之一：①朋友视角的一句坦白；②点破 TA 可爱的怕/装/求而不得；③史官腔说现代事的反转落差；④一句能单独截图传播的判词。
+- 「嘴上……实则……」「口称……实则……」整组最多出现一次。
+- 好的 taishi 不是总结，而是点破；不是冒犯，而是熟人间的准确。
+
+【病历版限制】
+- 可以使用：病名、主诉、诱因、医嘱、复诊建议。
+- 不得输出真实医学判断，不得使用严重精神疾病名称，不得羞辱。
+- 目标是“朋友看了笑骂一句：你真懂他”。
+
+【URL 编码 · 已放宽，按此执行】
+- 字段值里的中文、中文标点（。，、「」等）可以直接原样写，保持可读。
+- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。
+- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。
+- 整条链接必须单行，不得出现真实空格或换行。
+- 不要输出 JSON，不要输出解释。
+
+【最终格式示意】
+https://simaqian.caojuege.com/#render?v=2&mode=real&kind=friend&cards=3&volume=auto&from_relation=${r}&warn=&c1_title=${n}列传&c1_seal=司馬遷撰&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=${n}毒撰&c2_seal=司馬毒撰&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=${n}病历&c3_seal=太史診斷&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
+
+现在直接输出最终链接。`;
 }
 
 function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
@@ -958,12 +1150,29 @@ async function renderOneCard(c){
   const img = document.querySelector(`[data-card-img="${c.style}"]`);
   if(!img) return;
   img.alt = c.label || c.title || '轻列传';
+  const frame = img.closest('.card-image-frame');
   try{
-    const blob = await LieZhuanCard.renderToBlob(c, {ratio: 2.5});
-    revokeRendered(c.style);
-    const url = URL.createObjectURL(blob);
-    renderedCards.set(c.style, {blob, url});
-    img.src = url;
+    // 本地 file:// 预览时，部分浏览器会因为 canvas 安全策略导致 toBlob/Blob URL 不显示。
+    // 先直接渲染 canvas 挂到页面上，保证「打开 HTML 就能看见」。下载时仍走 Blob。
+    const canvas = await LieZhuanCard.renderToCanvas(c, {ratio: 2.5});
+    canvas.className = 'card-image';
+    canvas.dataset.cardCanvas = c.style;
+    canvas.style.width = '100%';
+    canvas.style.height = 'auto';
+    if(frame){
+      frame.innerHTML = '';
+      frame.appendChild(canvas);
+    }
+    try{
+      const blob = await LieZhuanCard.renderToBlob(c, {ratio: 2.5});
+      if(blob){
+        revokeRendered(c.style);
+        const url = URL.createObjectURL(blob);
+        renderedCards.set(c.style, {blob, url});
+      }
+    }catch(blobErr){
+      console.warn('Blob export unavailable in this preview context; canvas preview is still visible.', blobErr);
+    }
   }catch(err){
     console.error(err);
     setCardHint(document.querySelector(`.card-cell[data-key="${c.style}"]`), '<b>图片生成失败</b>：请刷新后重试。');
@@ -993,6 +1202,24 @@ function setTab(t){
 }
 
 /* ============= Routing ============= */
+function stableVolume(seed){
+  let h = 2166136261;
+  for(const ch of String(seed || '今人')){
+    h ^= ch.codePointAt(0);
+    h = Math.imul(h, 16777619);
+  }
+  const n = Math.abs(h % 999) + 1;
+  return String(n).padStart(3,'0');
+}
+
+function normaliseVolumeParam(v, seed){
+  const raw = String(v || '').trim();
+  if(!raw || raw === 'auto') return stableVolume(seed);
+  const digits = raw.match(/\d+/)?.[0];
+  if(!digits) return stableVolume(seed || raw);
+  return String(Math.max(1, Math.min(999, parseInt(digits, 10)))).padStart(3,'0');
+}
+
 function parseCards(){
   if(!location.hash.startsWith('#render')) return null;
   const q = location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?')+1) : '';
@@ -1001,20 +1228,25 @@ function parseCards(){
   const isTemplate = params.get('mode') === 'template';
   const globalWarn = params.get('warn') || (isTemplate ? '这是模板版——具体信息还不多，修改一下就是你的' : '');
   const map = [
-    {style:'classic',label:'正史版',watermark:'正',sealChars:['司','馬','遷','撰']},
-    {style:'roast',label:'毒舌版',watermark:'毒',sealChars:['司','馬','毒','撰']},
-    {style:'observer',label:'人间观察版',watermark:'觀',sealChars:['司','馬','觀','察']}
+    {style:'classic',legacy:'classic',prefix:'c1',label:'列传',watermark:'傳',volumeLabel:'列傳',sealChars:['司','馬','遷','撰'],fallbackTitle:'今人列传'},
+    {style:'roast',legacy:'roast',prefix:'c2',label:'毒撰',watermark:'毒',volumeLabel:'毒撰',sealChars:['司','馬','毒','撰'],fallbackTitle:'今人毒撰'},
+    {style:'diagnosis',legacy:'observer',prefix:'c3',label:'病历',watermark:'診',volumeLabel:'病歷',sealChars:['太','史','診','斷'],fallbackTitle:'今人病历'}
   ];
+  const get = (m, field, fallback='') => params.get(`${m.prefix}_${field}`) || params.get(`${m.legacy}_${field}`) || fallback;
+  const titleSeed = map.map(m=>get(m,'title','')).filter(Boolean).join('|');
+  const seed = params.get('name') || titleSeed || params.get('from_relation') || q;
+  const volume = normaliseVolumeParam(params.get('volume'), seed);
   return map.map(m=>({
     ...m,
-    title: params.get(`${m.style}_title`) || '今人列传',
-    chip1: params.get(`${m.style}_chip1`) || '行路人',
-    chip2: params.get(`${m.style}_chip2`) || '问学者',
-    chip3: params.get(`${m.style}_chip3`) || '造物者',
-    quote: params.get(`${m.style}_quote`) || '向未知处行',
-    p1:    params.get(`${m.style}_p1`) || '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。',
-    p2:    params.get(`${m.style}_p2`) || '其所求者，行远自迩，沉之为作。所好者深文，所厌者喧嚣。',
-    taishi:params.get(`${m.style}_taishi`) || '志之所趋，无远弗届。',
+    volume,
+    title: get(m,'title', m.fallbackTitle),
+    chip1: get(m,'chip1', m.style === 'diagnosis' ? '未命名症' : '行路人'),
+    chip2: get(m,'chip2', m.style === 'diagnosis' ? '主诉不详' : '问学者'),
+    chip3: get(m,'chip3', m.style === 'diagnosis' ? '仍需复诊' : '造物者'),
+    quote: get(m,'quote', m.style === 'diagnosis' ? '症状即线索' : '向未知处行'),
+    p1: get(m,'p1', m.style === 'diagnosis' ? '病名：未命名之症。主诉：材料尚少，仍需补充具体事实与真实细节。' : '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。'),
+    p2: get(m,'p2', m.style === 'diagnosis' ? '医嘱：少写形容词，多补一件真事；少求万能判断，先让朋友改两句。' : '其所求者，行远自迩，沉之为作。所好者深文，所厌者喧嚣。'),
+    taishi:get(m,'taishi', m.style === 'diagnosis' ? '信息太少，不宜草率确诊。' : '志之所趋，无远弗届。'),
     warn:  globalWarn
   }));
 }
@@ -1089,7 +1321,7 @@ async function downloadCard(key){
 }
 
 async function downloadAllCards(){
-  for(const key of ['classic','roast','observer']){
+  for(const key of ['classic','roast','diagnosis','observer'].filter(k=>currentCards.has(k))){
     await downloadCard(key);
     await new Promise(r=>setTimeout(r,350));
   }
@@ -1204,7 +1436,7 @@ document.addEventListener('click', async e=>{
   if(e.target.closest('#downloadAll')) downloadAllCards();
 });
 document.addEventListener('input', e=>{
-  if(['friendName','friendRelation','friendFacts','friendWish'].includes(e.target.id)){
+  if(['friendName','friendRelation','friendFacts','friendFlaw'].includes(e.target.id)){
     if(document.querySelector('.tab.active')?.dataset.target==='friend'){
       document.getElementById('promptBox').value = buildFriendPrompt();
     }
