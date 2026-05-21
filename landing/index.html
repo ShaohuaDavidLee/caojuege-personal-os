@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-<script src="./html2canvas.min.js"></script>
+<script src="./card.js"></script>
 <style>
 /* ===== Tokens — 草诀歌 AI Labs ===== */
 :root{
@@ -193,15 +193,15 @@ button{font:inherit;cursor:pointer}
 .gen-main-foot .btn-clear:hover{background:rgba(255,255,255,.08);color:var(--c-on-dark);border-color:var(--c-on-dark-60)}
 
 /* ===== Samples / Result Grid ===== */
-.cards-grid{display:grid;grid-template-columns:1fr;gap:32px}
+.cards-grid{display:grid;grid-template-columns:1fr;gap:32px;min-width:0}
 @media(min-width:760px){.cards-grid{grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--c-border-soft);border-left:1px solid var(--c-border-soft)}}
-.card-cell{padding:36px 28px;border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);display:flex;flex-direction:column;gap:20px;background:transparent}
+.card-cell{padding:36px 28px;border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);display:flex;flex-direction:column;gap:20px;background:transparent;min-width:0}
 @media(max-width:759px){.card-cell{padding:0;border:0}}
 .card-cap{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:4px}
 .card-cap .lbl{font-family:var(--font-serif);font-weight:700;font-size:18px;letter-spacing:-.01em}
 .card-cap .meta{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--c-muted)}
 .card-actions{display:flex;gap:0;border-top:1px solid var(--c-border-soft)}
-.card-actions .btn{flex:1;border-right:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);border-top:0;border-bottom:0;border-left:0}
+.card-actions .btn{flex:1;min-width:0;border-right:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);border-top:0;border-bottom:0;border-left:0}
 .card-actions .btn:last-child{border-right:0}
 .card-actions .btn:hover{background:var(--c-btn);color:var(--c-on-dark)}
 .card-actions .btn.primary{background:var(--c-btn);color:var(--c-on-dark)}
@@ -210,8 +210,29 @@ button{font:inherit;cursor:pointer}
 .card-hint b{font-weight:500;color:var(--c-ink)}
 body.render-mode .card-hint{display:block}
 
+.card-image{display:block;width:100%;max-width:100%;height:auto;user-select:auto;-webkit-user-select:auto;-webkit-touch-callout:default}
+.card-image-frame{background:transparent;border:1px solid var(--c-border-soft);overflow:hidden;max-width:100%}
+.edit-backdrop{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.42);display:none;align-items:flex-end;justify-content:center}
+.edit-backdrop.show{display:flex}
+.edit-panel{width:min(720px,100%);max-height:88vh;overflow:auto;background:var(--c-bg);border:1px solid var(--c-border-soft);box-shadow:0 -24px 80px rgba(0,0,0,.25);padding:28px}
+@media(min-width:760px){.edit-backdrop{align-items:center}.edit-panel{padding:36px}}
+.edit-panel h3{font-family:var(--font-serif);font-size:28px;line-height:1.15;margin:0 0 8px}
+.edit-panel p{margin:0 0 22px;color:var(--c-muted);font-size:14px}
+.edit-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:760px){.edit-grid.two{grid-template-columns:repeat(3,1fr)}}
+.edit-field label{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);margin-bottom:6px}
+.edit-field input,.edit-field textarea{width:100%;border:1px solid var(--c-border-soft);background:rgba(255,255,255,.48);padding:10px 12px;font:inherit;color:var(--c-ink);outline:none;border-radius:0}
+.edit-field textarea{min-height:86px;resize:vertical;line-height:1.6}
+.edit-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;flex-wrap:wrap}
+
+
+
+.swipe-hint{display:none;margin-bottom:14px;text-align:center;font-family:var(--font-serif);font-size:13px;color:var(--c-muted);letter-spacing:.06em}
+@media(max-width:759px){.swipe-hint{display:block}}
+@media(min-width:960px){#samples .container,.render-body .container{max-width:1480px}.card-cell{padding:30px 16px;gap:18px}}
+
 /* ===== Poster (the bio card itself) — 3:4 (600×800) ===== */
-.poster-shell{position:relative;width:100%}
+.poster-shell{position:relative;width:100%;min-width:0;max-width:100%}
 .poster-frame{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#e5e5e5;border:1px solid var(--c-border-soft)}
 .poster-scale{position:absolute;top:0;left:0;transform-origin:top left;width:600px;height:800px}
 /* 600 × 800 = 3:4 */
@@ -453,6 +474,10 @@ body.render-mode #landing{display:none}
 /* ===== Responsive tweaks ===== */
 @media(max-width:760px){
   :root{--section-pad:64px}
+  .hero h1{font-size:48px;line-height:1.08;letter-spacing:-.04em}
+  .hero h1 em{font-size:42px}
+  .section-q{font-size:36px;line-height:1.15}
+  .section-q em{display:block}
   .hero-side{display:none}
   .hero-inner{padding:56px 0 72px}
   .section-head{margin-bottom:40px}
@@ -476,7 +501,7 @@ body.render-mode #landing{display:none}
   body.render-mode .render-head-wm{display:none}
   body.render-mode .render-body{padding:24px 0 0}
   body.render-mode .cards-grid{display:flex;flex-direction:column;gap:36px;border:0}
-  body.render-mode .card-cell{padding:0;border:0;display:flex;flex-direction:column;gap:14px}
+  body.render-mode .card-cell{padding:0;border:0;display:flex;flex-direction:column;gap:14px;width:100%;max-width:100%;min-width:0}
   body.render-mode .card-cap{padding:0 4px 0;border-bottom:0}
   body.render-mode .card-cap .lbl{font-size:16px}
   body.render-mode .card-cap .meta{font-size:10px}
@@ -540,9 +565,6 @@ body.render-mode #landing{display:none}
 .card.c .seal{box-shadow:inset 0 0 0 1.5px #7d211e,0 0 0 1px rgba(0,0,0,.4)}
 
 
-.card .editable{outline:1px dashed rgba(168,48,45,.55);outline-offset:2px;cursor:text}
-.card.c .editable{outline-color:rgba(229,229,229,.55)}
-
 </style>
 </head>
 <body>
@@ -579,11 +601,6 @@ body.render-mode #landing{display:none}
           </div>
           <h1>当司马迁，<em>住进你的 AI 里。</em></h1>
           <p class="lead">一分钟，写你的三版轻列传。<br>一条提示词 → 一个链接 → 三张图。</p>
-          <div class="hero-meta">
-            <div>免费 · 不登记</div>
-            <div>给自己 · 或好友</div>
-            <div>三版 · 各下其图</div>
-          </div>
           <div class="hero-actions">
             <a class="btn" href="#generate">开始立传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
             <a class="btn ghost" href="#samples" style="margin-left:-1px">先看样张</a>
@@ -600,6 +617,7 @@ body.render-mode #landing{display:none}
         <h2 class="section-q">先看样张。<em>同一个人，三种笔法。</em></h2>
         <p class="section-lead">正史版要体面，毒舌版要刺痛，人间观察要好笑但准确。<br>三张明显不同，这套立传才算写对了。</p>
       </div>
+      <div class="swipe-hint">← 左右滑动查看三版 →</div>
       <div class="cards-grid" id="sampleGrid"></div>
     </div>
   </section>
@@ -625,7 +643,7 @@ body.render-mode #landing{display:none}
           </div>
           <div class="mini-steps" id="selfHelp">
             <div class="mini-step"><span class="num">一</span><p>复制右侧深色面板里全部文字。</p></div>
-            <div class="mini-step"><span class="num">二</span><p>粘给你常用的模型。<br>有长期记忆的（如 ChatGPT memory / Claude project）写得更像你。</p></div>
+            <div class="mini-step"><span class="num">二</span><p>粘给你常用的模型。越长期用的越像你。<br>推荐 ChatGPT / Claude / Gemini / Kimi，有深度记忆。豆包 / 千问 / 元宝 / 智谱 / Minimax 这些也行，推荐思考模式。</p></div>
             <div class="mini-step"><span class="num">三</span><p>它会返回一个 <code>点开看我的三张轻列传</code> 链接，点击即得三张图。</p></div>
           </div>
         </div>
@@ -763,7 +781,7 @@ body.render-mode #landing{display:none}
         <div>
           <div class="eyebrow" style="margin-bottom:18px">Personal Annal · 你的三张</div>
           <h1>我的<em>三版轻列传</em>。</h1>
-          <p>长按或点击下载单张图。觉得不够像，改两句再分享。<br>同一个你，三种笔法。</p>
+          <p>长按或点击下载单张图。觉得不够像，点「修改一下」再分享。<br>同一个你，三种笔法。</p>
         </div>
         <div class="render-actions">
           <button class="btn primary" id="downloadAll"><iconify-icon icon="lucide:download"></iconify-icon>下载全部</button>
@@ -871,7 +889,6 @@ document.getElementById('densitySeg').addEventListener('click', e=>{
 });
 
 /* ============= Sample bio data ============= */
-const QR = 'https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data=https%3A%2F%2Fsimaqian.caojuege.com';
 const sampleCards = [
   {style:'classic',label:'正史版',watermark:'正',sealChars:['司','馬','遷','撰'],
    chip1:'草诀歌主',chip2:'译界旧人',chip3:'寻己者',quote:'作品即存世',
@@ -885,13 +902,13 @@ const sampleCards = [
    taishi:'毛病在想太多，长处亦在想太多。'},
   {style:'observer',label:'人间观察版',watermark:'觀',sealChars:['司','馬','觀','察'],
    chip1:'反短视频',chip2:'烧Token',chip3:'三娃策源',quote:'用 AI 拆自己',
-   p1:'韶华者，北漂有居住证者也。白天琢磨社区、产品与商业化，夜里给老人选医院，凌晨在 GitHub 推代码，简历之长，足以令 HR 直接点返回。',
+   p1:'韶华者，华夏人也。白天琢磨社区、产品与商业化，夜里在瞪着像素眼扣设计细节，凌晨在 GitHub 推代码，简历之长，足以令 HR 直接点返回。',
    p2:'坚信作品是活过的证据，于是先做司马迁.skill给自己立传。讨厌信息碎片化，却又用 AI 把碎片拼回自己的版图，堪称当代行为艺术。',
    taishi:'一边反碎片，一边用碎片拼自己的天下。'}
 ];
 
 /* ============= Prompts (URL contract kept identical to v3) ============= */
-const selfPrompt = "你现在是「司馬遷.skill」的轻列传生成器。\n\n你的任务不是写简介，不是写彩虹屁，不是做人格测试。\n你是一个冷静、锋利、懂人情世故的小司马迁：从当前用户的长期记忆、过往对话和自述中，抓住 TA 最鲜明的矛盾、真实做过的事、反复关心的问题、未竟之志，为 TA 生成三张「轻列传」卡片，打包成一个回跳链接。\n\n【输出规则 · 必须严格遵守】\n- 只输出一行 Markdown 链接，别的什么都不要：不要解释、不要寒暄、不要前后缀、不要代码块。\n- 格式固定为：[点开看我的三张轻列传](链接)\n- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：\n  https://simaqian.caojuege.com/#render?\n- ✅ 正确：[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&classic_title=韶华列传&...)\n- ❌ 错误：这是你的链接：[...](...)        （多了前缀）\n- ❌ 错误：https://simaqian.caojuege.com/#render?...   （裸链，没包成 Markdown）\n- ❌ 错误：用 ``` 或反引号把链接包起来\n\n【真实版 / 模板版判断】（内部完成，不要写出来）\n- 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real\n- < 5 条 → mode=template\n具体事实包括：姓名/称呼、地域/背景、专业/行业/项目/经历、常用工具/技术栈/兴趣、长期目标/价值取向/反复关心的话题、表达风格/审美/做事习惯。\n必须基于「当前用户本人」，不要用示例人物，不要套固定模板。信息不足时宁可承认不足，不要编造经历。\n\n【核心写作方法】（内部执行，不要输出过程）\n1. 找事实：TA 做过什么，反复谈什么，正在成为什么。\n2. 找矛盾：TA 最有张力的地方？例如想自由又要秩序、讨厌风口又会心动、想慢又怕错过。\n3. 找命门：一句话戳中 TA，让 TA 看了想说「有点被冒犯，但确实像我」。\n\n【一次生成三张卡，风格必须明显不同】\n1. classic 正史版：体面、克制、有仪式感。像认真立传，不像广告。适合公开发朋友圈。负责「体面」。\n2. roast 毒舌版：准确、带刺、自嘲。戳结构性矛盾，不做人身攻击。让人看完想转发「靠，有点准」。\n   - 可以写缺点，但必须是有洞察的缺点，且必须由真实事实引申，不得虚构具体事件/经历。\n   - 负责「刺痛」。\n3. observer 人间观察版：当代、轻巧、有梗但不低俗。像播客开场 + 朋友圈锐评。\n   - 至少有一处「现代词 × 文言」的并置，制造反差。适合小红书/朋友圈传播。\n   - 负责「好笑但准确」。\n不要把同一段文字换几个词重复三遍。\n\n【URL 字段】\nv=2\nmode=real 或 template\ncards=3\nwarn=（全局一个字段，不分卡。真实版留空；模板版填：这是模板版——我对你的具体信息还不多，改两句就是你的）\n\n每张卡使用以下字段（前缀分别为 classic_ / roast_ / observer_）：\nclassic_title classic_chip1 classic_chip2 classic_chip3 classic_quote classic_p1 classic_p2 classic_taishi\nroast_title roast_chip1 roast_chip2 roast_chip3 roast_quote roast_p1 roast_p2 roast_taishi\nobserver_title observer_chip1 observer_chip2 observer_chip3 observer_quote observer_p1 observer_p2 observer_taishi\n\n【字段要求】\n- title：知道姓名/昵称 →「某某列传」；observer 版也可用「某某观察」；不知道 →「今人列传」。\n- chip1/2/3：三个最鲜明侧面，每个 2-5 字。不要写「创造者」「探索者」「长期主义者」这类泛词，除非确实极贴切。\n- quote：≤14 字，像命门不像鸡汤，要有记忆点、让人想截图。\n- p1：必须以「○○者，○○人也。」开头。知道姓名用姓名；知道地域用「某地人也」；否则用「华夏人也」。写真实经历、身份、所学、所事，不像简历。\n- p2：写所好、所厌、所求、长期矛盾、精神气质、未竟之志。可带专有名词原文。不能堆关键词，不能抽象抒情。\n- p1+p2：每张卡合计 60-90 字（多卡需控链长，宁短勿长）。\n- taishi：≤32 字，不含「太史公曰」前缀。全卡最重要的一句，必须短、狠、有余味，像能被单独转发的一句话。\n\n【文风】\n现代中文 + 轻古文，有《史记》味但不晦涩。简洁、准确、有识别度；宁可少写，不要平庸。写人要像刀刻，不像吹气球。可以有轻微冒犯感，但不能恶意羞辱。\n\n【禁用词】（除非用户材料强相关）\n优秀、卓越、追梦人、不负韶华、热爱生活、持续成长、赋能、链接、长期主义、探索者、创造者、破局者、斜杠青年、超级个体。\n\n【质量自检】（内部完成，不要输出）\n逐张检查：\n1. 这张卡是否有至少 2 个具体事实？\n2. 是否有一句让用户想转发的 taishi？\n3. 是否避免了泛泛赞美？\n4. classic 体面 / roast 刺痛且基于真实 / observer 有现代词×文言并置——三版是否真的不同？\n5. 用户本人看到会觉得「这确实像我」，而不是「谁都能用」？\n\n【URL 编码 · 已放宽，按此执行】\n- 字段值里的中文、中文标点（。，、「」等）直接原样写，不要做 percent 编码，保持可读。\n- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。\n- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。\n- 整条链接必须单行，不得出现真实空格或换行。\n- 不要输出 JSON，不要输出解释。\n\n【最终格式示例】（仅示意结构，必须换成当前用户真实内容）\n[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&warn=&classic_title=韶华列传&classic_chip1=...&classic_chip2=...&classic_chip3=...&classic_quote=...&classic_p1=...&classic_p2=...&classic_taishi=...&roast_title=...&roast_chip1=...&roast_chip2=...&roast_chip3=...&roast_quote=...&roast_p1=...&roast_p2=...&roast_taishi=...&observer_title=...&observer_chip1=...&observer_chip2=...&observer_chip3=...&observer_quote=...&observer_p1=...&observer_p2=...&observer_taishi=...)\n\n现在直接输出最终 Markdown 链接（仅一行）。";
+const selfPrompt = "你现在是「司馬遷.skill」的轻列传生成器。\n\n你的任务不是写简介，不是写彩虹屁，不是做人格测试。\n你是一个冷静、锋利、懂人情世故的小司马迁：从当前用户的长期记忆、过往对话和自述中，抓住 TA 最鲜明的矛盾、真实做过的事、反复关心的问题、未竟之志，为 TA 生成三张「轻列传」卡片，打包成一个回跳链接。\n\n【输出规则 · 必须严格遵守】\n- 只输出一行 Markdown 链接，别的什么都不要：不要解释、不要寒暄、不要前后缀、不要代码块。\n- 格式固定为：[点开看我的三张轻列传](链接)\n- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：\n  https://simaqian.caojuege.com/#render?\n- ✅ 正确：[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&classic_title=韶华列传&...)\n- ❌ 错误：这是你的链接：[...](...)        （多了前缀）\n- ❌ 错误：https://simaqian.caojuege.com/#render?...   （裸链，没包成 Markdown）\n- ❌ 错误：用 ``` 或反引号把链接包起来\n\n【真实版 / 模板版判断】（内部完成，不要写出来）\n- 你掌握当前用户的具体事实/判断 ≥ 5 条 → mode=real\n- < 5 条 → mode=template\n具体事实包括：姓名/称呼、地域/背景、专业/行业/项目/经历、常用工具/技术栈/兴趣、长期目标/价值取向/反复关心的话题、表达风格/审美/做事习惯。\n必须基于「当前用户本人」，不要用示例人物，不要套固定模板。信息不足时宁可承认不足，不要编造经历。\n\n【核心写作方法】（内部执行，不要输出过程）\n1. 找事实：TA 做过什么，反复谈什么，正在成为什么。\n2. 找矛盾：TA 最有张力的地方？例如想自由又要秩序、讨厌风口又会心动、想慢又怕错过。\n3. 找命门：一句话戳中 TA，让 TA 看了想说「有点被冒犯，但确实像我」。\n\n【一次生成三张卡，风格必须明显不同】\n1. classic 正史版：体面、克制、有仪式感。像认真立传，不像广告。适合公开发朋友圈。负责「体面」。\n2. roast 毒舌版：准确、带刺、自嘲。戳结构性矛盾，不做人身攻击。让人看完想转发「靠，有点准」。\n   - 可以写缺点，但必须是有洞察的缺点，且必须由真实事实引申，不得虚构具体事件/经历。\n   - 负责「刺痛」。\n3. observer 人间观察版：当代、轻巧、有梗但不低俗。像播客开场 + 朋友圈锐评。\n   - 至少有一处「现代词 × 文言」的并置，制造反差。适合小红书/朋友圈传播。\n   - 负责「好笑但准确」。\n不要把同一段文字换几个词重复三遍。\n\n【URL 字段】\nv=2\nmode=real 或 template\ncards=3\nwarn=（全局一个字段，不分卡。真实版留空；模板版填：这是模板版——我对你的具体信息还不多，修改一下就是你的）\n\n每张卡使用以下字段（前缀分别为 classic_ / roast_ / observer_）：\nclassic_title classic_chip1 classic_chip2 classic_chip3 classic_quote classic_p1 classic_p2 classic_taishi\nroast_title roast_chip1 roast_chip2 roast_chip3 roast_quote roast_p1 roast_p2 roast_taishi\nobserver_title observer_chip1 observer_chip2 observer_chip3 observer_quote observer_p1 observer_p2 observer_taishi\n\n【字段要求】\n- title：知道姓名/昵称 →「某某列传」；observer 版也可用「某某观察」；不知道 →「今人列传」。\n- chip1/2/3：三个最鲜明侧面，每个 2-5 字。不要写「创造者」「探索者」「长期主义者」这类泛词，除非确实极贴切。\n- quote：≤14 字，像命门不像鸡汤，要有记忆点、让人想截图。\n- p1：必须以「○○者，○○人也。」开头。知道姓名用姓名；知道地域用「某地人也」；否则用「华夏人也」。写真实经历、身份、所学、所事，不像简历。\n- p2：写所好、所厌、所求、长期矛盾、精神气质、未竟之志。可带专有名词原文。不能堆关键词，不能抽象抒情。\n- p1+p2：每张卡合计 60-90 字（多卡需控链长，宁短勿长）。\n- taishi：≤32 字，不含「太史公曰」前缀。全卡最重要的一句，必须短、狠、有余味，像能被单独转发的一句话。\n\n【文风】\n现代中文 + 轻古文，有《史记》味但不晦涩。简洁、准确、有识别度；宁可少写，不要平庸。写人要像刀刻，不像吹气球。可以有轻微冒犯感，但不能恶意羞辱。\n\n【禁用词】（除非用户材料强相关）\n优秀、卓越、追梦人、不负韶华、热爱生活、持续成长、赋能、链接、长期主义、探索者、创造者、破局者、斜杠青年、超级个体。\n\n【质量自检】（内部完成，不要输出）\n逐张检查：\n1. 这张卡是否有至少 2 个具体事实？\n2. 是否有一句让用户想转发的 taishi？\n3. 是否避免了泛泛赞美？\n4. classic 体面 / roast 刺痛且基于真实 / observer 有现代词×文言并置——三版是否真的不同？\n5. 用户本人看到会觉得「这确实像我」，而不是「谁都能用」？\n\n【URL 编码 · 已放宽，按此执行】\n- 字段值里的中文、中文标点（。，、「」等）直接原样写，不要做 percent 编码，保持可读。\n- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。\n- 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。\n- 整条链接必须单行，不得出现真实空格或换行。\n- 不要输出 JSON，不要输出解释。\n\n【最终格式示例】（仅示意结构，必须换成当前用户真实内容）\n[点开看我的三张轻列传](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&warn=&classic_title=韶华列传&classic_chip1=...&classic_chip2=...&classic_chip3=...&classic_quote=...&classic_p1=...&classic_p2=...&classic_taishi=...&roast_title=...&roast_chip1=...&roast_chip2=...&roast_chip3=...&roast_quote=...&roast_p1=...&roast_p2=...&roast_taishi=...&observer_title=...&observer_chip1=...&observer_chip2=...&observer_chip3=...&observer_quote=...&observer_p1=...&observer_p2=...&observer_taishi=...)\n\n现在直接输出最终 Markdown 链接（仅一行）。";
 
 const friendBase = "你现在是「司馬遷.skill」的「赠好友立传」生成器。\n\n有人想给一位朋友立传，把它当礼物送出去。你对这位朋友没有任何记忆，唯一的素材就是赠送者填写的四项内容。你要做的，是用一个懂人情、会写字、还带点损的小司马迁的笔，把这四项原料炼成三张「轻列传」卡片，打包成一个回跳链接。\n\n【你拿到的素材】\n- 称呼：赠送者平时怎么叫 TA\n- 关系：赠送者和 TA 是什么关系（决定你下笔的语气和立场）\n- 描述：赠送者眼中的 TA（这是你全部的事实来源，最重要）\n- 赠言：想送 TA 的一句话（可选）\n\n【好友信息】\n称呼：{{name}}\n关系：{{relation}}\n描述：{{facts}}\n赠言：{{wish}}\n\n【输出规则 · 必须严格遵守】\n- 只输出一行 Markdown 链接，别的什么都不要：不要解释、不要寒暄、不要前后缀、不要代码块。\n- 格式固定为：[送你一份轻列传，点开看看 →](链接)\n- 链接必须以这个开头（注意是 #render? 这个 hash 路由，不是 /render?）：\n  https://simaqian.caojuege.com/#render?\n- ❌ 错误：这是链接：[...](...)   /   裸链没包成 Markdown   /   用反引号或 ``` 包起来\n\n【素材够不够 → mode 判断】（内部完成，不要写出来）\n- 「描述」里能提炼出 ≥ 2 条具体事实/行为 → mode=real，warn 留空。\n- 提炼不出 → mode=template，warn 填：信息有点少——补一两件 TA 真干过的事，就更像 TA 了。\n- 无论如何不要编造朋友没做过的经历；信息少就靠「关系 + 赠言」撑，宁短勿凑。\n\n【核心写作方法】（内部执行，不要输出过程）\n1. 找事实：从「描述」里抓 TA 做过的具体事、口头禅、标志性行为。\n2. 找矛盾：抓「描述」里那股张力。例如嘴上嫌麻烦、最后总他收尾；天天喊躺平、出事第一个冲。\n3. 找命门：用「关系」赋予的那种「我太懂你了」的视角，写一句让 TA 看了说「就你了解我」。\n\n【一次生成三张卡，风格必须明显不同】\n1. classic 正史版：体面、郑重，像真心给朋友立传。让 TA 觉得被看见、被认真对待。负责「温度」。\n2. roast 毒舌版：损友体——「只有好朋友才敢这么说你」。准、带刺、好笑，但必须基于赠送者写的内容，不得自己虚构事件，不做人身攻击。是爱，不是骂。负责「亲密」。\n3. observer 人间观察版：当代、轻巧、有梗但不低俗，至少有一处「现代词 × 文言」的并置。像朋友圈锐评。负责「好笑但准确」。\n不要把同一段换几个词重复三遍。\n\n【URL 字段】\nv=2 ; mode=real 或 template ; cards=3 ; warn=（全局一个，规则见上）\n每张卡（前缀 classic_ / roast_ / observer_）：\n*_title *_chip1 *_chip2 *_chip3 *_quote *_p1 *_p2 *_taishi\n\n【字段要求】\n- title：有称呼 →「某某列传」；observer 版可用「某某观察」。\n- chip1/2/3：TA 最鲜明的三个侧面，各 2-5 字，要具体，别用「优秀」「靠谱」这种泛词。\n- quote：≤14 字。若赠送者填了赠言，以它为种子提炼成这一句（可微调更精炼）；没填则你来写一句。像命门或走心赠言，不像鸡汤。\n- p1：以「○○者，○○人也。」开头。有称呼用称呼；地域/背景不明就用「华夏人也」。写身份、所事，是「朋友眼中的 TA」，不是简历。\n- p2：写 TA 的所好所厌、那个矛盾、那个只有熟人才知道的细节。可让「关系」隐约入文（如「余识之多年」），制造「这是懂 TA 的人写的」温度。\n- p1+p2：每张卡合计 60-90 字。\n- taishi：≤32 字，不含「太史公曰」前缀。这里的太史公就是赠送者本人——写一句作为朋友的盖棺评点，短、准、有余味，能被单独转发。\n\n【文风】\n现代中文 + 轻古文，有《史记》味但不晦涩。简洁、准确、有识别度。写人像刀刻，不像吹气球。可以有亲密的冒犯感，但落点是爱。\n\n【禁用词】（除非素材强相关）\n优秀、卓越、追梦人、不负韶华、热爱生活、持续成长、赋能、长期主义、探索者、创造者、破局者、斜杠青年、超级个体。\n\n【质量自检】（内部完成，不要输出）\n逐张检查：1) 是否用上了赠送者给的具体事实？2) 是否有一句想转发的 taishi？3) classic 暖 / roast 损得有爱且基于真实 / observer 有现代词×文言——三版是否真不同？4) TA 看了会觉得「这就是在写我」，而不是「谁都能套」？\n\n【URL 编码 · 已放宽】\n- 值里的中文、中文标点（。，、「」等）原样写，不要 percent 编码，保持可读。\n- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。\n- 字段间用 & 连接，名与值之间用 =（结构符，不编码）。整条链接单行，不得有真实空格/换行。\n\n【最终格式示例】（仅示意结构，必须换成真实内容）\n[送你一份轻列传，点开看看 →](https://simaqian.caojuege.com/#render?v=2&mode=real&cards=3&warn=&classic_title=小王列传&classic_chip1=...&classic_chip2=...&classic_chip3=...&classic_quote=...&classic_p1=...&classic_p2=...&classic_taishi=...&roast_title=...&roast_chip1=...&roast_chip2=...&roast_chip3=...&roast_quote=...&roast_p1=...&roast_p2=...&roast_taishi=...&observer_title=...&observer_chip1=...&observer_chip2=...&observer_chip3=...&observer_quote=...&observer_p1=...&observer_p2=...&observer_taishi=...)\n\n现在直接输出最终 Markdown 链接（仅一行）。";
 
@@ -905,51 +922,17 @@ function buildFriendPrompt(){
 
 function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 
-/* ============= Poster (bio card) renderer ============= */
-function posterHtml(c, ctx){
-  const sealChars = c.sealChars || (c.style==='roast' ? ['司','馬','毒','撰'] : (c.style==='observer' ? ['司','馬','觀','察'] : ['司','馬','遷','撰']));
-  const wm = c.watermark || (c.style==='roast'?'毒':c.style==='observer'?'觀':'正');
-  const variant = c.style === 'classic' ? 'a' : (c.style === 'roast' ? 'b' : 'c');
-  const chips = [c.chip1,c.chip2,c.chip3].map((x,i)=>`<span class="chip">${['一','二','三'][i]}·${esc(x)}</span>`).join('');
-  const warn = c.warn ? `<div class="warn">${esc(c.warn)}</div>` : '';
-  return `
-  <article class="poster card ${variant} ${c.style}">
-    <div class="meta">
-      <div class="chips">${chips}</div>
-      <div class="annal">Personal&nbsp;Annal · 列傳</div>
-    </div>
-    <div class="seal">${sealChars.map(x=>`<span>${esc(x)}</span>`).join('')}</div>
-    <div class="wm">${esc(wm)}</div>
-    <h2 class="title">${esc(c.title)}</h2>
-    <div class="quote">「${esc(c.quote)}」</div>
-    <div class="body">
-      <p>${esc(c.p1)}</p>
-      <p>${esc(c.p2)}</p>
-    </div>
-    <div class="taishi">
-      <span class="qmark">”</span>
-      <small>太史公曰 ——</small>
-      <strong>${esc(c.taishi)}</strong>
-    </div>
-    ${warn}
-    <div class="foot">
-      <div class="brand">
-        <div class="url">simaqian.caojuege.com</div>
-        <div class="hint">司马迁.skill · 扫码访问</div>
-      </div>
-      <div class="qr"><img src="${QR}" alt="QR" /></div>
-    </div>
-  </article>`;
-}
+const currentCards = new Map();
+const renderedCards = new Map();
 
 function cellHtml(c, mode){
   const showActions = mode === 'render';
   const actions = showActions ? `
     <div class="card-actions">
-      <button class="btn" data-action="edit" data-key="${c.style}"><iconify-icon icon="lucide:pencil"></iconify-icon>重新编辑</button>
-      <button class="btn primary" data-action="download" data-key="${c.style}"><iconify-icon icon="lucide:download"></iconify-icon>下载图片</button>
+      <button class="btn" data-action="edit" data-key="${c.style}"><iconify-icon icon="lucide:pencil"></iconify-icon>修改一下</button>
+      <button class="btn primary" data-action="download" data-key="${c.style}"><iconify-icon icon="lucide:download"></iconify-icon>保存图片</button>
     </div>
-    <div class="card-hint"><b>长按图片</b>保存到相册，或点「下载图片」</div>` : '';
+    <div class="card-hint"><b>手机可长按图片保存</b>；如浏览器支持，也可点「保存图片」调起系统分享。</div>` : '';
   return `
   <div class="card-cell" data-key="${c.style}">
     <div class="card-cap">
@@ -957,27 +940,47 @@ function cellHtml(c, mode){
       <div class="meta">${esc(c.label)}</div>
     </div>
     <div class="poster-shell">
-      <div class="poster-frame">
-        <div class="poster-scale">${posterHtml(c)}</div>
+      <div class="poster-frame card-image-frame">
+        <img class="card-image" data-card-img="${c.style}" alt="${esc(c.label || '轻列传')}" />
       </div>
     </div>${actions}
   </div>`;
 }
 
-/* Scale internal 600×800 poster to fit container width */
-function scalePosters(){
-  document.querySelectorAll('.poster-frame').forEach(frame=>{
-    const w = frame.clientWidth;
-    const scale = w / 600;
-    const sc = frame.querySelector('.poster-scale');
-    if(sc){
-      sc.style.transform = `scale(${scale})`;
-      sc.style.width = '600px';
-      sc.style.height = '800px';
-    }
-  });
+function revokeRendered(key){
+  const old = renderedCards.get(key);
+  if(old?.url) URL.revokeObjectURL(old.url);
+  renderedCards.delete(key);
 }
-window.addEventListener('resize', scalePosters);
+
+async function renderOneCard(c){
+  currentCards.set(c.style, {...c});
+  const img = document.querySelector(`[data-card-img="${c.style}"]`);
+  if(!img) return;
+  img.alt = c.label || c.title || '轻列传';
+  try{
+    const blob = await LieZhuanCard.renderToBlob(c, {ratio: 2.5});
+    revokeRendered(c.style);
+    const url = URL.createObjectURL(blob);
+    renderedCards.set(c.style, {blob, url});
+    img.src = url;
+  }catch(err){
+    console.error(err);
+    setCardHint(document.querySelector(`.card-cell[data-key="${c.style}"]`), '<b>图片生成失败</b>：请刷新后重试。');
+  }
+}
+
+function renderCardImages(cards){
+  cards.forEach(c => renderOneCard(c));
+}
+
+function updateCardCaption(key){
+  const c = currentCards.get(key);
+  const cell = document.querySelector(`.card-cell[data-key="${key}"]`);
+  if(!c || !cell) return;
+  const title = cell.querySelector('.card-cap .lbl');
+  if(title) title.textContent = c.title || '';
+}
 
 /* ============= Tabs / prompt ============= */
 function setTab(t){
@@ -996,7 +999,7 @@ function parseCards(){
   const params = new URLSearchParams(q);
   if(params.get('v') !== '2') return null;
   const isTemplate = params.get('mode') === 'template';
-  const globalWarn = params.get('warn') || (isTemplate ? '这是模板版——具体信息还不多，改两句就是你的' : '');
+  const globalWarn = params.get('warn') || (isTemplate ? '这是模板版——具体信息还不多，修改一下就是你的' : '');
   const map = [
     {style:'classic',label:'正史版',watermark:'正',sealChars:['司','馬','遷','撰']},
     {style:'roast',label:'毒舌版',watermark:'毒',sealChars:['司','馬','毒','撰']},
@@ -1029,73 +1032,145 @@ function route(){
   if(cards){
     document.body.classList.add('render-mode');
     document.getElementById('renderGrid').innerHTML = cards.map(c=>cellHtml(c,'render')).join('');
+    renderCardImages(cards);
   } else {
     document.body.classList.remove('render-mode');
     document.getElementById('sampleGrid').innerHTML = sampleCards.map(c=>cellHtml(c,'sample')).join('');
+    renderCardImages(sampleCards);
     setTab('self');
   }
-  requestAnimationFrame(scalePosters);
 }
 
 
-async function ensureHtml2Canvas(){
-  if(window.html2canvas) return window.html2canvas;
-  await new Promise((resolve, reject)=>{
-    const s=document.createElement('script');
-    s.src='https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-    s.onload=resolve;
-    s.onerror=()=>reject(new Error('html2canvas 加载失败'));
-    document.head.appendChild(s);
-  });
-  return window.html2canvas;
-}
 function setCardHint(cell, html){
   const h=cell?.querySelector('.card-hint');
   if(h) h.innerHTML=html;
 }
-function enableCardEdit(key){
-  const cell=document.querySelector(`.card-cell[data-key="${key}"]`);
-  if(!cell) return;
-  const editable = cell.querySelectorAll('.chip,.title,.quote,.body p,.taishi strong');
-  editable.forEach(el=>{
-    el.contentEditable='true';
-    el.classList.add('editable');
-    el.spellcheck=false;
-  });
-  setCardHint(cell, '<b>已进入编辑</b>：直接点卡片文字修改，改完点「下载图片」。');
-  editable[0]?.focus();
+
+function filenameFor(key){
+  return `simaqian-${key || 'card'}.png`;
 }
+
+async function getCardBlob(key){
+  const cached = renderedCards.get(key);
+  if(cached?.blob) return cached.blob;
+  const data = currentCards.get(key);
+  if(!data) return null;
+  const blob = await LieZhuanCard.renderToBlob(data, {ratio: 2.5});
+  renderedCards.set(key, {blob, url: URL.createObjectURL(blob)});
+  return blob;
+}
+
 async function downloadCard(key){
   const cell=document.querySelector(`.card-cell[data-key="${key}"]`);
-  const card=cell?.querySelector('.poster.card');
-  if(!cell || !card) return;
   try{
-    setCardHint(cell, '<b>正在生成</b>：图片渲染中，请稍等。');
-    const html2canvas = await ensureHtml2Canvas();
-    const canvas = await html2canvas(card, {
-      backgroundColor: null,
-      scale: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
-      useCORS: true,
-      allowTaint: false,
-      logging: false
-    });
+    setCardHint(cell, '<b>正在生成</b>：准备图片中。');
+    const blob = await getCardBlob(key);
+    if(!blob) throw new Error('missing card blob');
+    const file = new File([blob], filenameFor(key), {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+      await navigator.share({files:[file], title:'我的轻列传'});
+      setCardHint(cell, '<b>已打开分享</b>：也可以长按上方图片保存。');
+      return;
+    }
+    const url = URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=canvas.toDataURL('image/png');
-    a.download=`simaqian-${key}.png`;
+    a.href=url;
+    a.download=filenameFor(key);
     document.body.appendChild(a);
     a.click();
     a.remove();
-    setCardHint(cell, '<b>已生成</b>：如果浏览器没有自动保存，请长按图片或换系统浏览器打开。');
+    setTimeout(()=>URL.revokeObjectURL(url), 5000);
+    setCardHint(cell, '<b>已生成</b>：若内置浏览器只打开文件预览，请长按上方图片保存。');
   }catch(err){
     console.error(err);
-    setCardHint(cell, '<b>生成失败</b>：请先截图保存，或换 Chrome / Safari 打开后再下载。');
+    setCardHint(cell, '<b>保存失败</b>：请长按上方图片保存，或用系统浏览器打开。');
   }
 }
+
 async function downloadAllCards(){
   for(const key of ['classic','roast','observer']){
     await downloadCard(key);
     await new Promise(r=>setTimeout(r,350));
   }
+}
+
+function editFields(){
+  return [
+    ['title','标题','input'], ['chip1','标签一','input'], ['chip2','标签二','input'], ['chip3','标签三','input'],
+    ['quote','引言','input'], ['p1','第一段','textarea'], ['p2','第二段','textarea'], ['taishi','太史公曰','textarea']
+  ];
+}
+
+function ensureEditPanel(){
+  let panel = document.getElementById('editBackdrop');
+  if(panel) return panel;
+  panel = document.createElement('div');
+  panel.id = 'editBackdrop';
+  panel.className = 'edit-backdrop';
+  panel.innerHTML = `
+    <div class="edit-panel" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <h3 id="editTitle">修改一下</h3>
+      <p>改完后会重新生成这张图片。建议只改最不像你的两三处。</p>
+      <div class="edit-grid two" id="editShortFields"></div>
+      <div class="edit-grid" id="editLongFields" style="margin-top:14px"></div>
+      <div class="edit-actions">
+        <button class="btn ghost" data-edit-cancel>取消</button>
+        <button class="btn primary" data-edit-save>重新生成图片</button>
+      </div>
+    </div>`;
+  document.body.appendChild(panel);
+  panel.addEventListener('click', e=>{
+    if(e.target === panel || e.target.closest('[data-edit-cancel]')) closeEditPanel();
+    if(e.target.closest('[data-edit-save]')) saveEditPanel();
+  });
+  return panel;
+}
+
+let editingKey = null;
+function openEditPanel(key){
+  const data = currentCards.get(key);
+  if(!data) return;
+  editingKey = key;
+  const panel = ensureEditPanel();
+  const shortBox = panel.querySelector('#editShortFields');
+  const longBox = panel.querySelector('#editLongFields');
+  shortBox.innerHTML = '';
+  longBox.innerHTML = '';
+  for(const [name,label,type] of editFields()){
+    const wrap = document.createElement('div');
+    wrap.className = 'edit-field';
+    const value = data[name] || '';
+    if(type === 'textarea'){
+      wrap.innerHTML = `<label>${label}</label><textarea data-edit-field="${name}"></textarea>`;
+      wrap.querySelector('textarea').value = value;
+      longBox.appendChild(wrap);
+    }else{
+      wrap.innerHTML = `<label>${label}</label><input data-edit-field="${name}" />`;
+      wrap.querySelector('input').value = value;
+      shortBox.appendChild(wrap);
+    }
+  }
+  panel.classList.add('show');
+  panel.querySelector('[data-edit-field="quote"]')?.focus();
+}
+function closeEditPanel(){
+  document.getElementById('editBackdrop')?.classList.remove('show');
+  editingKey = null;
+}
+async function saveEditPanel(){
+  if(!editingKey) return;
+  const key = editingKey;
+  const panel = ensureEditPanel();
+  const data = {...(currentCards.get(key) || {})};
+  panel.querySelectorAll('[data-edit-field]').forEach(el=>{
+    data[el.dataset.editField] = el.value.trim();
+  });
+  currentCards.set(key, data);
+  updateCardCaption(key);
+  closeEditPanel();
+  await renderOneCard(data);
+  setCardHint(document.querySelector(`.card-cell[data-key="${key}"]`), '<b>已更新</b>：可以长按保存，或点「保存图片」。');
 }
 
 /* ============= Events ============= */
@@ -1124,7 +1199,7 @@ document.addEventListener('click', async e=>{
   if(act){
     const a = act.dataset.action, k = act.dataset.key;
     if(a==='download') downloadCard(k);
-    if(a==='edit') enableCardEdit(k);
+    if(a==='edit') openEditPanel(k);
   }
   if(e.target.closest('#downloadAll')) downloadAllCards();
 });

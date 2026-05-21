@@ -10,14 +10,14 @@ body{background:#d9d2c5;color:#1a1a1a;font-family:-apple-system,"Noto Serif SC",
 h1{font-size:20px;letter-spacing:.04em;margin-bottom:6px}
 .lead{font-size:13px;color:#6b5d49;line-height:1.7;max-width:54ch;text-align:center;margin-bottom:26px}
 .lead code{background:rgba(0,0,0,.07);padding:1px 6px;border-radius:3px;font-family:monospace}
-.thumb{position:relative;overflow:hidden;background:#fff;box-shadow:0 16px 40px rgba(0,0,0,.2)}
-.thumb iframe{border:0;transform-origin:top left;display:block}
+.thumb{width:min(480px,100%);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px rgba(0,0,0,.2);background:#fff;overflow:hidden}
+.thumb canvas{width:100%;height:100%;display:block}
 </style>
 </head>
 <body>
 <h1>轻列传 · 3:4 预览</h1>
 <p class="lead">
-  静态预览（固定 3:4 素白）。要测试<b>点击文字直接改文案 + 下载 PNG</b>，请打开
+  静态预览（Canvas 单渲染器）。要测试<b>修改一下 + 保存图片</b>，请打开
   <code>index.html#render</code>。
 </p>
 <div class="thumb" id="thumb"></div>
@@ -25,31 +25,18 @@ h1{font-size:20px;letter-spacing:.04em;margin-bottom:6px}
 <script src="./card.js"></script>
 <script>
 const SAMPLE = {
-  mode:'real',
+  mode:'real', style:'classic', label:'正史版', watermark:'正',
   title:'韶华列传',
   chip1:'创作者', chip2:'主理人', chip3:'陪跑教练',
   quote:'以产品为笔，和世界对话',
-  p1:'韶华者，华夏人也。少习语言之事，后与人共立 LanguageX，治机器翻译。逢 AI 之兴，去其执事，自结草诀歌 AI 之社，聚非技之士，授以 AI 为笔，造作品而不逐风。',
+  p1:'韶华者，华夏人也。少习语言之事，后与人共立 LanguageX，治机器翻译。逢 AI 之兴，去其执事，自结草诀歌 AI 之社。',
   p2:'其所求者，小而久、精而有味、能沉之为作；不务速、不抢先、不逐热。',
   taishi:'作品者，人之留痕也。以三五人之力刻一物者，胜以千人之众逐一时。'
 };
-const THUMB_W = 480;
-const scale = THUMB_W / LieZhuanCard.W;
-const thumb = document.getElementById('thumb');
-thumb.style.width = THUMB_W + 'px';
-thumb.style.height = (LieZhuanCard.H * scale) + 'px';
-
-const f = document.createElement('iframe');
-f.style.width = LieZhuanCard.W + 'px';
-f.style.height = LieZhuanCard.H + 'px';
-f.style.transform = 'scale(' + scale + ')';
-f.setAttribute('scrolling', 'no');
-thumb.appendChild(f);
-
-const doc = f.contentDocument || f.contentWindow.document;
-doc.open();
-doc.write(LieZhuanCard.html(SAMPLE, { editable: false }));
-doc.close();
+(async()=>{
+  const canvas = await LieZhuanCard.renderToCanvas(SAMPLE, { ratio: 2 });
+  document.getElementById('thumb').appendChild(canvas);
+})();
 </script>
 </body>
 </html>

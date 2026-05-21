@@ -1,119 +1,361 @@
-/* 轻列传卡片 · 单一来源 (single source of truth)
- * 固定 3:4 (1080x1440) · 素白皮肤。被 landing/index.html 与 landing/preview.html 共用。
- * 改样式只改这里。 */
-(function (global) {
+/* 司马迁.skill · 轻列传 Canvas renderer
+ * Single renderer: preview image === exported image.
+ * No DOM screenshot / html2canvas dependency.
+ */
+(function(global){
   'use strict';
 
-  var W = 1080, H = 1440;
+  const W = 600;
+  const H = 800;
+  const QR_SRC = './qr-simaqian.png';
+  let qrPromise = null;
 
-  var DEFAULTS = {
-    mode: 'template',
-    title: '今人列传',
-    chip1: '行路人', chip2: '问学者', chip3: '造物者',
+  const SERIF = '"Noto Serif SC","Source Han Serif SC","Source Han Serif CN","Songti SC","STSongti","STSong","SimSun","NSimSun","FangSong",Georgia,"Times New Roman",serif';
+  const SANS = '"Inter","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei",system-ui,-apple-system,sans-serif';
+  const MONO = '"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
+
+  const DEFAULTS = {
+    style: 'classic', label: '正史版', watermark: '正',
+    title: '今人列传', chip1: '行路人', chip2: '问学者', chip3: '造物者',
     quote: '向未知处行',
-    p1: '今人者，华夏人也。',
-    p2: '其所求者，行远自迩，沉之为作。',
-    taishi: '志之所趋，无远弗届。',
-    warn: ''
+    p1: '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。',
+    p2: '其所求者，行远自迩，沉之为作。所好者深文，所厌者喧嚣。',
+    taishi: '志之所趋，无远弗届。', warn: ''
   };
 
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  const THEMES = {
+    classic: {
+      bg:'#ffffff', fg:'#1a1a1a', muted:'rgba(26,26,26,.55)', quote:'rgba(26,26,26,.72)',
+      chipBorder:'rgba(26,26,26,.40)', chipBg:'transparent', wm:'rgba(0,0,0,.05)',
+      taishiBg:'#1a1a1a', taishiFg:'#e5e5e5', taishiMuted:'rgba(229,229,229,.68)', qmark:'rgba(229,229,229,.16)',
+      qrBorder:'rgba(71,73,75,.20)', seal:['司','馬','遷','撰']
+    },
+    roast: {
+      bg:'#e5e5e5', fg:'#1a1a1a', muted:'rgba(26,26,26,.55)', quote:'rgba(26,26,26,.72)',
+      chipBorder:'rgba(26,26,26,.45)', chipBg:'rgba(255,255,255,.32)', wm:'rgba(0,0,0,.05)',
+      taishiBg:'#47494b', taishiFg:'#e5e5e5', taishiMuted:'rgba(229,229,229,.68)', qmark:'rgba(229,229,229,.16)',
+      qrBorder:'rgba(71,73,75,.20)', seal:['司','馬','毒','撰']
+    },
+    observer: {
+      bg:'#1a1a1a', fg:'#e5e5e5', muted:'rgba(229,229,229,.55)', quote:'rgba(229,229,229,.72)',
+      chipBorder:'rgba(229,229,229,.40)', chipBg:'transparent', wm:'rgba(255,255,255,.07)',
+      taishiBg:'#e5e5e5', taishiFg:'#1a1a1a', taishiMuted:'rgba(26,26,26,.62)', qmark:'rgba(26,26,26,.16)',
+      qrBorder:'transparent', seal:['司','馬','觀','察']
+    }
+  };
+
+  function normalize(data){
+    return Object.assign({}, DEFAULTS, data || {});
+  }
+
+  function loadQr(){
+    if(qrPromise) return qrPromise;
+    qrPromise = new Promise((resolve)=>{
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = QR_SRC;
     });
+    return qrPromise;
   }
 
-  function css() {
-    return [
-      '*{margin:0;padding:0;box-sizing:border-box}',
-      'html,body{width:' + W + 'px;height:' + H + 'px}',
-      'body{background:#e5e5e5;color:#1a1a1a;font-family:"Songti SC","STSong","Source Han Serif SC","Source Han Serif CN","Noto Serif CJK SC","Noto Serif SC","SimSun","NSimSun",Georgia,serif;position:relative;overflow:hidden}',
-      '.card{width:' + W + 'px;height:' + H + 'px;background:#e5e5e5;position:relative;overflow:hidden;display:flex;flex-direction:column}',
-      '.watermark{position:absolute;right:-24px;top:48px;display:flex;flex-direction:column;line-height:.8;font-size:400px;font-weight:700;color:rgba(0,0,0,.05);letter-spacing:-.04em;pointer-events:none;user-select:none}',
-      '.kicker-bar{display:flex;justify-content:space-between;align-items:center;padding:60px 80px 0;position:relative;z-index:1;flex:0 0 auto}',
-      '.chips{display:flex;gap:8px}',
-      '.chip{display:inline-flex;align-items:center;padding:7px 14px;border:1px solid rgba(71,73,75,.3);font-size:14px;letter-spacing:.06em;font-family:-apple-system,sans-serif}',
-      '.chip .ord{opacity:.55;margin-right:5px}',
-      '.right-kicker{font-size:13px;color:#5c5e60;letter-spacing:.22em;font-family:-apple-system,sans-serif}',
-      '.main{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-evenly;min-height:0;padding-bottom:200px}',
-      '.headline{margin:0 80px;position:relative;z-index:1}',
-      'h1{font-size:110px;font-weight:700;line-height:1;letter-spacing:.02em}',
-      '.quote{font-size:28px;color:#47494b;font-style:italic;margin-top:22px}',
-      '.quote::before{content:"\\300c"}.quote::after{content:"\\300d"}',
-      '.underline{width:96px;height:2px;background:#47494b;margin-top:14px}',
-      '.body-text{padding:0 80px;font-size:30px;line-height:1.95;max-width:900px;letter-spacing:.03em}',
-      '.body-text p{margin-bottom:18px}.body-text p:last-child{margin-bottom:0}',
-      '.dark-block{margin:0 80px;padding:30px 36px;background:#47494b;color:#e5e5e5;position:relative}',
-      '.dark-block .label{font-size:15px;letter-spacing:.22em;color:rgba(229,229,229,.6);margin-bottom:14px}',
-      '.dark-block .lines{font-size:24px;line-height:1.65}',
-      '.dark-block .qm{position:absolute;right:20px;top:-46px;font-size:200px;color:rgba(255,255,255,.08);font-family:Georgia,serif;line-height:1}',
-      '.seal{position:absolute;top:0;right:0;width:124px;height:124px;background:#b22222;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;z-index:2;box-shadow:inset 0 0 0 4px rgba(255,255,255,.18)}',
-      '.seal span{color:#fff;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;font-family:"PingFang SC","Heiti SC","Microsoft YaHei","Source Han Sans SC","Noto Sans CJK SC",sans-serif}',
-      '.footer{position:absolute;bottom:60px;left:80px;right:80px;display:flex;justify-content:space-between;align-items:flex-end;z-index:1}',
-      '.footer .info{display:flex;flex-direction:column;justify-content:flex-end}',
-      '.brand{font-size:20px;letter-spacing:.1em;color:#5c5e60;font-family:-apple-system,sans-serif;margin-bottom:8px}',
-      '.url{font-size:30px;font-weight:700;color:#1a1a1a;letter-spacing:.01em}',
-      '.sub{font-size:16px;color:#47494b;margin-top:8px;letter-spacing:.04em;font-family:-apple-system,sans-serif}',
-      '.qr{width:148px;height:148px;background:#fff;padding:8px;box-shadow:0 0 0 2px #1a1a1a}',
-      '.qr img{width:100%;height:100%;display:block}',
-      '.warn{background:#fff5e0;border-left:3px solid #b27e3e;padding:9px 18px;margin:14px 80px 0;font-size:13px;color:#6b4a2c;font-family:-apple-system,sans-serif;letter-spacing:.04em}',
-      '[contenteditable]{outline:0;cursor:text;border-radius:2px;transition:box-shadow .15s}',
-      '[contenteditable]:hover{box-shadow:0 0 0 1px rgba(71,73,75,.45)}',
-      '[contenteditable]:focus{box-shadow:0 0 0 1.5px #47494b}'
-    ].join('\n');
+  async function ready(){
+    if(document.fonts && document.fonts.ready){
+      try{ await document.fonts.ready; }catch(_){ /* ignore */ }
+    }
+    await loadQr();
   }
 
-  // 卡片 body 内部结构。editable=true 时给文字加 contenteditable。
-  function cardMarkup(d, editable) {
-    var ce = editable ? ' contenteditable="true" spellcheck="false"' : '';
-    var warnBlock = (d.mode === 'template' && d.warn)
-      ? '<div class="warn">' + esc(d.warn) + '</div>' : '';
-    return [
-      '<div class="card">',
-      '<div class="watermark"><span>列</span><span>傳</span></div>',
-      '<div class="kicker-bar"><div class="chips">',
-      '<span class="chip"><span class="ord">一</span><span data-f="chip1"' + ce + '>' + esc(d.chip1) + '</span></span>',
-      '<span class="chip"><span class="ord">二</span><span data-f="chip2"' + ce + '>' + esc(d.chip2) + '</span></span>',
-      '<span class="chip"><span class="ord">三</span><span data-f="chip3"' + ce + '>' + esc(d.chip3) + '</span></span>',
-      '</div><span class="right-kicker">PERSONAL ANNAL · 列 傳</span></div>',
-      '<div class="main">',
-      '<div class="headline">',
-      '<h1 data-f="title"' + ce + '>' + esc(d.title) + '</h1>',
-      '<div class="quote" data-f="quote"' + ce + '>' + esc(d.quote) + '</div>',
-      '<div class="underline"></div>',
-      '<div class="seal"><span>司</span><span>馬</span><span>遷</span><span>撰</span></div>',
-      '</div>',
-      warnBlock,
-      '<div class="body-text"><p data-f="p1"' + ce + '>' + esc(d.p1) + '</p><p data-f="p2"' + ce + '>' + esc(d.p2) + '</p></div>',
-      '<div class="dark-block"><div class="qm">"</div><div class="label">太 史 公 曰 ——</div><div class="lines" data-f="taishi"' + ce + '>' + esc(d.taishi) + '</div></div>',
-      '</div>',
-      '<div class="footer"><div class="info"><div class="brand">司馬遷.skill · 列傳</div><div class="url">simaqian.caojuege.com</div><div class="sub">扫码生成你的列传</div></div>',
-      '<div class="qr"><img crossorigin="anonymous" src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fsimaqian.caojuege.com&size=160x160&margin=0" alt=""/></div></div>',
-      '</div>'
-    ].join('');
+  function font(weight, size, family){
+    return `${weight} ${size}px ${family}`;
   }
 
-  // 完整 iframe 文档。opts.editable 文字可编辑；opts.h2cUrl 存在则附带 html2canvas 脚本。
-  function html(data, opts) {
+  function setFont(ctx, weight, size, family){
+    ctx.font = font(weight, size, family);
+  }
+
+  function tokenise(text){
+    const s = String(text || '').replace(/\r/g,'');
+    return s.match(/[A-Za-z0-9_./:+#%\-]+|\s+|./gu) || [];
+  }
+
+  function wrap(ctx, text, maxWidth, maxLines){
+    const tokens = tokenise(text);
+    const lines = [];
+    let line = '';
+    const push = () => {
+      if(line.trim()) lines.push(line.trim());
+      line = '';
+    };
+    for(const tok of tokens){
+      if(tok === '\n') { push(); continue; }
+      const isSpace = /^\s+$/.test(tok);
+      if(isSpace && !line) continue;
+      const candidate = line + tok;
+      if(ctx.measureText(candidate).width <= maxWidth){
+        line = candidate;
+        continue;
+      }
+      if(line) push();
+      if(!isSpace){
+        if(ctx.measureText(tok).width <= maxWidth){
+          line = tok;
+        }else{
+          // Very long latin token; split by character.
+          for(const ch of Array.from(tok)){
+            const c = line + ch;
+            if(ctx.measureText(c).width <= maxWidth) line = c;
+            else { push(); line = ch; }
+          }
+        }
+      }
+      if(maxLines && lines.length >= maxLines) break;
+    }
+    if(line && (!maxLines || lines.length < maxLines)) push();
+    if(maxLines && lines.length > maxLines) lines.length = maxLines;
+    if(maxLines && lines.length === maxLines){
+      let last = lines[maxLines - 1];
+      while(last && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+      if(last && (tokens.join('').trim() !== lines.join('').trim())) lines[maxLines - 1] = last + '…';
+    }
+    return lines;
+  }
+
+  function drawTextLines(ctx, lines, x, y, lineHeight){
+    for(const line of lines){
+      ctx.fillText(line, x, y);
+      y += lineHeight;
+    }
+    return y;
+  }
+
+  function roundedRect(ctx, x, y, w, h, r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr, y);
+    ctx.arcTo(x+w, y, x+w, y+h, rr);
+    ctx.arcTo(x+w, y+h, x, y+h, rr);
+    ctx.arcTo(x, y+h, x, y, rr);
+    ctx.arcTo(x, y, x+w, y, rr);
+    ctx.closePath();
+  }
+
+  function drawChip(ctx, text, x, y, theme){
+    setFont(ctx, '500', 13, SERIF);
+    const padX = 11;
+    const w = Math.ceil(ctx.measureText(text).width + padX * 2);
+    ctx.save();
+    ctx.strokeStyle = theme.chipBorder;
+    ctx.fillStyle = theme.chipBg;
+    ctx.lineWidth = 1;
+    if(theme.chipBg !== 'transparent') ctx.fillRect(x, y, w, 27);
+    ctx.strokeRect(x, y, w, 27);
+    ctx.fillStyle = theme.fg;
+    ctx.globalAlpha = .85;
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x + padX, y + 13.5);
+    ctx.restore();
+    return w;
+  }
+
+  function drawSeal(ctx, chars){
+    const x = 462, y = 124, w = 92, h = 104;
+    ctx.save();
+    ctx.fillStyle = '#a8302d';
+    ctx.fillRect(x,y,w,h);
+    ctx.strokeStyle = '#7d211e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x+1,y+1,w-2,h-2);
+    ctx.strokeStyle = 'rgba(240,223,196,.55)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(x+6,y+6,w-12,h-12);
+    ctx.fillStyle = '#f0dfc4';
+    setFont(ctx, '700', 31, SERIF);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const pos = [[.25,.25],[.75,.25],[.25,.75],[.75,.75]];
+    chars.forEach((ch,i)=>ctx.fillText(ch, x + w*pos[i][0], y + h*pos[i][1]));
+    ctx.restore();
+  }
+
+  function drawWatermark(ctx, wm, theme){
+    ctx.save();
+    ctx.fillStyle = theme.wm;
+    setFont(ctx, '900', 430, SERIF);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(wm || '正', 285, 690);
+    ctx.restore();
+  }
+
+  function fitTitleSize(ctx, title, maxWidth){
+    let size = 96;
+    while(size > 58){
+      setFont(ctx, '700', size, SERIF);
+      if(ctx.measureText(title).width <= maxWidth) break;
+      size -= 4;
+    }
+    return size;
+  }
+
+  function drawCard(ctx, raw){
+    const d = normalize(raw);
+    const style = d.style || 'classic';
+    const theme = THEMES[style] || THEMES.classic;
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = theme.bg;
+    ctx.fillRect(0,0,W,H);
+
+    drawWatermark(ctx, d.watermark || (style === 'roast' ? '毒' : style === 'observer' ? '觀' : '正'), theme);
+
+    // Meta row
+    let x = 46;
+    const y = 42;
+    const chips = [`一·${d.chip1}`, `二·${d.chip2}`, `三·${d.chip3}`];
+    chips.forEach((c)=>{ x += drawChip(ctx, c, x, y, theme) + 8; });
+    ctx.save();
+    ctx.fillStyle = theme.muted;
+    setFont(ctx, '500', 10, MONO);
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText('PERSONAL ANNAL · 列傳', 554, 48);
+    ctx.restore();
+
+    drawSeal(ctx, d.sealChars || theme.seal);
+
+    // Title
+    ctx.save();
+    ctx.fillStyle = theme.fg;
+    const titleSize = fitTitleSize(ctx, d.title, 380);
+    setFont(ctx, '700', titleSize, SERIF);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText(d.title, 46, 158);
+    ctx.restore();
+
+    // Quote
+    ctx.save();
+    ctx.fillStyle = theme.quote;
+    setFont(ctx, '400', 22, SERIF);
+    ctx.textBaseline = 'top';
+    ctx.font = `italic 22px ${SERIF}`;
+    ctx.fillText(`「${d.quote}」`, 46, 264);
+    ctx.globalAlpha = .65;
+    ctx.fillRect(46, 306, 56, 2);
+    ctx.restore();
+
+    // Body
+    ctx.save();
+    ctx.fillStyle = theme.fg;
+    setFont(ctx, '400', 17.5, SERIF);
+    ctx.textBaseline = 'top';
+    const p1Lines = wrap(ctx, d.p1, 470, 3);
+    const p2Lines = wrap(ctx, d.p2, 470, Math.max(2, 6 - p1Lines.length));
+    let by = 332;
+    by = drawTextLines(ctx, p1Lines, 46, by, 33);
+    by += 6;
+    drawTextLines(ctx, p2Lines, 46, by, 33);
+    ctx.restore();
+
+    // Taishi block
+    const tx = 46, ty = 520, tw = 508, th = 112;
+    ctx.save();
+    ctx.fillStyle = theme.taishiBg;
+    ctx.fillRect(tx, ty, tw, th);
+    ctx.fillStyle = theme.qmark;
+    setFont(ctx, '700', 170, 'Georgia,serif');
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillText('”', tx + tw - 12, ty - 24);
+    ctx.fillStyle = theme.taishiMuted;
+    setFont(ctx, '400', 12, SANS);
+    ctx.textAlign = 'left';
+    ctx.fillText('太史公曰 ——', tx + 30, ty + 28);
+    ctx.fillStyle = theme.taishiFg;
+    setFont(ctx, '700', 20, SERIF);
+    const tLines = wrap(ctx, d.taishi, tw - 60, 2);
+    drawTextLines(ctx, tLines, tx + 30, ty + 55, 31);
+    ctx.restore();
+
+    // Warn
+    if(d.warn){
+      ctx.save();
+      const wy = 644;
+      ctx.fillStyle = style === 'observer' ? 'rgba(255,255,255,.10)' : 'rgba(255,255,255,.48)';
+      ctx.fillRect(46, wy, 508, 24);
+      ctx.fillStyle = theme.fg;
+      ctx.globalAlpha = .75;
+      setFont(ctx, '400', 10.5, SANS);
+      ctx.textBaseline = 'middle';
+      const lines = wrap(ctx, d.warn, 486, 1);
+      ctx.fillText(lines[0] || d.warn, 56, wy + 12);
+      ctx.restore();
+    }
+
+    // Footer
+    ctx.save();
+    ctx.fillStyle = theme.fg;
+    ctx.globalAlpha = .75;
+    setFont(ctx, '500', 13.5, MONO);
+    ctx.textBaseline = 'top';
+    ctx.fillText('simaqian.caojuege.com', 46, 710);
+    setFont(ctx, '400', 10, SANS);
+    ctx.globalAlpha = .55;
+    ctx.fillText('司马迁.skill · 扫码访问', 46, 735);
+    ctx.restore();
+
+    drawQr(ctx, theme);
+  }
+
+  let cachedQr = null;
+  async function ensureQr(){
+    cachedQr = await loadQr();
+    return cachedQr;
+  }
+
+  function drawQr(ctx, theme){
+    const x = 492, y = 702, s = 62;
+    ctx.save();
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(x, y, s, s);
+    if(theme.qrBorder !== 'transparent'){
+      ctx.strokeStyle = theme.qrBorder;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, s, s);
+    }
+    if(cachedQr) ctx.drawImage(cachedQr, x + 4, y + 4, s - 8, s - 8);
+    else {
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillRect(x+18,y+18,26,26);
+    }
+    ctx.restore();
+  }
+
+  async function renderToCanvas(data, opts){
     opts = opts || {};
-    var d = {};
-    for (var k in DEFAULTS) d[k] = (data && data[k] != null && data[k] !== '') ? data[k] : DEFAULTS[k];
-    if (data && data.mode) d.mode = data.mode;
-    var h2c = opts.h2cUrl ? '<scr' + 'ipt src="' + opts.h2cUrl + '"></scr' + 'ipt>' : '';
-    return '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
-      + '<style>' + css() + '</style></head>'
-      + '<body>' + cardMarkup(d, !!opts.editable) + h2c + '</body></html>';
+    await ready();
+    cachedQr = await ensureQr();
+    const ratio = opts.ratio || 2;
+    const canvas = opts.canvas || document.createElement('canvas');
+    canvas.width = Math.round(W * ratio);
+    canvas.height = Math.round(H * ratio);
+    canvas.style.aspectRatio = '3 / 4';
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    drawCard(ctx, data);
+    return canvas;
   }
 
-  // 从已渲染文档读回当前(可能已编辑过的)文案
-  function readState(doc) {
-    var out = {};
-    ['title', 'chip1', 'chip2', 'chip3', 'quote', 'p1', 'p2', 'taishi'].forEach(function (f) {
-      var el = doc.querySelector('[data-f="' + f + '"]');
-      if (el) out[f] = el.textContent.trim();
-    });
-    return out;
+  async function renderToBlob(data, opts){
+    const canvas = await renderToCanvas(data, opts || {ratio: 2});
+    return new Promise((resolve)=>canvas.toBlob(resolve, 'image/png', 0.96));
   }
 
-  global.LieZhuanCard = { W: W, H: H, DEFAULTS: DEFAULTS, html: html, readState: readState, esc: esc };
+  async function renderToDataURL(data, opts){
+    const canvas = await renderToCanvas(data, opts || {ratio: 2});
+    return canvas.toDataURL('image/png');
+  }
+
+  global.LieZhuanCard = { W, H, DEFAULTS, renderToCanvas, renderToBlob, renderToDataURL, ready };
 })(typeof window !== 'undefined' ? window : this);
