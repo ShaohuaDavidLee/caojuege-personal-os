@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>司马迁.skill · 轻列传</title>
-<meta name="description" content="一分钟生成你的三张轻列传：列传、毒撰、病历。">
+<meta name="description" content="一分钟生成你的三张轻列传：列传、毒撰、诊断。">
 <meta property="og:title" content="司马迁.skill · 轻列传">
 <meta property="og:description" content="当司马迁走进你的 AI 里。一条提示词，一个链接，三张卡。">
 <meta property="og:type" content="website">
@@ -641,7 +641,7 @@ body.render-mode #landing{display:none}
       <div class="section-head">
         <span class="section-num">01</span>
         <h2 class="section-q">先看样张。<em>同一个人，三种判词。</em></h2>
-        <p class="section-lead">列传要体面，毒撰要刺痛，病历要破防但不冒犯。<br>三张明显不同，这套立传才算写对了。</p>
+        <p class="section-lead">列传要体面，毒撰要刺痛，诊断要破防但不冒犯。<br>三张明显不同，这套立传才算写对了。</p>
       </div>
       <div class="swipe-hint">← 左右滑动查看三张 →</div>
       <div class="cards-grid" id="sampleGrid"></div>
@@ -940,12 +940,12 @@ const sampleCards = [
    p1:'韶华者，云南人也。履历像开盲盒：俄语、翻译、媒体、产品、AI，一路换地图，嘴上曰寻找自己，旁人观之，像职业生涯在跑俄罗斯转盘。',
    p2:'其性好深文，厌短视频之喧；喜产品，又不愿只做增长螺丝。每逢风口，心动三刻，终又问曰：此事为何非我不可？',
    taishi:'转型多年，终于把“还在寻找”做成了产品。'},
-  {style:'diagnosis',label:'病历',watermark:'診',volume:'321',volumeLabel:'病歷',sealChars:['太','史','診','斷'],
+  {style:'diagnosis',label:'诊断',watermark:'診',volume:'321',volumeLabel:'診斷',sealChars:['太','史','診','斷'],
    chip1:'使命幻听',chip2:'重构成瘾',chip3:'发版不足',quote:'少问宇宙，多问用户',
-   title:'韶华病历',
-   p1:'病名：使命性重构综合征。主诉：每退出一个项目，就想重写一套人生操作系统；看见别人找不到自己，便怀疑自己应造一盏路灯。',
+   title:'韶华诊断',
+   p1:'症候：使命性重构综合征。主诉：每退出一个项目，就想重写一套人生操作系统；看见别人找不到自己，便怀疑自己应造一盏路灯。',
    p2:'诱因：传记、AI、PMF 与“为什么是你”长期混合摄入。医嘱：少在宇宙层面改需求，每日发版一次。',
-   taishi:'此病若愈，草诀歌当场停更。'}
+   taishi:'此症若愈，草诀歌当场停更。'}
 ];
 
 /* ============= Prompts (v4: c1/c2/c3 + volume + diagnosis) ============= */
@@ -968,14 +968,14 @@ const selfPrompt = `你现在是「司馬遷.skill」的三卡轻列传生成器
 先在内部生成，不要输出：
 1. 10 条关于 TA 的事实；
 2. 5 个 TA 身上的矛盾/张力；
-3. 5 个可被命名的“症候/时代病”；
+3. 5 个可被命名的“症候/长期张力”；
 4. 每张卡各 8 条候选 taishi。
 再按四个标准打分：真实度、刺痛感、体面度、转发欲。只保留最高分。
 
 【三张卡】
 card1 = 正史版：title 必须是「某某列传」；seal=司馬遷撰。体面、克制、有仪式感，不像广告。负责「体面」。
 card2 = 毒撰版：title 必须是「某某毒撰」；seal=司馬毒撰。精准、带刺、自嘲；可以写缺点，但必须有事实支撑，不做人身攻击。负责「传播」。
-card3 = 病历版：title 必须是「某某病历」；seal=太史診斷。把 TA 的长期张力命名为一种“时代病/个人症候”，像诊断书，但不要冒充医学诊断。负责「破防」。
+card3 = 诊断版：title 必须是「某某诊断」；seal=太史診斷。把 TA 的长期张力命名为一种“时代症候/个人症候”，像诊断笺，但不要冒充医学诊断。负责「破防」。
 
 【URL 字段 schema】
 v=2
@@ -990,14 +990,14 @@ c2_title c2_seal c2_chip1 c2_chip2 c2_chip3 c2_quote c2_p1 c2_p2 c2_taishi
 c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
 
 【卷数编号】
-- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 病歷·第XXX卷」。
+- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 診斷·第XXX卷」。
 - 如果你能根据姓名/昵称/稳定身份生成一个三位稳定编号，就填 001-999；否则填 auto，让前端按姓名哈希生成。
 - 同一对象反复生成时，volume 应尽量一致。
 
 【字段要求】
 - chip1/2/3：每个 2-6 字，像“确诊体/精准的损”，避免空泛正面词。例：人形backup、长文顽固、使命重构。
 - quote：≤14 字，像座右铭/病句/暗号，不要鸡汤。
-- c1_p1 必须以「○○者，○○人也。」开头；c2_p1 也尽量保留史传腔；c3_p1 可用「病名：……」。
+- c1_p1 必须以「○○者，○○人也。」开头；c2_p1 也尽量保留史传腔；c3_p1 可用「症候：……」。
 - 每张卡 p1+p2 合计 70-120 字；具体、有识别度，不像简历。
 - taishi ≤32 字，不含「太史公曰」前缀。
 
@@ -1007,20 +1007,21 @@ c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
 - 「嘴上……实则……」「口称……实则……」整组最多出现一次。
 - 好的 taishi 不是总结，而是点破。
 
-【病历版限制】
-- 可以使用：病名、主诉、诱因、医嘱、复诊建议。
+【诊断版限制】
+- 可以使用：症候、主诉、诱因、医嘱、复诊建议；避免使用“病名”二字。
 - 不得输出真实医学判断，不得使用严重精神疾病名称，不得羞辱。
 - 目标是“精准自嘲”，不是“攻击人格”。
 
-【URL 编码 · 已放宽，按此执行】
-- 字段值里的中文、中文标点（。，、「」等）可以直接原样写，保持可读。
-- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。
+【URL 编码 · 必须严格执行】
+- 除字段名、结构符 & 和 =、以及开头的 https://simaqian.caojuege.com/#render? 外，所有字段值都必须做 URL 百分号编码（UTF-8）。
+- 字段值里不得出现未编码的中文、中文标点、空格、换行，也不得出现未编码的 & = # %。
+- 编码示例：韶华列传 → %E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0；司馬遷撰 → %E5%8F%B8%E9%A6%AC%E9%81%B7%E6%92%B0。
 - 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。
 - 整条链接必须单行，不得出现真实空格或换行。
-- 不要输出 JSON，不要输出解释。
+- 不要输出 JSON，不要输出解释，不要输出 Markdown。
 
 【最终格式示意】
-https://simaqian.caojuege.com/#render?v=2&mode=real&kind=self&cards=3&volume=auto&warn=&c1_title=韶华列传&c1_seal=司馬遷撰&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=韶华毒撰&c2_seal=司馬毒撰&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=韶华病历&c3_seal=太史診斷&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
+https://simaqian.caojuege.com/#render?v=2&mode=real&kind=self&cards=3&volume=auto&warn=&c1_title=%E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0&c1_seal=%E5%8F%B8%E9%A6%AC%E9%81%B7%E6%92%B0&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=%E9%9F%B6%E5%8D%8E%E6%AF%92%E6%92%B0&c2_seal=%E5%8F%B8%E9%A6%AC%E6%AF%92%E6%92%B0&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=%E9%9F%B6%E5%8D%8E%E8%AF%8A%E6%96%AD&c3_seal=%E5%A4%AA%E5%8F%B2%E8%A8%BA%E6%96%B7&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
 
 现在直接输出最终链接。`;
 
@@ -1059,9 +1060,9 @@ TA 最可爱的毛病/反差：${flaw}
 再按四个标准打分：真实度、刺痛感、体面度、转发欲。只保留最高分。
 
 【三张卡】
-card1 = 正史版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}列传」；seal=司馬遷撰。体面、克制、有仪式感。
-card2 = 毒撰版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}毒撰」；seal=司馬毒撰。精准、带刺、好笑，但不刻薄。
-card3 = 病历版：title 必须是「${n.replace(/列传|毒撰|病历/g,'')}病历」；seal=太史診斷。把 TA 的可爱反差命名为一种“朋友病/时代症候”，像诊断书，但不要冒充医学诊断。
+card1 = 正史版：title 必须是「${n.replace(/列传|毒撰|诊断/g,'')}列传」；seal=司馬遷撰。体面、克制、有仪式感。
+card2 = 毒撰版：title 必须是「${n.replace(/列传|毒撰|诊断/g,'')}毒撰」；seal=司馬毒撰。精准、带刺、好笑，但不刻薄。
+card3 = 诊断版：title 必须是「${n.replace(/列传|毒撰|诊断/g,'')}诊断」；seal=太史診斷。把 TA 的可爱反差命名为一种“朋友症候/时代症候”，像诊断笺，但不要冒充医学诊断。
 
 【URL 字段 schema】
 v=2
@@ -1077,7 +1078,7 @@ c2_title c2_seal c2_chip1 c2_chip2 c2_chip3 c2_quote c2_p1 c2_p2 c2_taishi
 c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
 
 【卷数编号】
-- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 病歷·第XXX卷」。
+- volume 是馆藏编号，不是排名。页面会展示为「列傳·第XXX卷 / 毒撰·第XXX卷 / 診斷·第XXX卷」。
 - 如果你能根据「好友称呼 + 关系」生成一个三位稳定编号，就填 001-999；否则填 auto，让前端按称呼哈希生成。
 - 同一对象反复生成时，volume 应尽量一致。
 
@@ -1094,20 +1095,21 @@ c3_title c3_seal c3_chip1 c3_chip2 c3_chip3 c3_quote c3_p1 c3_p2 c3_taishi
 - 「嘴上……实则……」「口称……实则……」整组最多出现一次。
 - 好的 taishi 不是总结，而是点破；不是冒犯，而是熟人间的准确。
 
-【病历版限制】
-- 可以使用：病名、主诉、诱因、医嘱、复诊建议。
+【诊断版限制】
+- 可以使用：症候、主诉、诱因、医嘱、复诊建议；避免使用“病名”二字。
 - 不得输出真实医学判断，不得使用严重精神疾病名称，不得羞辱。
 - 目标是“朋友看了笑骂一句：你真懂他”。
 
-【URL 编码 · 已放宽，按此执行】
-- 字段值里的中文、中文标点（。，、「」等）可以直接原样写，保持可读。
-- 只编码这几个字符（出现在值里时）：空格→%20、换行→%0A、& → %26、= → %3D、# → %23、% → %25。
+【URL 编码 · 必须严格执行】
+- 除字段名、结构符 & 和 =、以及开头的 https://simaqian.caojuege.com/#render? 外，所有字段值都必须做 URL 百分号编码（UTF-8）。
+- 字段值里不得出现未编码的中文、中文标点、空格、换行，也不得出现未编码的 & = # %。
+- 编码示例：韶华列传 → %E9%9F%B6%E5%8D%8E%E5%88%97%E4%BC%A0；司馬遷撰 → %E5%8F%B8%E9%A6%AC%E9%81%B7%E6%92%B0。
 - 字段间用 & 连接，字段名与值之间用 =（这两个是结构符，不编码）。
 - 整条链接必须单行，不得出现真实空格或换行。
-- 不要输出 JSON，不要输出解释。
+- 不要输出 JSON，不要输出解释，不要输出 Markdown。
 
 【最终格式示意】
-https://simaqian.caojuege.com/#render?v=2&mode=real&kind=friend&cards=3&volume=auto&from_relation=${r}&warn=&c1_title=${n}列传&c1_seal=司馬遷撰&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=${n}毒撰&c2_seal=司馬毒撰&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=${n}病历&c3_seal=太史診斷&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
+https://simaqian.caojuege.com/#render?v=2&mode=real&kind=friend&cards=3&volume=auto&from_relation=...&warn=&c1_title=...&c1_seal=%E5%8F%B8%E9%A6%AC%E9%81%B7%E6%92%B0&c1_chip1=...&c1_chip2=...&c1_chip3=...&c1_quote=...&c1_p1=...&c1_p2=...&c1_taishi=...&c2_title=...&c2_seal=%E5%8F%B8%E9%A6%AC%E6%AF%92%E6%92%B0&c2_chip1=...&c2_chip2=...&c2_chip3=...&c2_quote=...&c2_p1=...&c2_p2=...&c2_taishi=...&c3_title=...&c3_seal=%E5%A4%AA%E5%8F%B2%E8%A8%BA%E6%96%B7&c3_chip1=...&c3_chip2=...&c3_chip3=...&c3_quote=...&c3_p1=...&c3_p2=...&c3_taishi=...
 
 现在直接输出最终链接。`;
 }
@@ -1220,17 +1222,24 @@ function normaliseVolumeParam(v, seed){
   return String(Math.max(1, Math.min(999, parseInt(digits, 10)))).padStart(3,'0');
 }
 
+function canonicaliseRenderHash(q, params){
+  const canonical = params.toString();
+  if(!canonical || canonical === q) return;
+  history.replaceState(null, '', `${location.pathname}${location.search}#render?${canonical}`);
+}
+
 function parseCards(){
   if(!location.hash.startsWith('#render')) return null;
   const q = location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?')+1) : '';
   const params = new URLSearchParams(q);
   if(params.get('v') !== '2') return null;
+  canonicaliseRenderHash(q, params);
   const isTemplate = params.get('mode') === 'template';
   const globalWarn = params.get('warn') || (isTemplate ? '这是模板版——具体信息还不多，修改一下就是你的' : '');
   const map = [
     {style:'classic',legacy:'classic',prefix:'c1',label:'列传',watermark:'傳',volumeLabel:'列傳',sealChars:['司','馬','遷','撰'],fallbackTitle:'今人列传'},
     {style:'roast',legacy:'roast',prefix:'c2',label:'毒撰',watermark:'毒',volumeLabel:'毒撰',sealChars:['司','馬','毒','撰'],fallbackTitle:'今人毒撰'},
-    {style:'diagnosis',legacy:'observer',prefix:'c3',label:'病历',watermark:'診',volumeLabel:'病歷',sealChars:['太','史','診','斷'],fallbackTitle:'今人病历'}
+    {style:'diagnosis',legacy:'observer',prefix:'c3',label:'诊断',watermark:'診',volumeLabel:'診斷',sealChars:['太','史','診','斷'],fallbackTitle:'今人诊断'}
   ];
   const get = (m, field, fallback='') => params.get(`${m.prefix}_${field}`) || params.get(`${m.legacy}_${field}`) || fallback;
   const titleSeed = map.map(m=>get(m,'title','')).filter(Boolean).join('|');
@@ -1244,7 +1253,7 @@ function parseCards(){
     chip2: get(m,'chip2', m.style === 'diagnosis' ? '主诉不详' : '问学者'),
     chip3: get(m,'chip3', m.style === 'diagnosis' ? '仍需复诊' : '造物者'),
     quote: get(m,'quote', m.style === 'diagnosis' ? '症状即线索' : '向未知处行'),
-    p1: get(m,'p1', m.style === 'diagnosis' ? '病名：未命名之症。主诉：材料尚少，仍需补充具体事实与真实细节。' : '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。'),
+    p1: get(m,'p1', m.style === 'diagnosis' ? '症候：未命名之症。主诉：材料尚少，仍需补充具体事实与真实细节。' : '今人者，华夏人也。少习诸艺，长而问己，未竟之事尤多。'),
     p2: get(m,'p2', m.style === 'diagnosis' ? '医嘱：少写形容词，多补一件真事；少求万能判断，先让朋友改两句。' : '其所求者，行远自迩，沉之为作。所好者深文，所厌者喧嚣。'),
     taishi:get(m,'taishi', m.style === 'diagnosis' ? '信息太少，不宜草率确诊。' : '志之所趋，无远弗届。'),
     warn:  globalWarn
@@ -1299,24 +1308,19 @@ async function downloadCard(key){
     setCardHint(cell, '<b>正在生成</b>：准备图片中。');
     const blob = await getCardBlob(key);
     if(!blob) throw new Error('missing card blob');
-    const file = new File([blob], filenameFor(key), {type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
-      await navigator.share({files:[file], title:'我的轻列传'});
-      setCardHint(cell, '<b>已打开分享</b>：也可以长按上方图片保存。');
-      return;
-    }
     const url = URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
     a.download=filenameFor(key);
+    a.rel='noopener';
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(()=>URL.revokeObjectURL(url), 5000);
-    setCardHint(cell, '<b>已生成</b>：若内置浏览器只打开文件预览，请长按上方图片保存。');
+    setCardHint(cell, '<b>已下载</b>：如果浏览器拦截下载，请右键/长按上方图片保存。');
   }catch(err){
     console.error(err);
-    setCardHint(cell, '<b>保存失败</b>：请长按上方图片保存，或用系统浏览器打开。');
+    setCardHint(cell, '<b>保存失败</b>：请右键/长按上方图片保存，或用系统浏览器打开。');
   }
 }
 
