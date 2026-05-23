@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>精列传入口 · 司马迁.skill</title>
+<meta name="description" content="粘贴个人简历、作品链接或公开主页，生成一段可交给 AI 的精列传启动提示词。">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+:root{
+  --c-bg:#e5e5e5;
+  --c-panel:#f6f6f4;
+  --c-panel-2:#ffffff;
+  --c-ink:#1a1a1a;
+  --c-ink-pure:#000;
+  --c-btn:#47494b;
+  --c-muted:#5c5e60;
+  --c-muted-2:#8b8f93;
+  --c-border-soft:rgba(71,73,75,.20);
+  --c-border-strong:rgba(71,73,75,.45);
+  --c-on-dark:#e5e5e5;
+  --c-on-dark-60:rgba(229,229,229,.60);
+  --c-on-dark-80:rgba(229,229,229,.82);
+  --c-seal:#a8302d;
+  --font-sans:"Inter","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --font-serif:"Noto Serif SC","Source Han Serif SC","Source Han Serif CN","Songti SC","STSongti-SC-Regular","STSong","SimSun","NSimSun","FangSong",Songti,Georgia,"Times New Roman",serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,"PingFang SC",monospace;
+  --container:1320px;
+  --pad-x:24px;
+  --pad-x-lg:48px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--c-bg);color:var(--c-ink);font-family:var(--font-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+::selection{background:var(--c-btn);color:var(--c-on-dark)}
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
+@media(min-width:960px){.container{padding:0 var(--pad-x-lg)}}
+
+.nav{position:sticky;top:0;z-index:20;background:var(--c-bg);border-bottom:1px solid var(--c-border-soft)}
+.nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px;max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
+@media(min-width:960px){.nav-inner{height:72px;padding:0 var(--pad-x-lg)}}
+.lockup{display:flex;align-items:baseline;gap:10px;min-width:0}
+.lockup .mark{font-family:var(--font-serif);font-size:18px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
+.lockup .tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--c-muted);white-space:nowrap}
+.nav-links{display:none;gap:28px;font-size:13px;color:var(--c-muted)}
+.nav-links a{transition:color .25s}
+.nav-links a:hover{color:var(--c-ink)}
+@media(min-width:820px){.nav-links{display:flex}}
+.nav-back{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);display:inline-flex;align-items:center;gap:6px;transition:color .25s;white-space:nowrap}
+.nav-back:hover{color:var(--c-ink)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--c-btn);background:var(--c-btn);color:var(--c-on-dark);padding:13px 18px;border-radius:0;font-weight:500;font-size:14px;line-height:1;min-height:46px;transition:background .25s,color .25s,border-color .25s}
+.btn:hover{background:var(--c-ink-pure);border-color:var(--c-ink-pure)}
+.btn.ghost{background:transparent;color:var(--c-ink);border-color:var(--c-border-strong)}
+.btn.ghost:hover{background:var(--c-btn);color:var(--c-on-dark);border-color:var(--c-btn)}
+.btn.light{background:var(--c-on-dark);color:var(--c-ink);border-color:var(--c-on-dark)}
+.btn.light:hover{background:#fff;border-color:#fff}
+.icon-btn{width:46px;height:46px;border:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);display:inline-flex;align-items:center;justify-content:center;transition:background .25s,color .25s,border-color .25s}
+.icon-btn:hover{background:var(--c-btn);color:var(--c-on-dark);border-color:var(--c-btn)}
+.icon-btn iconify-icon,.btn iconify-icon{font-size:17px}
+
+.shell{position:relative;overflow:hidden;border-bottom:1px solid var(--c-border-soft)}
+.shell::before{content:"精列傳";position:absolute;right:-72px;top:88px;font-family:var(--font-serif);font-size:clamp(150px,24vw,360px);font-weight:900;line-height:.9;letter-spacing:-.16em;color:rgba(0,0,0,.045);writing-mode:vertical-rl;pointer-events:none}
+.worktop{position:relative;z-index:1;padding:48px 0 72px;display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:1060px){.worktop{grid-template-columns:minmax(0,5fr) minmax(360px,4fr);align-items:stretch;padding:64px 0 88px;gap:0}}
+.intro{padding:0 0 18px}
+@media(min-width:1060px){.intro{padding:0 44px 0 0}}
+.eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.22em;color:var(--c-muted);display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.eyebrow::before{content:"";width:6px;height:6px;background:var(--c-btn);border-radius:50%}
+h1{font-family:var(--font-serif);font-size:clamp(46px,7vw,92px);line-height:1.03;letter-spacing:-.03em;margin:0;color:var(--c-ink)}
+h1 em{display:block;font-style:italic;font-weight:500;color:var(--c-btn)}
+.lead{font-family:var(--font-serif);font-size:clamp(17px,2vw,22px);line-height:1.75;font-weight:300;color:var(--c-muted);max-width:620px;margin:28px 0 0}
+.quick-grid{display:grid;grid-template-columns:1fr;gap:0;margin-top:34px;border-top:1px solid var(--c-border-soft);border-left:1px solid var(--c-border-soft);max-width:720px}
+@media(min-width:680px){.quick-grid{grid-template-columns:repeat(3,1fr)}}
+.quick{border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);padding:20px 18px;min-height:118px;background:rgba(255,255,255,.24)}
+.quick b{display:block;font-family:var(--font-serif);font-size:17px;margin-bottom:8px}
+.quick span{display:block;color:var(--c-muted);font-size:13px;line-height:1.65}
+
+.panel{border:1px solid var(--c-border-soft);background:rgba(255,255,255,.42);min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;border-bottom:1px solid var(--c-border-soft)}
+.panel-title{font-family:var(--font-serif);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.panel-meta{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted)}
+.panel-body{padding:22px;display:flex;flex-direction:column;gap:18px}
+.row{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:680px){.row.two{grid-template-columns:1fr 1fr}}
+.field label{display:flex;align-items:baseline;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);margin-bottom:8px}
+.field label span{letter-spacing:0;text-transform:none;color:rgba(92,94,96,.58);font-size:12px}
+.field input,.field textarea{width:100%;border:0;border-bottom:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);outline:none;border-radius:0;padding:10px 0;font-size:15px}
+.field textarea{min-height:260px;line-height:1.7;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--c-ink)}
+.field input::placeholder,.field textarea::placeholder{color:rgba(92,94,96,.42)}
+.link-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.link-list{display:flex;flex-wrap:wrap;gap:8px;min-height:34px}
+.link-pill{display:inline-flex;align-items:center;gap:8px;max-width:100%;border:1px solid var(--c-border-soft);background:rgba(255,255,255,.5);padding:7px 8px 7px 10px;font-size:13px;color:var(--c-ink)}
+.link-pill span{max-width:min(480px,72vw);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.link-pill button{width:24px;height:24px;border:0;background:transparent;color:var(--c-muted);display:inline-flex;align-items:center;justify-content:center;padding:0}
+.link-pill button:hover{color:var(--c-ink)}
+.seg{display:flex;border:1px solid var(--c-border-soft);background:rgba(255,255,255,.26);min-width:0}
+.seg button{flex:1;min-width:0;border:0;border-right:1px solid var(--c-border-soft);background:transparent;color:var(--c-muted);padding:13px 10px;font-family:var(--font-serif);font-size:14px;white-space:nowrap}
+.seg button:last-child{border-right:0}
+.seg button.active{background:var(--c-ink);color:var(--c-on-dark)}
+.checks{display:grid;grid-template-columns:1fr;gap:10px;padding-top:4px}
+@media(min-width:680px){.checks{grid-template-columns:repeat(3,1fr)}}
+.check{display:flex;align-items:flex-start;gap:10px;border-top:1px solid var(--c-border-soft);padding-top:12px;color:var(--c-muted);font-size:13px;line-height:1.55}
+.check input{width:16px;height:16px;margin-top:2px;accent-color:var(--c-btn);flex:0 0 auto}
+
+.output{background:var(--c-btn);color:var(--c-on-dark);display:flex;flex-direction:column}
+.output .panel-head{border-bottom:1px solid rgba(255,255,255,.18)}
+.output .panel-title{color:var(--c-on-dark)}
+.output .panel-meta{color:var(--c-on-dark-60)}
+.prompt{flex:1;min-height:520px;border:0;background:transparent;color:var(--c-on-dark);font-family:var(--font-mono);font-size:13px;line-height:1.78;padding:24px;outline:none;resize:vertical}
+.output-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:18px 22px;border-top:1px solid rgba(255,255,255,.18)}
+.output-foot .status{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-on-dark-60);opacity:0;transition:opacity .25s}
+.output-foot .status.show{opacity:1}
+.meter{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--c-border-soft);border-left:1px solid var(--c-border-soft);margin-top:4px}
+.meter div{border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);padding:13px 12px}
+.meter b{display:block;font-family:var(--font-mono);font-size:18px;line-height:1.2}
+.meter span{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-muted);margin-top:3px}
+.section{padding:56px 0 72px;border-bottom:1px solid var(--c-border-soft)}
+.section-head{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:28px}
+@media(min-width:900px){.section-head{grid-template-columns:auto 1fr;gap:36px;align-items:end}}
+.section-num{font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--c-muted)}
+.section h2{font-family:var(--font-serif);font-size:clamp(30px,4vw,48px);line-height:1.12;letter-spacing:-.02em;margin:0}
+.ideas{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--c-border-soft);border-left:1px solid var(--c-border-soft)}
+@media(min-width:900px){.ideas{grid-template-columns:repeat(4,1fr)}}
+.idea{padding:26px 22px 30px;border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);background:rgba(255,255,255,.2)}
+.idea iconify-icon{font-size:20px;color:var(--c-seal);margin-bottom:16px}
+.idea h3{font-family:var(--font-serif);font-size:19px;margin:0 0 10px}
+.idea p{margin:0;color:var(--c-muted);font-size:14px;line-height:1.75}
+.foot{padding:24px 0;color:var(--c-muted);font-size:13px}
+.foot-inner{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid var(--c-border-soft);padding-top:18px}
+@media(max-width:640px){
+  .nav-back{display:none}
+  .prompt{min-height:420px}
+  .output-foot .btn{flex:1}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="lockup">
+      <span class="mark">司马迁<span style="font-family:var(--font-sans);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--c-muted)">.skill</span></span>
+      <span class="tag">精列傳入口</span>
+    </div>
+    <div class="nav-links">
+      <a href="./index.html">轻列传</a>
+      <a href="#intake">简历入口</a>
+      <a href="#optimize">可优化项</a>
+    </div>
+    <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
+      <iconify-icon icon="lucide:arrow-left"></iconify-icon>
+      草诀歌 AI Labs
+    </a>
+  </div>
+</nav>
+
+<main>
+  <section class="shell" id="intake">
+    <div class="container">
+      <div class="worktop">
+        <div class="intro">
+          <div class="eyebrow">Personal OS Intake · Resume / Links</div>
+          <h1>把简历，<em>交给史官。</em></h1>
+          <p class="lead">粘贴简历正文、公开主页或作品链接，生成一段可直接交给 AI 的精列传启动提示词。</p>
+          <div class="quick-grid" aria-label="精列传输出">
+            <div class="quick"><b>Persona Agent</b><span>给 AI 的人物档案：事实、判断、边界、协作方式。</span></div>
+            <div class="quick"><b>Personal Homepage</b><span>给合作方看的个人主页：你是谁，能提供什么。</span></div>
+            <div class="quick"><b>Interview Gaps</b><span>材料不足时，只追问高杠杆缺口。</span></div>
+          </div>
+        </div>
+
+        <aside class="panel output" aria-label="生成的精列传启动提示词">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">启动提示词</div>
+              <div class="panel-meta">simaqian-intake.txt</div>
+            </div>
+            <button class="icon-btn" id="refreshPrompt" aria-label="刷新提示词" title="刷新提示词">
+              <iconify-icon icon="lucide:refresh-cw"></iconify-icon>
+            </button>
+          </div>
+          <textarea class="prompt" id="promptBox" spellcheck="false"></textarea>
+          <div class="output-foot">
+            <button class="btn light" id="copyPrompt"><iconify-icon icon="lucide:copy"></iconify-icon>复制提示词</button>
+            <button class="btn ghost" id="downloadPrompt"><iconify-icon icon="lucide:download"></iconify-icon>下载 .txt</button>
+            <span class="status" id="statusText">已更新</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2>个人材料</h2>
+      </div>
+      <div class="panel">
+        <div class="panel-body">
+          <div class="row two">
+            <div class="field">
+              <label for="personName">称呼 <span>可选</span></label>
+              <input id="personName" autocomplete="name" placeholder="韶华 David / Hua / 你的常用称呼">
+            </div>
+            <div class="field">
+              <label for="currentRole">当前身份 <span>可选</span></label>
+              <input id="currentRole" placeholder="AI 产品经理 / 创作者 / 独立顾问 / 创业者">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="resumeText">简历正文 <span id="resumeHint">0 字</span></label>
+            <textarea id="resumeText" placeholder="可以粘贴简历、LinkedIn/脉脉介绍、个人简介、作品清单、播客介绍、公众号简介，或任何已经公开/愿意被整理的材料。"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="linkInput">公开链接 <span id="linkHint">0 条</span></label>
+            <div class="link-line">
+              <input id="linkInput" placeholder="https://example.com/profile">
+              <button class="btn ghost" id="addLink"><iconify-icon icon="lucide:plus"></iconify-icon>添加</button>
+            </div>
+          </div>
+          <div class="link-list" id="linkList" aria-live="polite"></div>
+
+          <div class="row two">
+            <div class="field">
+              <label>输出范围</label>
+              <div class="seg" id="modeSeg" role="tablist" aria-label="输出范围">
+                <button class="active" data-mode="full">全套</button>
+                <button data-mode="agent">只要 Persona</button>
+                <button data-mode="homepage">只要主页</button>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);margin-bottom:8px">材料状态</label>
+              <div class="meter">
+                <div><b id="wordCount">0</b><span>Chars</span></div>
+                <div><b id="linkCount">0</b><span>Links</span></div>
+                <div><b id="signalCount">弱</b><span>Signal</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="checks">
+            <label class="check"><input id="publicOnly" type="checkbox" checked>默认只采用我公开或愿意公开的信息</label>
+            <label class="check"><input id="allowInterview" type="checkbox" checked>材料不足时先访谈，再输出</label>
+            <label class="check"><input id="skipSensitive" type="checkbox" checked>跳过电话、住址、薪资、健康等敏感字段</label>
+          </div>
+
+          <div style="display:flex;gap:0;flex-wrap:wrap;padding-top:6px">
+            <button class="btn" id="buildPrompt"><iconify-icon icon="lucide:sparkles"></iconify-icon>生成提示词</button>
+            <button class="btn ghost" id="clearAll" style="margin-left:-1px"><iconify-icon icon="lucide:eraser"></iconify-icon>清空</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="optimize" style="border-bottom:0">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2>这个 skill 还可以继续优化的地方</h2>
+      </div>
+      <div class="ideas">
+        <div class="idea">
+          <iconify-icon icon="lucide:route"></iconify-icon>
+          <h3>材料入口前置</h3>
+          <p>把精列传从“复制一句话”升级成“粘材料、出提示词”，降低第一次使用的心理门槛。</p>
+        </div>
+        <div class="idea">
+          <iconify-icon icon="lucide:scan-search"></iconify-icon>
+          <h3>缺口追问</h3>
+          <p>先根据简历识别身份、作品、判断、边界，再只追问缺失的 6-10 个关键问题。</p>
+        </div>
+        <div class="idea">
+          <iconify-icon icon="lucide:shield-check"></iconify-icon>
+          <h3>隐私分级</h3>
+          <p>把公开信息、可私用信息、禁止写入信息分层，减少个人主页误曝风险。</p>
+        </div>
+        <div class="idea">
+          <iconify-icon icon="lucide:file-check-2"></iconify-icon>
+          <h3>输出验收</h3>
+          <p>给 persona-agent.md 和 personal-homepage.html 加自检清单，避免空泛、编造和营销腔。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="container">
+    <div class="foot-inner">
+      <span><b>司马迁.skill</b> · 精列传入口</span>
+      <span>草诀歌 AI Labs · 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const els = {
+  name: document.getElementById('personName'),
+  role: document.getElementById('currentRole'),
+  resume: document.getElementById('resumeText'),
+  linkInput: document.getElementById('linkInput'),
+  linkList: document.getElementById('linkList'),
+  prompt: document.getElementById('promptBox'),
+  status: document.getElementById('statusText'),
+  wordCount: document.getElementById('wordCount'),
+  linkCount: document.getElementById('linkCount'),
+  signalCount: document.getElementById('signalCount'),
+  resumeHint: document.getElementById('resumeHint'),
+  linkHint: document.getElementById('linkHint'),
+  publicOnly: document.getElementById('publicOnly'),
+  allowInterview: document.getElementById('allowInterview'),
+  skipSensitive: document.getElementById('skipSensitive')
+};
+
+let links = [];
+let outputMode = 'full';
+const storageKey = 'simaqian-intake-v1';
+
+function cleanText(s){
+  return String(s || '').replace(/\r/g, '').trim();
+}
+
+function normaliseUrl(raw){
+  const value = cleanText(raw);
+  if(!value) return '';
+  const withProtocol = /^[a-z]+:\/\//i.test(value) ? value : `https://${value}`;
+  try{
+    const url = new URL(withProtocol);
+    if(!/^https?:$/.test(url.protocol)) return '';
+    return url.href;
+  }catch(_){
+    return '';
+  }
+}
+
+function showStatus(text){
+  els.status.textContent = text;
+  els.status.classList.add('show');
+  clearTimeout(showStatus.timer);
+  showStatus.timer = setTimeout(()=>els.status.classList.remove('show'), 1500);
+}
+
+function outputLabel(){
+  if(outputMode === 'agent') return '只输出 persona-agent.md';
+  if(outputMode === 'homepage') return '只输出 personal-homepage.html';
+  return '输出 persona-agent.md + personal-homepage.html';
+}
+
+function policyLines(){
+  const lines = [];
+  if(els.publicOnly.checked) lines.push('- 默认只采用我公开或明确愿意写入的信息；不确定的信息先标注为“待确认”。');
+  if(els.skipSensitive.checked) lines.push('- 跳过电话、住址、薪资、健康、家庭、未公开商业合作等敏感字段。');
+  if(els.allowInterview.checked) lines.push('- 如果材料不足，不要硬写成品，先追问 6-10 个高杠杆问题。');
+  return lines.join('\n') || '- 遵循仓库 SKILL.md 的隐私默认与输出规范。';
+}
+
+function buildPrompt(){
+  const name = cleanText(els.name.value) || '未填写';
+  const role = cleanText(els.role.value) || '未填写';
+  const resume = cleanText(els.resume.value);
+  const linkBlock = links.length ? links.map((l, i)=>`${i + 1}. ${l}`).join('\n') : '未提供';
+  const materialBlock = resume || '未提供。请先基于称呼、身份和链接判断是否足够；如果链接无法访问，请让我补充正文材料。';
+
+  return `请按 github.com/ShaohuaDavidLee/simaqian 这个仓库的 SKILL.md，帮我跑一份精列传。
+请先读取 README、SKILL.md 和 references/ 的工作流，再基于我下面的材料输出。
+
+【输出范围】
+${outputLabel()}
+
+【基础信息】
+称呼：${name}
+当前身份：${role}
+
+【隐私与边界】
+${policyLines()}
+
+【公开链接 / 作品链接】
+${linkBlock}
+
+【简历正文 / 个人材料】
+${materialBlock}
+
+【处理要求】
+1. 先吸收材料，不要一上来发长问卷。
+2. 先列出你确认掌握的事实、判断、风格、边界和证据来源。
+3. 如果链接无法打开，请明确告诉我需要粘贴哪些页面内容，不要编造。
+4. 如果材料足够，直接输出文件内容；如果材料不足，只追问最关键的缺口。
+5. 写作要具体、克制、可验证，不要写成成功学包装或营销简介。
+6. persona-agent.md 要服务 AI 协作；personal-homepage.html 要服务真人合作方快速理解我。`;
+}
+
+function renderLinks(){
+  els.linkList.innerHTML = links.map((link, index)=>`
+    <span class="link-pill">
+      <span>${escapeHtml(link)}</span>
+      <button type="button" data-remove="${index}" aria-label="删除链接"><iconify-icon icon="lucide:x"></iconify-icon></button>
+    </span>
+  `).join('');
+  updateMeta();
+}
+
+function addLinksFromInput(){
+  const raw = cleanText(els.linkInput.value);
+  if(!raw) return;
+  const candidates = raw.split(/\s+/).map(normaliseUrl).filter(Boolean);
+  const added = [];
+  candidates.forEach(url=>{
+    if(!links.includes(url)){
+      links.push(url);
+      added.push(url);
+    }
+  });
+  els.linkInput.value = '';
+  renderLinks();
+  updatePrompt();
+  showStatus(added.length ? '已添加链接' : '链接无效');
+}
+
+function escapeHtml(s){
+  return String(s || '').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+}
+
+function signalLabel(chars, linkCount){
+  if(chars > 1600 || (chars > 800 && linkCount >= 2) || linkCount >= 4) return '强';
+  if(chars > 400 || linkCount >= 2) return '中';
+  return '弱';
+}
+
+function updateMeta(){
+  const chars = cleanText(els.resume.value).length;
+  els.wordCount.textContent = String(chars);
+  els.linkCount.textContent = String(links.length);
+  els.resumeHint.textContent = `${chars} 字`;
+  els.linkHint.textContent = `${links.length} 条`;
+  els.signalCount.textContent = signalLabel(chars, links.length);
+}
+
+function updatePrompt(){
+  updateMeta();
+  els.prompt.value = buildPrompt();
+  persist();
+}
+
+function persist(){
+  const payload = {
+    name: els.name.value,
+    role: els.role.value,
+    resume: els.resume.value,
+    links,
+    outputMode,
+    publicOnly: els.publicOnly.checked,
+    allowInterview: els.allowInterview.checked,
+    skipSensitive: els.skipSensitive.checked
+  };
+  try{ localStorage.setItem(storageKey, JSON.stringify(payload)); }catch(_){}
+}
+
+function restore(){
+  try{
+    const raw = localStorage.getItem(storageKey);
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    els.name.value = saved.name || '';
+    els.role.value = saved.role || '';
+    els.resume.value = saved.resume || '';
+    links = Array.isArray(saved.links) ? saved.links.filter(Boolean) : [];
+    outputMode = saved.outputMode || 'full';
+    els.publicOnly.checked = saved.publicOnly !== false;
+    els.allowInterview.checked = saved.allowInterview !== false;
+    els.skipSensitive.checked = saved.skipSensitive !== false;
+  }catch(_){}
+}
+
+function syncModeButtons(){
+  document.querySelectorAll('#modeSeg button').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.mode === outputMode);
+  });
+}
+
+document.getElementById('addLink').addEventListener('click', addLinksFromInput);
+els.linkInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    addLinksFromInput();
+  }
+});
+els.linkList.addEventListener('click', e=>{
+  const btn = e.target.closest('[data-remove]');
+  if(!btn) return;
+  links.splice(Number(btn.dataset.remove), 1);
+  renderLinks();
+  updatePrompt();
+  showStatus('已删除链接');
+});
+document.getElementById('modeSeg').addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-mode]');
+  if(!btn) return;
+  outputMode = btn.dataset.mode;
+  syncModeButtons();
+  updatePrompt();
+});
+['input','change'].forEach(type=>{
+  [els.name, els.role, els.resume, els.publicOnly, els.allowInterview, els.skipSensitive].forEach(el=>{
+    el.addEventListener(type, updatePrompt);
+  });
+});
+document.getElementById('buildPrompt').addEventListener('click', ()=>{
+  updatePrompt();
+  showStatus('已生成');
+});
+document.getElementById('refreshPrompt').addEventListener('click', ()=>{
+  updatePrompt();
+  showStatus('已刷新');
+});
+document.getElementById('copyPrompt').addEventListener('click', async ()=>{
+  updatePrompt();
+  try{ await navigator.clipboard.writeText(els.prompt.value); }
+  catch(_){ els.prompt.focus(); els.prompt.select(); document.execCommand('copy'); }
+  showStatus('已复制');
+});
+document.getElementById('downloadPrompt').addEventListener('click', ()=>{
+  updatePrompt();
+  const blob = new Blob([els.prompt.value], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'simaqian-intake-prompt.txt';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+  showStatus('已下载');
+});
+document.getElementById('clearAll').addEventListener('click', ()=>{
+  els.name.value = '';
+  els.role.value = '';
+  els.resume.value = '';
+  els.linkInput.value = '';
+  links = [];
+  outputMode = 'full';
+  els.publicOnly.checked = true;
+  els.allowInterview.checked = true;
+  els.skipSensitive.checked = true;
+  syncModeButtons();
+  renderLinks();
+  updatePrompt();
+  showStatus('已清空');
+});
+
+restore();
+syncModeButtons();
+renderLinks();
+updatePrompt();
+</script>
+</body>
+</html>
