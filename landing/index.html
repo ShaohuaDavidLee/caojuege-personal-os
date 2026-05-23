@@ -607,6 +607,7 @@ body.render-mode #landing{display:none}
       <div class="nav-links">
         <a href="#samples">样张</a>
         <a href="#generate">生成</a>
+        <a href="./intake.html">简历入口</a>
         <a href="#depth">精列传</a>
       </div>
       <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
@@ -630,6 +631,7 @@ body.render-mode #landing{display:none}
           <div class="hero-actions">
             <a class="btn" href="#generate">开始立传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
             <a class="btn ghost" href="#samples" style="margin-left:-1px">先看样张</a>
+            <a class="btn ghost" href="./intake.html" style="margin-left:-1px"><iconify-icon icon="lucide:file-input"></iconify-icon>粘贴简历</a>
           </div>
         </div>
       </div>
@@ -775,6 +777,7 @@ body.render-mode #landing{display:none}
 我的材料放在 ./me 里。如果我没有材料，访谈我就行。</textarea>
         <div class="gen-main-foot">
           <button class="btn btn-light" id="copyFinePrompt"><iconify-icon icon="lucide:copy"></iconify-icon>复制提示词</button>
+          <a class="btn btn-clear" href="./intake.html"><iconify-icon icon="lucide:file-input"></iconify-icon>粘贴简历生成</a>
           <a class="btn btn-clear" href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener"><iconify-icon icon="lucide:github"></iconify-icon>查看 GitHub</a>
           <a class="btn btn-clear" href="https://www.caojuege.com/" target="_blank" rel="noopener"><iconify-icon icon="lucide:arrow-up-right"></iconify-icon>草诀歌 AI Labs</a>
           <span class="copied" id="copiedFine">已复制 ✓</span>
@@ -803,6 +806,7 @@ body.render-mode #landing{display:none}
       </div>
       <div class="nav-links">
         <a href="#samples" onclick="goLanding()">回到首页</a>
+        <a href="./intake.html">简历入口</a>
         <a href="#depth" onclick="goLanding('#depth')">精列传</a>
       </div>
       <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
@@ -844,7 +848,7 @@ body.render-mode #landing{display:none}
           <p>如果你想让 AI 真正理解你，可以继续生成精列传：<br>一份给 AI 看的 <code style="font-family:'JetBrains Mono',monospace;font-size:14px;background:rgba(255,255,255,.1);padding:2px 6px">persona-agent.md</code>，一份给人看的 personal homepage。</p>
         </div>
         <div class="actions">
-          <a class="btn primary" href="#" onclick="goLanding('#depth');return false">生成我的精列传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
+          <a class="btn primary" href="./intake.html">生成我的精列传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
           <a class="btn" href="#" onclick="goLanding('#generate');return false">再生成一版轻列传</a>
         </div>
       </div>
