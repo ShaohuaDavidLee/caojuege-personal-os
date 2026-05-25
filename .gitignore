@@ -1,0 +1,7 @@
+node_modules/
+*.log
+.DS_Store
+# Cloudflare 本地密钥，绝不提交
+.dev.vars
+**/.dev.vars
+.wrangler/

@@ -1,0 +1,6 @@
+# 本地用 `wrangler pages dev landing-b` 时，复制本文件为 .dev.vars 并填入真实值。
+# 真实 .dev.vars 已被 .gitignore 忽略，切勿提交真实 key。
+# 线上：在 Cloudflare Pages 项目 → Settings → Environment variables 里设置同名变量，
+#       DEEPSEEK_API_KEY 设为「加密(Secret)」。
+DEEPSEEK_API_KEY=sk-在这里填你自己的key
+DEEPSEEK_MODEL=deepseek-v4-pro

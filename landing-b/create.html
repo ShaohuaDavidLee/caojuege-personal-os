@@ -123,13 +123,24 @@ window.VerdictCard=(function(){
 (function(){
   var $=function(id){return document.getElementById(id);};
   var toastEl=$('toast'),off=0;
-  function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('show');},2400);}
-  function render(){VerdictCard.draw($('card'),VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off));}
-  ['name','b1','b2'].forEach(function(id){$(id).addEventListener('input',render);});
-  $('reroll').addEventListener('click',function(){off++;render();});
+  function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('show');},2800);}
+  function tmpl(){VerdictCard.draw($('card'),VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off));}
+  ['name','b1','b2'].forEach(function(id){$(id).addEventListener('input',tmpl);});
+  var gen=$('reroll');
+  gen.addEventListener('click',function(){
+    var label=gen.textContent; gen.disabled=true; gen.textContent='太史公落笔中…';
+    fetch('/api/verdict',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:$('name').value,b1:$('b1').value,b2:$('b2').value})})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        if(!j||!j.line) throw new Error(j&&j.error||'no_line');
+        var d=VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off); d.line=j.line; VerdictCard.draw($('card'),d);
+      })
+      .catch(function(){ off++; tmpl(); toast('太史公一时走神，先用模板写了一句。部署到 s.caojuege.com 接上 DeepSeek 后就是真的。'); })
+      .finally(function(){ gen.disabled=false; gen.textContent=label; });
+  });
   $('download').addEventListener('click',function(){var n=VerdictCard.clean($('name').value)||'verdict';VerdictCard.download($('card'),'taishi-'+n+'.png');});
-  $('again').addEventListener('click',function(){$('name').value='';$('b1').value='';$('b2').value='';off=0;$('name').focus();render();toast('换个人再损。正式版：把链接发回给被损的人，TA 填两栏就能回敬你。');});
-  render();VerdictCard.ensureFonts().then(render);
+  $('again').addEventListener('click',function(){$('name').value='';$('b1').value='';$('b2').value='';off=0;$('name').focus();tmpl();toast('换个人再损。');});
+  tmpl();VerdictCard.ensureFonts().then(tmpl);
 })();
 </script>
 </body>
