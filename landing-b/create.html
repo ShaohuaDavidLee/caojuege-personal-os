@@ -36,6 +36,10 @@
     <div class="flow-grid">
       <section>
         <p class="hook">你越具体，TA 越想转发；你越客套，它越像年会颁奖词。</p>
+        <div class="dice-row">
+          <button class="btn ghost" id="dice" type="button">没头绪？随机抽一组</button>
+          <span class="dice-hint">点下面的示例就能填，改两个字更像 TA</span>
+        </div>
         <div class="field">
           <div class="label-row"><span class="label">你正在为谁定判词</span><span class="hint">写 TA 愿意被这样叫的名字</span></div>
           <input id="name" value="老周" maxlength="6" autocomplete="off" style="max-width:240px" />
@@ -43,10 +47,12 @@
         <div class="field">
           <div class="label-row"><span class="label">TA 最让你受不了的口头禅</span><span class="hint">越具体越好</span></div>
           <input id="b1" value="在吗？（然后消失俩小时）" autocomplete="off" />
+          <div class="chips" id="chips-b1"></div>
         </div>
         <div class="field">
           <div class="label-row"><span class="label">TA 最可爱的反差 / 隐藏 bug</span><span class="hint">当面也能说的那种</span></div>
           <textarea id="b2">嘴上说要戒手机，朋友圈半夜三点还在线</textarea>
+          <div class="chips" id="chips-b2"></div>
         </div>
         <div class="actions"><button class="btn" id="reroll">有请太史公写判词</button></div>
       </section>
@@ -144,6 +150,14 @@ window.VerdictCard=(function(){
   });
   $('download').addEventListener('click',function(){var n=VerdictCard.clean($('name').value)||'verdict';VerdictCard.download($('card'),'taishi-'+n+'.png');});
   $('again').addEventListener('click',function(){$('name').value='';$('b1').value='';$('b2').value='';off=0;$('name').focus();tmpl();toast('换个人再损。');});
+
+  var CHIPS_B1=['在吗','等我五分钟','这事我熟','下次一定','我马上到','不熬夜了','随便都行'];
+  var CHIPS_B2=['嘴上躺平，加班最狠','说要减肥，半夜点外卖','天天哭穷，又总抢着买单','喊着断舍离，购物车堆成山','说不熬夜，三点还在刷手机','朋友圈很佛，抢红包最快'];
+  var PRESETS=[{name:'老周',b1:'等我五分钟',b2:'每次都迟到，还总怪路上堵'},{name:'阿强',b1:'这事我熟',b2:'吹得最响，干得最少'},{name:'室友',b1:'随便吃点',b2:'说随便，又把每家都嫌一遍'},{name:'老板',b1:'马上就好',b2:'说马上，让人等到天荒地老'},{name:'我妈',b1:'我没事',b2:'嘴上没事，电话里能念叨半小时'},{name:'老王',b1:'下次一定',b2:'答应的事永远在下次，从没下次'}];
+  function chips(boxId,list,targetId){var box=$(boxId);if(!box)return;list.forEach(function(t){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.addEventListener('click',function(){$(targetId).value=t;tmpl();});box.appendChild(b);});}
+  chips('chips-b1',CHIPS_B1,'b1');chips('chips-b2',CHIPS_B2,'b2');
+  $('dice').addEventListener('click',function(){var p=PRESETS[Math.floor(Math.random()*PRESETS.length)];$('name').value=p.name;$('b1').value=p.b1;$('b2').value=p.b2;tmpl();toast('抽了一组，改两个字更像 TA。');});
+
   tmpl();VerdictCard.ensureFonts().then(tmpl);
 })();
 </script>

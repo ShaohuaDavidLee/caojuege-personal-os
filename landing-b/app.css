@@ -83,6 +83,13 @@ textarea{min-height:80px;resize:vertical}
 input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface)}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 .actions .btn{width:100%;padding:16px 22px}
+.dice-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 24px}
+#dice{padding:9px 16px;font-size:13px;width:auto}
+.dice-hint{font-family:var(--font-sans);font-size:12px;color:var(--c-muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-family:var(--font-serif);font-size:13.5px;color:var(--c-ink);border:1px solid var(--c-border-soft);background:rgba(255,255,255,.3);padding:6px 12px;cursor:pointer;transition:border-color .15s,background .15s;line-height:1.45;border-radius:0}
+.chip:hover{border-color:var(--c-btn);background:#fff}
+.chip:active{transform:translateY(1px)}
 
 /* card stage + stacked CTA (shared by create & receive) */
 .stage{position:sticky;top:96px}
