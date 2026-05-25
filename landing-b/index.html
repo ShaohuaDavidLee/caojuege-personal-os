@@ -70,25 +70,23 @@ button{font:inherit;cursor:pointer}
 .label{font-size:14.5px;color:var(--c-ink)}
 .hint{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted)}
 input,textarea{width:100%;border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:13px 14px;color:var(--c-ink);font-family:var(--font-serif);font-size:17px;line-height:1.7;outline:none;border-radius:0;transition:border-color .25s,background .25s}
-.subject input{font-weight:700;font-size:19px;padding:7px 11px}
+.subject input{font-size:17px;padding:9px 12px}
 textarea{min-height:80px;resize:vertical}
 input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface)}
 .note{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted);margin-top:4px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.actions .btn{width:100%;padding:16px 22px}
 
 /* preview */
 .stage{position:sticky;top:96px}
 .stage-frame{border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:14px}
 #card{width:100%;height:auto;display:block;box-shadow:0 16px 40px rgba(0,0,0,.16)}
-.stage-cta{margin-top:16px;display:flex;flex-direction:column;gap:0;border:1px solid var(--c-border-soft)}
-.stage-cta .row{display:flex;gap:0;border-bottom:1px solid var(--c-border-soft)}
-.stage-cta .row:last-child{border-bottom:0}
-.stage-cta .btn{flex:1;border:0;border-right:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink)}
-.stage-cta .btn:last-child{border-right:0}
+.stage-cta{margin-top:16px;display:flex;flex-direction:column;border:1px solid var(--c-border-soft)}
+.stage-cta .btn{width:100%;border:0;border-bottom:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);padding:16px 22px}
+.stage-cta .btn:last-child{border-bottom:0}
 .stage-cta .btn:hover{background:var(--c-btn);color:var(--c-on-dark)}
 .stage-cta .btn.primary{background:var(--c-btn);color:var(--c-on-dark)}
 .stage-cta .btn.primary:hover{background:var(--c-ink-pure)}
-.cta-for{font-family:var(--font-sans);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);padding:10px 14px 2px}
 .savehint{margin-top:10px;font-family:var(--font-serif);font-size:12.5px;color:var(--c-muted);text-align:center}
 .savehint b{color:var(--c-ink);font-weight:500}
 
@@ -125,7 +123,7 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
 </nav>
 
 <section class="head">
-  <div class="head-wm">判</div>
+  <div class="head-wm">判詞</div>
   <div class="container">
     <div class="eyebrow">Personal Annal · 太史判词</div>
     <h1>给朋友定<em>一句判词</em>。</h1>
@@ -143,7 +141,6 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
           <span class="for">你正在为</span>
           <input id="name" value="老周" maxlength="6" aria-label="对象称呼" />
           <span class="for">定一句太史判词</span>
-          <div class="note" style="flex-basis:100%">正式版对象名从链接带入，损友无需填；这里可改着玩。</div>
         </div>
 
         <div class="field">
@@ -159,20 +156,13 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
         <div class="actions">
           <button class="btn ghost" id="reroll">换一句判词</button>
         </div>
-        <div class="note" style="margin-top:14px">判词由 AI 生成；此页用模板示意格式与版式。</div>
       </section>
 
       <aside class="stage">
-        <div class="stage-frame"><canvas id="card" width="2160" height="2160" aria-label="太史判词预览"></canvas></div>
+        <div class="stage-frame"><canvas id="card" width="2160" height="2880" aria-label="太史判词预览"></canvas></div>
         <div class="stage-cta">
-          <div>
-            <div class="cta-for">主动作</div>
-            <div class="row"><button class="btn primary" id="download">下载 / 发回群里</button></div>
-          </div>
-          <div>
-            <div class="cta-for">继续传播</div>
-            <div class="row"><button class="btn" id="again">再损一个朋友</button></div>
-          </div>
+          <button class="btn primary" id="download">下载 / 发回群里</button>
+          <button class="btn" id="again">再损一个朋友</button>
         </div>
         <div class="savehint"><b>长按图片</b>保存到相册，或点「下载 / 发回群里」</div>
       </aside>
@@ -198,7 +188,7 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
   const SERIF = '"Noto Serif SC","Songti SC","STSong",serif';
   const MONO = 'ui-monospace,Menlo,monospace';
   const SANS = '"Inter","PingFang SC",sans-serif';
-  const RATIO=2, W=1080, H=1080, P=84;
+  const RATIO=2, W=1080, H=1440, P=84;
   let tplOffset=0, blob=null, objURL=null;
 
   const clean = s => String(s||'').replace(/\s+/g,' ').trim();
@@ -293,10 +283,12 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle='#e5e5e5'; ctx.fillRect(0,0,W,H);
 
-    // watermark
+    // watermark 判詞（繁体，竖排两字）
     ctx.save();
-    ctx.fillStyle='rgba(0,0,0,.05)'; ctx.font='900 600px '+SERIF; setLS(ctx,0);
-    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('判',W*.62,H*.6); ctx.restore();
+    ctx.fillStyle='rgba(0,0,0,.05)'; ctx.font='900 430px '+SERIF; setLS(ctx,0);
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('判',W*.66,H*.34); ctx.fillText('詞',W*.66,H*.64);
+    ctx.restore();
 
     // top bar
     ctx.save();
@@ -307,25 +299,25 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
     ctx.textAlign='right'; ctx.fillText('PERSONAL ANNAL · 判',W-P,P+26); ctx.restore();
 
     // seal (upper right)
-    drawSeal(ctx,W-P-116,P+78,116);
+    drawSeal(ctx,W-P-116,P+82,116);
 
     // verdict (centered in zone)
     ctx.save();
-    ctx.fillStyle='#1a1a1a'; ctx.font='700 62px '+SERIF; setLS(ctx,1);
+    ctx.fillStyle='#1a1a1a'; ctx.font='700 66px '+SERIF; setLS(ctx,1);
     ctx.textAlign='left'; ctx.textBaseline='top';
-    const lineH=92, maxLines=5;
+    const lineH=100, maxLines=6;
     const lines=wrap(ctx,'「'+line+'」',W-2*P,maxLines);
-    const zT=372, zB=748;
+    const zT=448, zB=1014;
     let y=Math.max(zT,(zT+zB)/2-(lines.length*lineH)/2);
     for(const ln of lines){ ctx.fillText(ln,P,y); y+=lineH; }
     ctx.restore();
 
     // rule + evidence
     ctx.save();
-    ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(P,792,W-2*P,3);
+    ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(P,1072,W-2*P,3);
     ctx.fillStyle='#5c5e60'; ctx.font='500 25px '+SERIF; setLS(ctx,0);
     ctx.textAlign='left'; ctx.textBaseline='top';
-    let ey=820; for(const ln of wrap(ctx,ev,W-2*P,2)){ ctx.fillText(ln,P,ey); ey+=37; }
+    let ey=1100; for(const ln of wrap(ctx,ev,W-2*P,2)){ ctx.fillText(ln,P,ey); ey+=37; }
     ctx.restore();
 
     // footer
