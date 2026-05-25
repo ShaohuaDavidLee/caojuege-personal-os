@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>给朋友定一句 · 太史判词</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./app.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="lockup"><a href="./index.html" class="mark">司马迁<span class="dot">.skill</span></a><span class="tag">太史判词</span></div>
+    <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
+      <svg class="ico" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      草诀歌 AI Labs
+    </a>
+  </div>
+</nav>
+
+<section class="hero" style="padding-bottom:36px">
+  <div class="hero-wm">判詞</div>
+  <div class="container">
+    <div class="eyebrow">Personal Annal · 太史判词</div>
+    <h1 style="margin-bottom:10px">给朋友定<em>一句判词</em>。</h1>
+    <p class="lead" style="margin-bottom:0">填两栏，出一张能甩回群里的卡。损得越具体，TA 越想转发。</p>
+  </div>
+</section>
+
+<div class="flow">
+  <div class="container">
+    <div class="flow-grid">
+      <section>
+        <p class="hook">你越具体，TA 越想转发；你越客套，它越像年会颁奖词。</p>
+        <div class="subject">
+          <span class="for">你正在为</span>
+          <input id="name" value="老周" maxlength="6" aria-label="对象称呼" />
+          <span class="for">定一句太史判词</span>
+        </div>
+        <div class="field">
+          <div class="label-row"><span class="label">TA 最让你受不了的口头禅</span><span class="hint">越具体越好</span></div>
+          <input id="b1" value="在吗？（然后消失俩小时）" autocomplete="off" />
+        </div>
+        <div class="field">
+          <div class="label-row"><span class="label">TA 最可爱的反差 / 隐藏 bug</span><span class="hint">当面也能说的那种</span></div>
+          <textarea id="b2">嘴上说要戒手机，朋友圈半夜三点还在线</textarea>
+        </div>
+        <div class="actions"><button class="btn ghost" id="reroll">换一句判词</button></div>
+      </section>
+
+      <aside class="stage">
+        <div class="stage-frame"><canvas id="card" class="vcard" width="2160" height="2880" aria-label="太史判词预览"></canvas></div>
+        <div class="cta-stack">
+          <button class="btn primary" id="download">下载 / 发回群里</button>
+          <button class="btn" id="again">再损一个朋友</button>
+        </div>
+        <div class="savehint"><b>长按图片</b>保存到相册，或点「下载 / 发回群里」</div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<footer class="foot">
+  <div class="container">
+    <div class="foot-inner"><span>司马迁.skill · 太史判词</span><span>s.caojuege.com</span></div>
+  </div>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="./verdict-card.js"></script>
+<script>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var toastEl = $('toast'), off = 0;
+  function toast(m){ toastEl.textContent = m; toastEl.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(function(){ toastEl.classList.remove('show'); }, 2400); }
+  function render(){ VerdictCard.draw($('card'), VerdictCard.buildData($('name').value, $('b1').value, $('b2').value, off)); }
+
+  ['name','b1','b2'].forEach(function(id){ $(id).addEventListener('input', render); });
+  $('reroll').addEventListener('click', function(){ off++; render(); });
+  $('download').addEventListener('click', function(){
+    var n = VerdictCard.clean($('name').value) || 'verdict';
+    VerdictCard.download($('card'), 'taishi-' + n + '.png');
+  });
+  $('again').addEventListener('click', function(){
+    $('name').value = ''; $('b1').value = ''; $('b2').value = ''; off = 0;
+    $('name').focus(); render();
+    toast('换个人再损。正式版：把链接发回给被损的人，TA 填两栏就能回敬你。');
+  });
+
+  render();
+  VerdictCard.ensureFonts().then(render);
+})();
+</script>
+</body>
+</html>

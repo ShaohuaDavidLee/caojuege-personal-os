@@ -4,117 +4,18 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>太史判词 · 司马迁.skill</title>
-<meta name="description" content="给朋友定一句太史判词：填两栏，出一张能甩回群里的卡。">
+<meta name="description" content="给朋友定一句太史判词：填两栏，出一张能甩回群里的卡。" />
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --c-bg:#e5e5e5; --c-surface:#fff; --c-surface-40:rgba(255,255,255,0.40);
-  --c-ink:#1a1a1a; --c-ink-pure:#000; --c-btn:#47494b;
-  --c-border-soft:rgba(71,73,75,0.20); --c-border-strong:rgba(71,73,75,0.45);
-  --c-muted:#5c5e60; --c-on-dark:#e5e5e5; --c-seal:#a8302d;
-  --font-sans:"Inter","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei",ui-sans-serif,system-ui,-apple-system,sans-serif;
-  --font-serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun","FangSong",Georgia,serif;
-  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --container:1280px; --pad-x:24px; --pad-x-lg:48px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--c-bg);color:var(--c-ink);font-family:var(--font-sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
-a{color:inherit;text-decoration:none}
-::selection{background:var(--c-btn);color:var(--c-on-dark)}
-button{font:inherit;cursor:pointer}
-.ico{width:1em;height:1em;display:inline-block;vertical-align:-.14em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
-@media(min-width:960px){.container{padding:0 var(--pad-x-lg)}}
-.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--c-muted)}
-
-/* nav */
-.nav{position:sticky;top:0;z-index:30;background:var(--c-bg);border-bottom:1px solid var(--c-border-soft)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:64px;max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
-@media(min-width:960px){.nav-inner{padding:0 var(--pad-x-lg);height:72px}}
-.lockup{display:flex;align-items:baseline;gap:10px}
-.lockup .mark{font-family:var(--font-serif);font-weight:700;font-size:18px;letter-spacing:.04em}
-.lockup .tag{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--c-muted)}
-.nav-back{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);display:inline-flex;align-items:center;gap:6px;transition:color .3s}
-.nav-back:hover{color:var(--c-ink)}
-@media(max-width:600px){.nav-back{display:none}}
-
-/* buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-sans);font-weight:500;font-size:14px;letter-spacing:.02em;padding:14px 22px;border:1px solid var(--c-btn);background:var(--c-btn);color:var(--c-on-dark);transition:background .3s,color .3s,border-color .3s;border-radius:0}
-.btn:hover{background:var(--c-ink-pure);border-color:var(--c-ink-pure)}
-.btn.ghost{background:transparent;color:var(--c-ink);border-color:var(--c-btn)}
-.btn.ghost:hover{background:var(--c-btn);color:var(--c-on-dark)}
-.btn[disabled]{opacity:.5;cursor:default}
-
-/* head */
-.head{padding:64px 0 36px;border-bottom:1px solid var(--c-border-soft);position:relative;overflow:hidden}
-.head-wm{position:absolute;right:-22px;top:24px;font-family:var(--font-serif);font-weight:900;font-size:clamp(150px,22vw,300px);line-height:.9;color:rgba(0,0,0,.04);writing-mode:vertical-rl;pointer-events:none;user-select:none;letter-spacing:-.14em}
-.head h1{font-family:var(--font-serif);font-weight:700;font-size:clamp(38px,6vw,68px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 16px;position:relative;z-index:1}
-.head h1 em{font-style:italic;font-weight:500;color:var(--c-btn)}
-.head p{margin:0;color:var(--c-muted);font-family:var(--font-serif);font-weight:300;font-size:16px;line-height:1.75;max-width:520px;position:relative;z-index:1}
-
-/* flow */
-.flow{padding:48px 0 64px}
-.flow-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:start}
-@media(min-width:880px){.flow-grid{grid-template-columns:1fr minmax(360px,440px);gap:56px}}
-
-.hook{font-family:var(--font-serif);font-weight:700;font-size:18px;line-height:1.6;margin:0 0 26px;padding:14px 16px;border-left:3px solid var(--c-seal);background:rgba(168,48,45,.06)}
-.subject{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:26px;font-family:var(--font-serif)}
-.subject .for{font-family:var(--font-sans);font-size:13px;color:var(--c-muted)}
-.subject input{max-width:170px}
-.field{margin-bottom:20px}
-.label-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
-.label{font-size:14.5px;color:var(--c-ink)}
-.hint{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted)}
-input,textarea{width:100%;border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:13px 14px;color:var(--c-ink);font-family:var(--font-serif);font-size:17px;line-height:1.7;outline:none;border-radius:0;transition:border-color .25s,background .25s}
-.subject input{font-size:17px;padding:9px 12px}
-textarea{min-height:80px;resize:vertical}
-input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface)}
-.note{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted);margin-top:4px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-.actions .btn{width:100%;padding:16px 22px}
-
-/* preview */
-.stage{position:sticky;top:96px}
-.stage-frame{border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:14px}
-#card{width:100%;height:auto;display:block;box-shadow:0 16px 40px rgba(0,0,0,.16)}
-.stage-cta{margin-top:16px;display:flex;flex-direction:column;border:1px solid var(--c-border-soft)}
-.stage-cta .btn{width:100%;border:0;border-bottom:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);padding:16px 22px}
-.stage-cta .btn:last-child{border-bottom:0}
-.stage-cta .btn:hover{background:var(--c-btn);color:var(--c-on-dark)}
-.stage-cta .btn.primary{background:var(--c-btn);color:var(--c-on-dark)}
-.stage-cta .btn.primary:hover{background:var(--c-ink-pure)}
-.savehint{margin-top:10px;font-family:var(--font-serif);font-size:12.5px;color:var(--c-muted);text-align:center}
-.savehint b{color:var(--c-ink);font-weight:500}
-
-/* footer */
-.foot{padding:40px 0;border-top:1px solid var(--c-border-soft);color:var(--c-muted)}
-.foot-inner{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:14px;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
-
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);opacity:0;pointer-events:none;background:var(--c-ink);color:var(--c-on-dark);padding:11px 16px;font-family:var(--font-sans);font-size:13px;transition:.18s ease;z-index:40;max-width:86vw;text-align:center}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-@media(max-width:880px){
-  .head{padding:32px 0 24px}
-  .head h1{font-size:34px}
-  .head-wm{display:none}
-  .flow{padding:28px 0 48px}
-  .stage{position:static}
-  .flow-grid{gap:32px}
-}
-</style>
+<link rel="stylesheet" href="./app.css">
 </head>
 <body>
 
 <nav class="nav">
   <div class="nav-inner">
-    <div class="lockup">
-      <span class="mark">司马迁<span style="font-family:var(--font-sans);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--c-muted)">.skill</span></span>
-      <span class="tag">太史判词</span>
-    </div>
+    <div class="lockup"><span class="mark">司马迁<span class="dot">.skill</span></span><span class="tag">太史判词</span></div>
     <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
       <svg class="ico" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
       草诀歌 AI Labs
@@ -122,53 +23,34 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
   </div>
 </nav>
 
-<section class="head">
-  <div class="head-wm">判詞</div>
+<section class="hero">
+  <div class="hero-wm">判詞</div>
   <div class="container">
-    <div class="eyebrow">Personal Annal · 太史判词</div>
-    <h1>给朋友定<em>一句判词</em>。</h1>
-    <p>填两栏，出一张能甩回群里的卡。损得越具体，TA 越想转发。</p>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow">Personal Annal · 太史判词</div>
+        <h1>给朋友，定<em>一句判词</em>。</h1>
+        <p class="lead">不写小作文，只下一句。把朋友最真实的那点矛盾，交给太史公，出一张能甩回群里的卡。</p>
+        <div class="hero-actions">
+          <a class="btn big" href="./create.html">给朋友定一句 →</a>
+          <a class="btn ghost big" href="./receive.html">看看别人收到的</a>
+        </div>
+      </div>
+      <aside class="side-card"><canvas id="sample" width="2160" height="2880" aria-label="判词卡示例"></canvas></aside>
+    </div>
   </div>
 </section>
 
-<div class="flow">
+<section class="steps">
   <div class="container">
-    <div class="flow-grid">
-      <section>
-        <p class="hook">你越具体，TA 越想转发；你越客套，它越像年会颁奖词。</p>
-
-        <div class="subject">
-          <span class="for">你正在为</span>
-          <input id="name" value="老周" maxlength="6" aria-label="对象称呼" />
-          <span class="for">定一句太史判词</span>
-        </div>
-
-        <div class="field">
-          <div class="label-row"><span class="label">TA 最让你受不了的口头禅</span><span class="hint">越具体越好</span></div>
-          <input id="b1" value="在吗？（然后消失俩小时）" autocomplete="off" />
-        </div>
-
-        <div class="field">
-          <div class="label-row"><span class="label">TA 最可爱的反差 / 隐藏 bug</span><span class="hint">当面也能说的那种</span></div>
-          <textarea id="b2">嘴上说要戒手机，朋友圈半夜三点还在线</textarea>
-        </div>
-
-        <div class="actions">
-          <button class="btn ghost" id="reroll">换一句判词</button>
-        </div>
-      </section>
-
-      <aside class="stage">
-        <div class="stage-frame"><canvas id="card" width="2160" height="2880" aria-label="太史判词预览"></canvas></div>
-        <div class="stage-cta">
-          <button class="btn primary" id="download">下载 / 发回群里</button>
-          <button class="btn" id="again">再损一个朋友</button>
-        </div>
-        <div class="savehint"><b>长按图片</b>保存到相册，或点「下载 / 发回群里」</div>
-      </aside>
+    <div class="eyebrow">怎么玩 · 三步</div>
+    <div class="steps-grid">
+      <div class="step"><div class="n">壹</div><h3>填两栏</h3><p>TA 的一句口头禅，和一个最可爱的反差。越具体越好。</p></div>
+      <div class="step"><div class="n">贰</div><h3>出一张判词卡</h3><p>太史公落一句判词，配上「损友供词」与朱印，竖版可存图。</p></div>
+      <div class="step"><div class="n">叁</div><h3>甩回群里</h3><p>发回给 TA，或群里一甩。被损的人想回敬，群友也想整一张。</p></div>
     </div>
   </div>
-</div>
+</section>
 
 <footer class="foot">
   <div class="container">
@@ -178,196 +60,14 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
     </div>
   </div>
 </footer>
-<div class="toast" id="toast"></div>
 
+<script src="./verdict-card.js"></script>
 <script>
 (function(){
-  'use strict';
-  const $ = id => document.getElementById(id);
-  const toastEl = $('toast');
-  const SERIF = '"Noto Serif SC","Songti SC","STSong",serif';
-  const MONO = 'ui-monospace,Menlo,monospace';
-  const SANS = '"Inter","PingFang SC",sans-serif';
-  const RATIO=2, W=1080, H=1440, P=84;
-  let tplOffset=0, blob=null, objURL=null;
-
-  const clean = s => String(s||'').replace(/\s+/g,' ').trim();
-  const stripTail = s => clean(s).replace(/[。.!！；;，,]+$/,'');
-  const shorten = (s,n) => { const a=Array.from(String(s||'')); return a.length>n?a.slice(0,n-1).join('')+'…':a.join(''); };
-  function hash(seed){ let h=2166136261; for(const c of String(seed)){ h^=c.charCodeAt(0); h=Math.imul(h,16777619);} return Math.abs(h); }
-  const vol = seed => String(hash(seed)%899+100);
-
-  function buildLine(name,b1,b2){
-    const q=stripTail(b1).replace(/[（(].*$/,'').trim()||'在吗';
-    const fc=stripTail(b2)||'想法太多，三天换一个新坑';
-    const tpls=[
-      `世人只记得他那句「${q}」，没人替他说出：${fc}。`,
-      `${name}最大的破绽，不是「${q}」，是${fc}。`,
-      `嘴上「${q}」，身体却很诚实——${fc}。`,
-      `别信他那句「${q}」。真相是，${fc}。`,
-      `一个把「${q}」挂在嘴边的人，偏偏${fc}。这才是他。`
-    ];
-    return tpls[(hash(name+b1+b2)+tplOffset)%tpls.length];
-  }
-
-  function setLS(ctx,px){ try{ ctx.letterSpacing = px+'px'; }catch(e){} }
-  const NO_START='」』）】》〉。，、；：！？·…％”’';  // 不能出现在行首
-  const NO_END='「『（【《〈“‘';                      // 不能出现在行尾
-  function wrap(ctx,text,maxW,maxLines){
-    const toks=String(text||'').match(/[A-Za-z0-9_.:#%+\-]+|\s+|./gu)||[];
-    const lines=[]; let line='';
-    const push=()=>{ if(line.trim()) lines.push(line.trim()); line=''; };
-    for(const t of toks){
-      const cand=line+t;
-      if(ctx.measureText(cand).width<=maxW){ line=cand; continue; }
-      if(line) push();
-      if(!/^\s+$/.test(t)) line=t;
-      if(maxLines&&lines.length>=maxLines) break;
-    }
-    if(line&&(!maxLines||lines.length<maxLines)) push();
-    // 避头尾：只往下挪字（上行变短、不会超宽），消除行首禁则标点与行尾孤立开引号
-    for(let i=0;i<lines.length-1;i++){
-      while(lines[i].length>1 && lines[i+1] && NO_START.indexOf(lines[i+1][0])>=0){
-        lines[i+1]=lines[i].slice(-1)+lines[i+1]; lines[i]=lines[i].slice(0,-1);
-      }
-      while(lines[i].length>1 && NO_END.indexOf(lines[i].slice(-1))>=0){
-        lines[i+1]=lines[i].slice(-1)+lines[i+1]; lines[i]=lines[i].slice(0,-1);
-      }
-    }
-    if(maxLines&&lines.length===maxLines){
-      let last=lines[maxLines-1];
-      while(last&&ctx.measureText(last+'…').width>maxW) last=last.slice(0,-1);
-      if(last&&text.trim()!==lines.join('').trim()) lines[maxLines-1]=last+'…';
-    }
-    return lines;
-  }
-
-  function drawSeal(ctx,x,y,s){
-    ctx.save();
-    ctx.fillStyle='#a8302d'; ctx.fillRect(x,y,s,s);
-    ctx.strokeStyle='#7d211e'; ctx.lineWidth=4; ctx.strokeRect(x+2,y+2,s-4,s-4);
-    ctx.strokeStyle='rgba(240,223,196,.5)'; ctx.lineWidth=2.5; ctx.strokeRect(x+10,y+10,s-20,s-20);
-    ctx.fillStyle='#f0dfc4'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.font='700 '+Math.round(s*.3)+'px '+SERIF; setLS(ctx,0);
-    const ch=['司','馬','毒','判'];
-    ctx.fillText(ch[0],x+s*.3,y+s*.3); ctx.fillText(ch[1],x+s*.7,y+s*.3);
-    ctx.fillText(ch[2],x+s*.3,y+s*.7); ctx.fillText(ch[3],x+s*.7,y+s*.7);
-    ctx.restore();
-  }
-
-  // 占位二维码（正式版本地生成真码，指向 s.caojuege.com）
-  function drawQR(ctx,x,y,s){
-    ctx.save();
-    ctx.fillStyle='#fff'; ctx.fillRect(x,y,s,s);
-    const pad=Math.round(s*.08), n=21, cell=(s-pad*2)/n, ox=x+pad, oy=y+pad;
-    ctx.fillStyle='#1a1a1a';
-    const finder=(fx,fy)=>{ ctx.fillRect(ox+fx*cell,oy+fy*cell,cell*7,cell*7); ctx.fillStyle='#fff'; ctx.fillRect(ox+(fx+1)*cell,oy+(fy+1)*cell,cell*5,cell*5); ctx.fillStyle='#1a1a1a'; ctx.fillRect(ox+(fx+2)*cell,oy+(fy+2)*cell,cell*3,cell*3); };
-    let h=hash('s.caojuege.com');
-    for(let r=0;r<n;r++)for(let c=0;c<n;c++){
-      if((r<8&&c<8)||(r<8&&c>=n-8)||(r>=n-8&&c<8)) continue;
-      h=(h*1103515245+12345)&0x7fffffff;
-      if(h%100<46) ctx.fillRect(ox+c*cell,oy+r*cell,cell,cell);
-    }
-    finder(0,0); finder(n-7,0); finder(0,n-7);
-    ctx.restore();
-  }
-
-  function render(){
-    const name=clean($('name').value)||'某某';
-    const line=buildLine(name,$('b1').value,$('b2').value);
-    const ev=`损友供词：${shorten(stripTail($('b1').value)||'—',16)}；${shorten(stripTail($('b2').value)||'—',18)}`;
-    const v=vol(name+$('b1').value+$('b2').value);
-
-    const c=$('card'), ctx=c.getContext('2d');
-    ctx.setTransform(RATIO,0,0,RATIO,0,0);
-    ctx.clearRect(0,0,W,H);
-    ctx.fillStyle='#e5e5e5'; ctx.fillRect(0,0,W,H);
-
-    // watermark 判詞（繁体，竖排两字）
-    ctx.save();
-    ctx.fillStyle='rgba(0,0,0,.05)'; ctx.font='900 430px '+SERIF; setLS(ctx,0);
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('判',W*.66,H*.34); ctx.fillText('詞',W*.66,H*.64);
-    ctx.restore();
-
-    // top bar
-    ctx.save();
-    ctx.strokeStyle='rgba(71,73,75,.45)'; ctx.lineWidth=1.5; ctx.strokeRect(P,P,172,52);
-    ctx.fillStyle='#47494b'; ctx.font='600 28px '+SERIF; setLS(ctx,0);
-    ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText('毒判 · '+v,P+18,P+27);
-    ctx.fillStyle='#5c5e60'; ctx.font='500 19px '+MONO; setLS(ctx,4);
-    ctx.textAlign='right'; ctx.fillText('PERSONAL ANNAL · 判',W-P,P+26); ctx.restore();
-
-    // seal (upper right)
-    drawSeal(ctx,W-P-116,P+82,116);
-
-    // verdict (centered in zone)
-    ctx.save();
-    ctx.fillStyle='#1a1a1a'; ctx.font='700 66px '+SERIF; setLS(ctx,1);
-    ctx.textAlign='left'; ctx.textBaseline='top';
-    const lineH=100, maxLines=6;
-    const lines=wrap(ctx,'「'+line+'」',W-2*P,maxLines);
-    const zT=448, zB=1014;
-    let y=Math.max(zT,(zT+zB)/2-(lines.length*lineH)/2);
-    for(const ln of lines){ ctx.fillText(ln,P,y); y+=lineH; }
-    ctx.restore();
-
-    // rule + evidence
-    ctx.save();
-    ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(P,1072,W-2*P,3);
-    ctx.fillStyle='#5c5e60'; ctx.font='500 25px '+SERIF; setLS(ctx,0);
-    ctx.textAlign='left'; ctx.textBaseline='top';
-    let ey=1100; for(const ln of wrap(ctx,ev,W-2*P,2)){ ctx.fillText(ln,P,ey); ey+=37; }
-    ctx.restore();
-
-    // footer
-    drawQR(ctx,W-P-122,H-P-122,122);
-    ctx.save();
-    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-    ctx.fillStyle='#5c5e60'; ctx.font='400 22px '+SANS; setLS(ctx,0);
-    ctx.fillText('司马迁.skill · 太史判词',P,H-P-92);
-    ctx.fillStyle='#1a1a1a'; ctx.font='600 34px '+MONO; setLS(ctx,1);
-    ctx.fillText('s.caojuege.com',P,H-P-44);
-    ctx.fillStyle='#5c5e60'; ctx.font='500 17px '+MONO; setLS(ctx,2);
-    ctx.fillText('扫码也给朋友定一句',P,H-P-12);
-    ctx.restore();
-  }
-
-  function toast(m){ toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>toastEl.classList.remove('show'),2400); }
-
-  async function download(){
-    const c=$('card');
-    blob = await new Promise(r=>c.toBlob(r,'image/png',0.96));
-    if(!blob){ toast('生成失败，可截图保存'); return; }
-    if(objURL) URL.revokeObjectURL(objURL);
-    objURL = URL.createObjectURL(blob);
-    const file = new File([blob],'taishi-'+(clean($('name').value)||'verdict')+'.png',{type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      try{ await navigator.share({files:[file],title:'太史判词'}); return; }
-      catch(e){ if(e&&e.name==='AbortError') return; }
-    }
-    const a=document.createElement('a');
-    a.href=objURL; a.download=file.name;
-    document.body.appendChild(a); a.click(); a.remove();
-  }
-
-  ['name','b1','b2'].forEach(id=>$(id).addEventListener('input',render));
-  $('reroll').addEventListener('click',()=>{ tplOffset++; render(); });
-  $('download').addEventListener('click',download);
-  $('again').addEventListener('click',()=>{
-    $('name').value=''; $('b1').value=''; $('b2').value=''; tplOffset=0;
-    $('name').focus(); render();
-    toast('换个人再损。正式版：把链接发回给被损的人，TA 填两栏就能回敬你。');
-  });
-
-  render();
-  if(document.fonts && document.fonts.load){
-    Promise.all([
-      document.fonts.load('700 62px "Noto Serif SC"'),
-      document.fonts.load('900 200px "Noto Serif SC"'),
-      document.fonts.load('500 25px "Noto Serif SC"')
-    ]).then(render).catch(()=>{});
-  }
+  var c = document.getElementById('sample');
+  var d = VerdictCard.buildData('老周', '在吗？（然后消失俩小时）', '嘴上说要戒手机，朋友圈半夜三点还在线', 3);
+  function go(){ VerdictCard.draw(c, d); }
+  go(); VerdictCard.ensureFonts().then(go);
 })();
 </script>
 </body>
