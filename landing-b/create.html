@@ -123,19 +123,23 @@ window.VerdictCard=(function(){
 (function(){
   var $=function(id){return document.getElementById(id);};
   var toastEl=$('toast'),off=0;
-  function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('show');},2800);}
+  function toast(m,ms){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('show');},ms||2800);}
   function tmpl(){VerdictCard.draw($('card'),VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off));}
   ['name','b1','b2'].forEach(function(id){$(id).addEventListener('input',tmpl);});
   var gen=$('reroll');
   gen.addEventListener('click',function(){
     var label=gen.textContent; gen.disabled=true; gen.textContent='太史公落笔中…';
     fetch('/api/verdict',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:$('name').value,b1:$('b1').value,b2:$('b2').value})})
-      .then(function(r){return r.json();})
-      .then(function(j){
-        if(!j||!j.line) throw new Error(j&&j.error||'no_line');
-        var d=VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off); d.line=j.line; VerdictCard.draw($('card'),d);
+      .then(function(r){ return r.text().then(function(t){ return {ok:r.ok,status:r.status,text:t}; }); })
+      .then(function(res){
+        var j=null; try{ j=JSON.parse(res.text); }catch(e){}
+        if(res.ok && j && j.line){
+          var d=VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off); d.line=j.line; VerdictCard.draw($('card'),d); return;
+        }
+        var msg = (j && j.error) ? (j.error + (j.status?(' '+j.status):'') + (j.detail?(' — '+j.detail):'')) : ('HTTP '+res.status+'：未返回JSON（可能没路由到 /api/verdict）');
+        off++; tmpl(); toast('AI失败：'+msg, 8000);
       })
-      .catch(function(){ off++; tmpl(); toast('太史公一时走神，先用模板写了一句。部署到 s.caojuege.com 接上 DeepSeek 后就是真的。'); })
+      .catch(function(e){ off++; tmpl(); toast('网络错误：'+(e&&e.message||e), 8000); })
       .finally(function(){ gen.disabled=false; gen.textContent=label; });
   });
   $('download').addEventListener('click',function(){var n=VerdictCard.clean($('name').value)||'verdict';VerdictCard.download($('card'),'taishi-'+n+'.png');});
