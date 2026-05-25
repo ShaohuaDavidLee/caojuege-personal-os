@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>司马迁 · 太史判词卡 · 可玩 demo v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c-bg:#e5e5e5;
+  --c-ink:#1a1a1a;
+  --c-btn:#47494b;
+  --c-on-dark:#e5e5e5;
+  --c-border-soft:rgba(71,73,75,0.20);
+  --c-border-strong:rgba(71,73,75,0.45);
+  --c-muted:#5c5e60;
+  --c-seal:#a8302d;
+  --c-seal-shadow:#7d211e;
+  --c-seal-tint:#f0dfc4;
+
+  --f-serif:"Noto Serif SC","Source Han Serif SC","Source Han Serif CN",
+            "Songti SC","STSongti","STSong","SimSun","NSimSun","FangSong",
+            Songti,Georgia,"Times New Roman",serif;
+  --f-sans:"Inter","PingFang SC","Hiragino Sans GB","Source Han Sans SC",
+           "Microsoft YaHei","WenQuanYi Micro Hei",system-ui,-apple-system,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,
+           "PingFang SC",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--c-bg);color:var(--c-ink);font-family:var(--f-sans);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+::selection{background:var(--c-btn);color:var(--c-on-dark)}
+
+.wrap{max-width:1240px;margin:0 auto;padding:56px 32px 96px}
+@media(max-width:760px){.wrap{padding:28px 18px 64px}}
+
+/* ===== Header ===== */
+.hd{margin-bottom:44px}
+.hd .eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--c-muted);margin-bottom:14px}
+.hd h1{font-family:var(--f-serif);font-weight:700;font-size:clamp(32px,4.4vw,54px);letter-spacing:-.02em;margin:0 0 14px;line-height:1.06}
+.hd h1 em{font-style:italic;font-weight:500;color:var(--c-btn)}
+.hd p{margin:0;color:var(--c-muted);font-family:var(--f-serif);font-size:16px;line-height:1.78;font-weight:300;max-width:640px}
+
+/* recall banner (回敬 loop entry) */
+.recall{margin:0 0 28px;padding:14px 18px;border:1px solid var(--c-seal);background:rgba(168,48,45,.06);font-family:var(--f-serif);font-size:15px;display:none;align-items:center;gap:12px}
+.recall.on{display:flex}
+.recall b{color:var(--c-seal)}
+
+/* ===== Layout ===== */
+.stage{display:grid;grid-template-columns:1fr;gap:40px;border-top:1px solid var(--c-border-soft);padding-top:40px}
+@media(min-width:920px){.stage{grid-template-columns:minmax(300px,380px) 1fr;gap:52px;align-items:start}}
+
+/* ===== Controls ===== */
+.panel h4{font-family:var(--f-serif);font-weight:700;font-size:15px;margin:0 0 16px;letter-spacing:.02em}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:12px;letter-spacing:.04em;color:var(--c-muted);margin-bottom:7px;font-family:var(--f-mono);text-transform:uppercase}
+.field label .opt{text-transform:none;letter-spacing:0;font-family:var(--f-serif);opacity:.8}
+.field input[type=text],.field textarea{width:100%;border:1px solid var(--c-border-strong);background:#fff;color:var(--c-ink);font-family:var(--f-serif);font-size:15px;padding:10px 12px;line-height:1.55;resize:vertical}
+.field textarea{min-height:52px}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--c-ink)}
+
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{font-family:var(--f-serif);font-size:13.5px;padding:7px 14px;border:1px solid var(--c-border-strong);background:#fff;color:var(--c-ink);cursor:pointer;line-height:1}
+.seg button.on{background:var(--c-btn);color:var(--c-on-dark);border-color:var(--c-btn)}
+.seg.swatch button{width:30px;height:30px;padding:0;border-radius:50%}
+.seg.swatch button[data-v=a]{background:#e5e5e5}
+.seg.swatch button[data-v=b]{background:#fff}
+.seg.swatch button[data-v=c]{background:#1a1a1a}
+.seg.swatch button.on{box-shadow:0 0 0 2px var(--c-bg),0 0 0 4px var(--c-ink)}
+
+.actions{display:flex;gap:10px;margin-top:22px}
+.actions button{font-family:var(--f-serif);font-weight:500;font-size:15px;padding:12px 20px;cursor:pointer;border:1px solid var(--c-ink);line-height:1}
+.actions .primary{background:var(--c-ink);color:var(--c-bg)}
+.actions .ghost{background:transparent;color:var(--c-ink)}
+
+.hintbox{margin-top:26px;padding:14px 16px;border:1px dashed var(--c-border-strong);font-family:var(--f-serif);font-size:13px;color:var(--c-muted);line-height:1.7}
+.hintbox b{color:var(--c-ink);font-weight:500}
+
+/* ===== Card frame (3:4) ===== */
+.cardcol{display:flex;flex-direction:column;gap:24px}
+.frame{width:100%;max-width:480px;aspect-ratio:3/4;position:relative;overflow:hidden;border:1px solid var(--c-border-soft);margin:0 auto}
+.scale{position:absolute;top:0;left:0;transform-origin:top left}
+
+/* ===== Card baseline 600 × 800 ===== */
+.card{position:relative;width:600px;height:800px;padding:40px 46px 36px;overflow:hidden;font-family:var(--f-sans)}
+.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;position:relative;z-index:2}
+.card .vol{font-family:var(--f-serif);font-weight:500;font-size:15px;letter-spacing:.04em;border:1px solid currentColor;padding:7px 14px;line-height:1;opacity:.78}
+.card .annal{font-family:var(--f-mono);font-weight:500;font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;white-space:nowrap;margin-top:8px;opacity:.55}
+.card .seal{position:absolute;top:104px;right:46px;width:84px;height:96px;background:var(--c-seal);color:var(--c-seal-tint);font-family:var(--f-serif);font-weight:700;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;line-height:1;border:2px solid var(--c-seal-shadow);box-shadow:inset 0 0 0 1.5px var(--c-seal-shadow);z-index:3}
+.card .seal span{display:flex;align-items:center;justify-content:center;font-size:29px}
+.card .wm{position:absolute;font-family:var(--f-serif);font-weight:900;font-size:520px;line-height:.82;pointer-events:none;user-select:none;right:-38px;top:170px;letter-spacing:-.06em;opacity:.085;z-index:0}
+.card .verdict{position:relative;z-index:1;margin-top:118px}
+.card .verdict .qbrack-l,.card .verdict .qbrack-r{font-family:var(--f-serif);font-weight:700;font-size:64px;line-height:0;position:relative;top:-6px;opacity:.85}
+.card .verdict .line{font-family:var(--f-serif);font-weight:700;font-size:44px;line-height:1.4;letter-spacing:-.01em;text-align:justify;display:inline}
+.card .div{margin-top:34px;height:1px;background:currentColor;opacity:.18;position:relative;z-index:1}
+.card .evidence{margin-top:16px;font-family:var(--f-serif);font-weight:400;font-size:16px;line-height:1.7;position:relative;z-index:1;opacity:.78}
+.card .evidence b{font-family:var(--f-serif);font-weight:500;letter-spacing:.04em;font-size:14px;opacity:.78;margin-right:8px}
+/* 太史公附言 — 留台阶 / 反转彩蛋 */
+.card .codicil{margin-top:14px;font-family:var(--f-serif);font-style:italic;font-weight:400;font-size:14px;line-height:1.7;position:relative;z-index:1;opacity:.62}
+.card .codicil b{font-style:normal;font-weight:500;opacity:.8;margin-right:6px}
+.card .foot{position:absolute;left:46px;right:46px;bottom:34px;display:flex;justify-content:space-between;align-items:flex-end;gap:18px;z-index:2}
+.card .foot .brand .label{font-family:var(--f-serif);font-size:12.5px;letter-spacing:.02em;opacity:.7;margin-bottom:6px}
+.card .foot .brand .url{font-family:var(--f-mono);font-size:18px;letter-spacing:.01em;font-weight:600}
+.card .foot .brand .hint{margin-top:5px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;opacity:.55;font-family:var(--f-mono)}
+.card .foot .qr{width:88px;height:88px;background:#fff;padding:5px}
+.card .foot .qr img{width:100%;height:100%;display:block}
+
+/* variant a — 灰底 */
+.card.a{background:#e5e5e5;color:#1a1a1a}
+.card.a .wm{color:rgba(0,0,0,0.075)}
+.card.a .foot .qr{border:1px solid var(--c-border-soft)}
+/* variant b — 白纸 */
+.card.b{background:#fff;color:#1a1a1a}
+.card.b .top{padding-bottom:14px;border-bottom:1px solid rgba(26,26,26,.18)}
+.card.b .verdict{margin-top:64px}
+.card.b .verdict .line{font-size:40px}
+.card.b .wm{color:rgba(0,0,0,0.055);font-size:480px;top:200px}
+.card.b .foot .qr{border:1px solid var(--c-border-soft)}
+/* variant c — 黑底 */
+.card.c{background:#1a1a1a;color:#e5e5e5}
+.card.c .wm{color:rgba(255,255,255,0.075)}
+.card.c .annal{color:rgba(229,229,229,.6)}
+.card.c .vol{border-color:rgba(229,229,229,0.32);opacity:.82}
+.card.c .foot .qr{background:#fff}
+.card.c .seal{box-shadow:inset 0 0 0 1.5px var(--c-seal-shadow),0 0 0 1px rgba(0,0,0,.5)}
+
+/* ===== 回敬回路 panel ===== */
+.loop{border:1px solid var(--c-border-soft);background:rgba(255,255,255,.4);padding:24px 26px}
+.loop h4{font-family:var(--f-serif);font-weight:700;font-size:16px;margin:0 0 6px}
+.loop .sub{font-family:var(--f-serif);font-size:13.5px;color:var(--c-muted);margin:0 0 20px;line-height:1.7}
+.steps{display:flex;align-items:stretch;gap:0;margin-bottom:22px}
+.steps .s{flex:1;border:1px solid var(--c-border-soft);padding:12px 12px;font-family:var(--f-serif);font-size:13px;line-height:1.5;position:relative;background:#fff}
+.steps .s .n{font-family:var(--f-mono);font-size:10px;letter-spacing:.18em;color:var(--c-seal);display:block;margin-bottom:5px}
+.steps .arrow{display:flex;align-items:center;justify-content:center;width:26px;color:var(--c-muted);font-size:16px}
+.loop .cta-row{display:flex;flex-wrap:wrap;gap:10px}
+.loop .cta-row button{font-family:var(--f-serif);font-size:14px;padding:11px 16px;cursor:pointer;border:1px solid var(--c-ink);background:var(--c-ink);color:var(--c-bg);line-height:1.2}
+.loop .cta-row button.alt{background:transparent;color:var(--c-ink)}
+.loop .toast{margin-top:12px;font-family:var(--f-mono);font-size:12px;color:var(--c-seal);min-height:16px}
+
+/* bridge to 列传 */
+.bridge{margin-top:18px;padding:16px 18px;border-top:2px solid var(--c-ink);font-family:var(--f-serif)}
+.bridge .k{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--c-muted);font-family:var(--f-mono);margin-bottom:8px}
+.bridge p{margin:0 0 12px;font-size:14.5px;line-height:1.7;color:var(--c-ink)}
+.bridge a{display:inline-block;font-size:14px;font-weight:500;color:var(--c-ink);border-bottom:2px solid var(--c-seal);text-decoration:none;padding-bottom:2px}
+
+.docfoot{margin-top:72px;padding-top:28px;border-top:1px solid var(--c-border-soft);display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:14px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);font-family:var(--f-mono)}
+.docfoot a{color:var(--c-ink);border-bottom:1px solid var(--c-border-soft);text-decoration:none;padding-bottom:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hd">
+    <div class="eyebrow">Personal Annal · 太史判词 · 可玩 demo v2</div>
+    <h1>给朋友下<em>一句判词。</em></h1>
+    <p>v1 探索了灰/白/黑三种底色，这一版让它能玩起来：填称呼与两条「损友供词」，太史公给出一句可单独截图的判词。重点是右侧的<b>「回敬」回路</b>——每张判词都指向一个会想回敬你的人，这是轻列传（写自己）没有的传播扳机。判朋友<b>留功德</b>：每张卡都带一句反转附言。</p>
+  </header>
+
+  <div class="recall" id="recall"></div>
+
+  <div class="stage">
+    <!-- Controls -->
+    <div class="panel">
+      <h4>① 给谁下判</h4>
+      <div class="field">
+        <label>好友称呼</label>
+        <input type="text" id="who" maxlength="12" placeholder="老周" />
+      </div>
+
+      <div class="field">
+        <label>毛病类型 <span class="opt">· 决定判词的梗</span></label>
+        <div class="seg" id="trait"></div>
+      </div>
+
+      <div class="field">
+        <label>损友供词① <span class="opt">· 当面也敢说的那种</span></label>
+        <input type="text" id="ev1" maxlength="40" />
+      </div>
+      <div class="field">
+        <label>损友供词②</label>
+        <input type="text" id="ev2" maxlength="40" />
+      </div>
+
+      <div class="field">
+        <label>毒舌强度 <span class="opt">· 上限止于「微毒」</span></label>
+        <div class="seg" id="strength">
+          <button data-s="0" class="on">宠溺</button>
+          <button data-s="1">微毒</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>底色</label>
+        <div class="seg swatch" id="bg">
+          <button data-v="a" class="on" title="灰底·正典"></button>
+          <button data-v="b" title="白纸·判书"></button>
+          <button data-v="c" title="黑底·夜判"></button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" id="gen">下判</button>
+        <button class="ghost" id="reroll">换一句</button>
+      </div>
+
+      <div class="hintbox">
+        <b>这是前端 mock。</b>正式版判词正文由后端 DeepSeek 生成；这里用本地模板演示交互与回路。「换一句」对应真实版的「改两句就是 TA」。
+      </div>
+    </div>
+
+    <!-- Card + loop -->
+    <div class="cardcol">
+      <div class="frame"><div class="scale" id="cardHost"></div></div>
+
+      <div class="loop">
+        <h4>② 回敬回路 · 病毒扳机</h4>
+        <p class="sub">轻列传是写自己，发出去没人需要回应。判词指向一个具体的人——他被点名，几乎必须回敬一张。每张卡自带「下一个用户」。</p>
+        <div class="steps">
+          <div class="s"><span class="n">STEP 1</span>你判 TA 一句，甩进群</div>
+          <div class="arrow">→</div>
+          <div class="s"><span class="n">STEP 2</span>TA 被群里点名，不服</div>
+          <div class="arrow">→</div>
+          <div class="s"><span class="n">STEP 3</span>TA 扫码，回敬你一张</div>
+          <div class="arrow">↺</div>
+        </div>
+        <div class="cta-row">
+          <button id="copyMsg">复制「甩给 TA」群消息</button>
+          <button class="alt" id="copyLink">复制回敬链接</button>
+        </div>
+        <div class="toast" id="toast"></div>
+
+        <div class="bridge">
+          <div class="k">玩梗之外 · 钩子到主产品</div>
+          <p id="bridgeText">玩够了？这一句判，其实可以认真写成一整篇——把 TA 的可爱与反差，立成一卷《列传》。</p>
+          <a href="./index.html" id="bridgeLink">正经给 TA 立一篇列传 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="docfoot">
+    <span>司马迁.skill · 太史判词 · 可玩 demo v2</span>
+    <span><a href="./index.html">← 回到轻列传主线</a></span>
+  </footer>
+</div>
+
+<script>
+const QR_URL = './qr-simaqian.png';
+const SEAL = ['司','馬','毒','判'];
+const WM = '判';
+
+/* 毛病类型 packs — drives both default 供词 and the 判词 punchline pool */
+const PACKS = {
+  pigeon: {
+    name:'拖延鸽王',
+    ev:['等我三分钟（半小时起）','「在吗」之后再无下文'],
+    lines:{
+      0:[
+        '{who}之约，向以「稍等」始，以「改天」终。',
+        '{who}最快的是「在吗」，最慢的是下文。',
+        '世人皆道{who}忙——忙于换坑，疏于填坑。'
+      ],
+      1:[
+        '{who}的「马上到」，是一种修辞，不是承诺。',
+        '与{who}约，宜自带板凳与耐心：其「五分钟」，约合人间半个时辰。'
+      ]
+    }
+  },
+  stubborn: {
+    name:'嘴硬心软',
+    ev:['永远说「我没事」，转头偷偷查攻略','嘴上说不在乎，行动比谁都快'],
+    lines:{
+      0:[
+        '{who}者，言出如风，心软如棉——风过处，棉先湿。',
+        '论嘴硬，{who}天下第一；论嘴软，亦在三秒之后。'
+      ],
+      1:[
+        '{who}口称「随便」，实则每一项都有标准答案。',
+        '{who}最硬的是嘴，最软的是心，最累的是中间那个人。'
+      ]
+    }
+  },
+  fickle: {
+    name:'三分钟热度',
+    ev:['上周要考研，这周要创业','买齐装备之后再没碰过'],
+    lines:{
+      0:[
+        '{who}之志，朝东暮西。问其所往，曰：再想想。',
+        '{who}者，计划之巨人，行动之幼童也。'
+      ],
+      1:[
+        '太史公阅人无数，未见有如{who}者：决心日日新，坑亦日日新。',
+        '{who}的爱好，比天气预报更新得勤。'
+      ]
+    }
+  },
+  night: {
+    name:'熬夜手机党',
+    ev:['嘴上说要戒手机，半夜三点还在线','立的flag比闹钟还多'],
+    lines:{
+      0:[
+        '{who}口称早睡，手机长明。此之谓知行不一。',
+        '{who}与手机，相看两不厌，独到天明。'
+      ],
+      1:[
+        '{who}的「最后刷一条」，是一道没有尽头的循环。',
+        '论熬夜，{who}从不缺席；论早起，{who}向来缺位。'
+      ]
+    }
+  }
+};
+const PACK_ORDER = ['pigeon','stubborn','fickle','night'];
+
+/* 太史公附言 — 留台阶 / 反转彩蛋（跨 pack 通用） */
+const CODICILS = [
+  '此判七分戏，三分真。{who}虽如此，急难时却总是第一个到。',
+  '损归损，{who}这人，值得交。',
+  '能被这样写一笔的，都是舍不得删的好友。',
+  '判其短，亦记其长——{who}之「坏」，皆是熟人才懂的好。'
+];
+
+const state = { pack:'pigeon', strength:0, bg:'a', who:'', ev1:'', ev2:'', lineIdx:0, codIdx:0 };
+
+function hashVol(s){
+  let h=0; for(const c of (s||'x')) h=(h*131+c.charCodeAt(0))%900;
+  return String(h+100);
+}
+function pick(arr,i){ return arr[((i%arr.length)+arr.length)%arr.length]; }
+function fill(t,who){ return t.replace(/\{who\}/g, who); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function currentLine(){
+  const who = state.who || '某君';
+  const pool = PACKS[state.pack].lines[state.strength];
+  return esc(fill(pick(pool, state.lineIdx), who));
+}
+function currentCodicil(){
+  const who = state.who || '某君';
+  return esc(fill(pick(CODICILS, state.codIdx), who));
+}
+
+function cardHTML(){
+  const who = esc(state.who || '某君');
+  const vol = '毒判 · ' + hashVol(state.who);
+  const ev1 = esc(state.ev1 || PACKS[state.pack].ev[0]);
+  const ev2 = esc(state.ev2 || PACKS[state.pack].ev[1]);
+  return `
+  <article class="card ${state.bg}">
+    <div class="top">
+      <div class="vol">${vol}</div>
+      <div class="annal">Personal&nbsp;Annal · 判 · ${who}</div>
+    </div>
+    <div class="seal">${SEAL.map(s=>`<span>${s}</span>`).join('')}</div>
+    <div class="wm">${WM}</div>
+    <div class="verdict">
+      <span class="qbrack-l">「</span><span class="line">${currentLine()}</span><span class="qbrack-r">」</span>
+    </div>
+    <div class="div"></div>
+    <p class="evidence"><b>损友供词</b>${ev1}；${ev2}。</p>
+    <p class="codicil"><b>太史公附言</b>${currentCodicil()}</p>
+    <div class="foot">
+      <div class="brand">
+        <div class="label">司马迁.skill · 太史判词</div>
+        <div class="url">s.caojuege.com</div>
+        <div class="hint">扫码也给朋友定一句</div>
+      </div>
+      <div class="qr"><img src="${QR_URL}" alt="QR" /></div>
+    </div>
+  </article>`;
+}
+
+function render(){
+  document.getElementById('cardHost').innerHTML = cardHTML();
+  scaleCard();
+  const who = state.who || 'TA';
+  document.getElementById('bridgeText').textContent =
+    `玩够了？这一句判，其实可以认真写成一整篇——把${who}的可爱与反差，立成一卷《${who}列传》。`;
+}
+
+function scaleCard(){
+  const f = document.querySelector('.frame');
+  const sc = document.getElementById('cardHost');
+  if(!f||!sc) return;
+  const s = f.clientWidth / 600;
+  sc.style.transform = `scale(${s})`;
+  sc.style.width = '600px';
+  sc.style.height = '800px';
+}
+window.addEventListener('resize', scaleCard);
+
+/* ---- build trait seg ---- */
+const traitSeg = document.getElementById('trait');
+traitSeg.innerHTML = PACK_ORDER.map((k,i)=>
+  `<button data-p="${k}"${i===0?' class="on"':''}>${PACKS[k].name}</button>`).join('');
+
+function setPackDefaults(){
+  document.getElementById('ev1').value = PACKS[state.pack].ev[0];
+  document.getElementById('ev2').value = PACKS[state.pack].ev[1];
+  state.ev1 = PACKS[state.pack].ev[0];
+  state.ev2 = PACKS[state.pack].ev[1];
+}
+
+/* ---- wiring ---- */
+function segWire(id, attr, key, after){
+  document.getElementById(id).addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    [...e.currentTarget.children].forEach(c=>c.classList.remove('on'));
+    b.classList.add('on');
+    state[key] = (attr==='data-s') ? Number(b.getAttribute(attr)) : b.getAttribute(attr);
+    if(after) after();
+    render();
+  });
+}
+segWire('trait','data-p','pack',()=>{ state.lineIdx=0; setPackDefaults(); });
+segWire('strength','data-s','strength',()=>{ state.lineIdx=0; });
+segWire('bg','data-v','bg');
+
+document.getElementById('who').addEventListener('input', e=>{ state.who=e.target.value.trim(); render(); });
+document.getElementById('ev1').addEventListener('input', e=>{ state.ev1=e.target.value.trim(); render(); });
+document.getElementById('ev2').addEventListener('input', e=>{ state.ev2=e.target.value.trim(); render(); });
+document.getElementById('gen').addEventListener('click', ()=>{ state.lineIdx++; state.codIdx++; render(); });
+document.getElementById('reroll').addEventListener('click', ()=>{ state.lineIdx++; render(); });
+
+/* ---- 回敬回路 actions ---- */
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>{ t.textContent=''; }, 2600);
+}
+function plainLine(){
+  return fill(pick(PACKS[state.pack].lines[state.strength], state.lineIdx), state.who || '某君');
+}
+function recallURL(){
+  const u = new URL(location.href);
+  u.hash = '';
+  u.search = '?from=' + encodeURIComponent(state.who || '某君');
+  return u.toString();
+}
+async function copy(text, ok){
+  try{ await navigator.clipboard.writeText(text); toast(ok); }
+  catch(_){ toast('复制失败，请手动选择'); }
+}
+document.getElementById('copyMsg').addEventListener('click', ()=>{
+  const who = state.who || 'TA';
+  const msg = `@${who} 太史公给你下了判词：\n「${plainLine()}」\n不服？扫码回敬我一张 👉 ${recallURL()}`;
+  copy(msg, '已复制群消息，去群里 @TA');
+});
+document.getElementById('copyLink').addEventListener('click', ()=>{
+  copy(recallURL(), '已复制回敬链接');
+});
+
+/* ---- read 回敬 entry param (closes the loop visibly) ---- */
+function initFromParam(){
+  const from = new URLSearchParams(location.search).get('from');
+  if(from){
+    const r = document.getElementById('recall');
+    r.classList.add('on');
+    r.innerHTML = `<span><b>「${esc(from)}」</b> 刚判了你一句 —— 轮到你回敬了。下面随便填两条，给 TA 也下一判。</span>`;
+  }
+}
+
+/* ---- boot ---- */
+setPackDefaults();
+initFromParam();
+render();
+</script>
+</body>
+</html>
