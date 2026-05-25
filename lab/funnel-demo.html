@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>司马迁.skill · 漏斗模拟（两层模型）</title>
+<style>
+  :root{
+    --paper:#efe9dc; --ink:#191919; --muted:rgba(25,25,25,.56);
+    --hair:rgba(25,25,25,.16); --red:#aa302c; --red-dark:#76201d;
+    --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",serif;
+    --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif)}
+  .page{width:min(1060px,calc(100vw - 28px));margin:0 auto;padding:28px 0 64px}
+  .badge{display:inline-block;border:1px solid var(--hair);padding:5px 11px;font-family:var(--sans);font-size:12px;color:var(--muted);background:rgba(255,255,255,.3);margin-bottom:14px}
+  h1{font-size:clamp(28px,5vw,42px);line-height:1.04;margin:0 0 12px;letter-spacing:-.02em}
+  .model{font-family:var(--sans);font-size:13.5px;line-height:1.85;color:rgba(25,25,25,.62);max-width:680px;margin:0 0 8px}
+  .model b{color:var(--ink)}
+  .layerkey{font-family:var(--sans);font-size:12px;color:var(--muted);margin:6px 0 22px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-family:var(--sans);margin-right:6px}
+  .pill.spread{background:rgba(170,48,44,.12);color:var(--red-dark);border:1px solid rgba(170,48,44,.3)}
+  .pill.keep{background:rgba(25,25,25,.86);color:#f3ecdd}
+
+  .nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+  .nav button{border:1px solid rgba(25,25,25,.18);background:rgba(255,255,255,.3);padding:8px 11px;color:rgba(25,25,25,.62);font-family:var(--sans);font-size:12.5px;cursor:pointer}
+  .nav button.active{background:var(--ink);color:#f3ecdd;border-color:var(--ink)}
+
+  .screen{display:none}.screen.active{display:block}
+  .panel{border:1px solid var(--hair);background:rgba(255,255,255,.32);box-shadow:0 14px 36px rgba(50,35,16,.05)}
+  .phead{padding:14px 18px;border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .ptitle{font-size:20px;font-weight:700}
+  .pbody{padding:20px}
+  .anno{font-family:var(--sans);font-size:12.5px;line-height:1.8;color:rgba(25,25,25,.55);background:rgba(25,25,25,.04);border-left:3px solid rgba(25,25,25,.2);padding:10px 13px;margin:0 0 18px}
+  .anno.spread{border-left-color:var(--red)}
+
+  .row{display:grid;grid-template-columns:1fr minmax(280px,360px);gap:26px;align-items:start}
+  @media (max-width:820px){.row{grid-template-columns:1fr;gap:18px}.page{width:min(100vw - 22px,560px)}}
+  .stage{background:rgba(255,255,255,.28);border:1px solid var(--hair);padding:12px;display:flex;justify-content:center}
+  canvas{width:100%;max-width:340px;height:auto;display:block;box-shadow:0 14px 32px rgba(50,35,16,.14)}
+
+  .hook{font-size:17px;line-height:1.6;font-weight:700;margin:0 0 18px;padding:12px 14px;border-left:3px solid var(--red);background:rgba(170,48,44,.06)}
+  .field{margin-bottom:16px}
+  .label-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .label{font-size:14.5px;color:rgba(25,25,25,.74)} .hint{font-family:var(--sans);font-size:11.5px;color:rgba(25,25,25,.42)}
+  input,textarea{width:100%;border:0;border-bottom:1px solid rgba(25,25,25,.28);background:rgba(255,255,255,.45);padding:11px;color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.7;outline:none;border-radius:0}
+  textarea{min-height:70px;resize:vertical}
+  input:focus,textarea:focus{border-bottom-color:var(--red);background:rgba(255,255,255,.7)}
+
+  .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+  .btn{border:1px solid rgba(25,25,25,.3);background:transparent;color:var(--ink);padding:10px 15px;cursor:pointer;font-family:var(--sans);font-size:13.5px;transition:.15s ease}
+  .btn:hover{background:rgba(255,255,255,.5);transform:translateY(-1px)} .btn:active{transform:translateY(0)}
+  .btn.primary{background:var(--ink);color:#f3ecdd;border-color:var(--ink)}
+  .btn.red{background:var(--red);color:#f4e9d5;border-color:var(--red-dark)}
+  .btn.big{font-size:15px;padding:14px 18px}
+  .cta-for{font-family:var(--sans);font-size:11px;color:var(--muted);display:block;margin-bottom:3px}
+  .cta-wrap{display:flex;flex-direction:column;gap:3px}
+
+  .who{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+  @media (max-width:560px){.who{grid-template-columns:1fr}}
+  .whocard{border:1px solid var(--hair);background:rgba(255,255,255,.4);padding:18px;cursor:pointer;transition:.15s ease}
+  .whocard:hover{transform:translateY(-2px);background:rgba(255,255,255,.62)}
+  .whocard b{display:block;font-size:18px;margin-bottom:6px}
+  .whocard span{font-family:var(--sans);font-size:12px;color:var(--muted);line-height:1.6}
+
+  .vlist{display:flex;flex-direction:column;gap:12px}
+  .vitem{border:1px solid var(--hair);background:rgba(255,255,255,.4);padding:14px 16px}
+  .vitem .q{font-size:17px;line-height:1.5;margin-bottom:7px}
+  .vitem .e{font-family:var(--sans);font-size:11.5px;color:var(--muted)}
+  .count{font-family:var(--sans);font-size:13px;color:var(--muted)}
+
+  .unlock{margin-top:18px;border:1px dashed rgba(25,25,25,.32);background:rgba(25,25,25,.04);padding:16px}
+  .unlock b{font-size:15px} .unlock p{font-family:var(--sans);font-size:12.5px;color:rgba(25,25,25,.6);line-height:1.7;margin:8px 0 12px}
+
+  .home{border:1px solid var(--hair);background:rgba(255,255,255,.45);padding:22px}
+  .home-name{font-size:30px;font-weight:700} .home-url{font-family:var(--sans);font-size:12px;color:var(--muted);margin:4px 0 18px}
+  .home-sec{margin-bottom:20px} .home-sec-t{font-family:var(--sans);font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+  .home-empty{font-family:var(--sans);font-size:13px;color:rgba(25,25,25,.55);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(16px);opacity:0;pointer-events:none;background:var(--ink);color:#f3ecdd;padding:11px 16px;font-family:var(--sans);font-size:13px;transition:.18s ease;z-index:20;max-width:86vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<main class="page">
+  <span class="badge">模拟页 · 完全离线 · 不影响正式站</span>
+  <h1>司马迁.skill · 两层漏斗模拟</h1>
+  <p class="model">
+    <b>传播层（判词回路）</b>:朋友互相损,自己就能转,不依赖立传 —— 冷启动靠它扩散。<br>
+    <b>留存层（立传 / 个人主页）</b>:不是必经步骤,是攒够判词后的一次"<b>认领</b>" —— 长期资产。
+  </p>
+  <p class="layerkey"><span class="pill spread">传播层</span>红 · <span class="pill keep">留存层</span>黑。下面按"群里看到卡 → 自我识别 → 回敬/补刀 → 判词出炉 → 攒够后认领主页"走一遍。</p>
+
+  <nav class="nav">
+    <button data-go="land" class="active">① 群里看到卡</button>
+    <button data-go="subject">② 被损本人</button>
+    <button data-go="roast">③ 损友补刀</button>
+    <button data-go="result">④ 判词出炉</button>
+    <button data-go="claim">⑤ 认领主页</button>
+  </nav>
+
+  <!-- ① 落地 / 身份识别 -->
+  <section class="screen active" id="s-land">
+    <div class="panel">
+      <div class="phead"><div class="ptitle">群里看到一张判词卡</div><span class="pill spread">传播层 · 入口</span></div>
+      <div class="pbody">
+        <p class="anno spread">扫码进来,先让人<b>自我识别</b>(你是被损的本人,还是路过想玩),再给对应下一步。绝不一上来就让所有人"给自己立传"。</p>
+        <div class="row">
+          <div>
+            <p style="font-size:17px;line-height:1.7;margin:0 0 18px">有人在群里给 <b>韶华</b> 定了一句太史判词 👇</p>
+            <p class="label" style="margin-bottom:12px">你是谁?</p>
+            <div class="who">
+              <div class="whocard" data-go="subject"><b>我就是韶华（本人）</b><span>看看朋友怎么损我 → 主要想回敬一张</span></div>
+              <div class="whocard" data-go="roast"><b>我路过,也想整一张</b><span>挑个朋友开损 → 进补刀</span></div>
+            </div>
+          </div>
+          <aside><div class="stage"><canvas id="cardLand" width="2160" height="2160"></canvas></div></aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 被损本人视角 -->
+  <section class="screen" id="s-subject">
+    <div class="panel">
+      <div class="phead"><div class="ptitle">被损本人视角</div><span class="pill spread">传播层 · 本人</span></div>
+      <div class="pbody">
+        <p class="anno spread">本人的主 CTA 是「<b>回敬</b>」。「认领主页」只在<b>攒够判词后</b>才提示 —— 不在"刚被损"那一刻弹立传,因为<b>判词 ≠ 立传</b>,那时它既突兀又多余。</p>
+        <p class="count">韶华,你已经被朋友定了 <b id="vcount">3</b> 条判词:</p>
+        <div class="vlist" id="subjectList" style="margin:12px 0 4px"></div>
+
+        <div class="actions" style="margin-top:18px">
+          <button class="btn red big" data-go="roast">回敬定你的人一张</button>
+        </div>
+
+        <div class="unlock">
+          <b>🗄 攒够 3 条,解锁:认领你的列传主页</b>
+          <p>这些判词是"<b>别人写的你</b>",你还缺一版"<b>你亲笔的你</b>"。认领主页,把朋友们给的判词收进来,再补一版正史列传 —— 这才是把它们变成你资产的时刻。</p>
+          <button class="btn primary" data-go="claim">认领我的主页 →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 损友补刀 -->
+  <section class="screen" id="s-roast">
+    <div class="panel">
+      <div class="phead"><div class="ptitle">损友补刀</div><span class="pill spread">传播层 · 核心动作</span></div>
+      <div class="pbody">
+        <p class="anno spread">2 栏输入。正式版把这两栏发给一个<b>极薄后端 → DeepSeek</b> 出那一句(成本几厘钱);这里用模板示意格式。输入全在表单里,<b>不需要对方本人的 AI 记忆</b>,所以特别适合集中式代理。</p>
+        <div class="row">
+          <div>
+            <p class="hook">你越具体,TA 越想转发;你越客套,它越像年会颁奖词。</p>
+            <div class="field">
+              <div class="label-row"><span class="label">你要损谁</span><span class="hint">回敬就是定你的那个人</span></div>
+              <input id="rname" value="老周" maxlength="6" />
+            </div>
+            <div class="field">
+              <div class="label-row"><span class="label">TA 最让你受不了的口头禅</span><span class="hint">越具体越好</span></div>
+              <input id="b1" value="在吗？（然后消失俩小时）" autocomplete="off" />
+            </div>
+            <div class="field">
+              <div class="label-row"><span class="label">TA 最可爱的反差 / 隐藏 bug</span><span class="hint">当面也能说的那种</span></div>
+              <textarea id="b2">嘴上说要戒手机，朋友圈半夜三点还在线</textarea>
+            </div>
+            <div class="actions">
+              <button class="btn primary big" id="synth" data-go="result">合成判词 →</button>
+            </div>
+          </div>
+          <aside><div class="stage"><canvas id="cardResult" width="2160" height="2160"></canvas></div></aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 判词出炉 -->
+  <section class="screen" id="s-result">
+    <div class="panel">
+      <div class="phead"><div class="ptitle">判词出炉</div><span class="pill spread">传播层 · 产物</span></div>
+      <div class="pbody">
+        <p class="anno spread">判词卡的钩子要<b>看人下菜</b>:本人 → 回敬;群友 → 我也来。<b>这里故意不放"给自己立传"按钮</b> —— 那是攒够判词后在主页里以"认领"出现的事。</p>
+        <div class="row">
+          <aside><div class="stage"><canvas id="cardResult2" width="2160" height="2160"></canvas></div></aside>
+          <div>
+            <div class="actions" style="flex-direction:column;align-items:stretch;gap:14px">
+              <div class="cta-wrap"><span class="cta-for">给所有人</span><button class="btn red big" id="download">下载 / 发回群里</button></div>
+              <div class="cta-wrap"><span class="cta-for">给被损的本人</span><button class="btn big" data-go="roast" id="again1">回敬一张</button></div>
+              <div class="cta-wrap"><span class="cta-for">给路过的群友</span><button class="btn big" data-go="roast" id="again2">我也给别人来一张</button></div>
+            </div>
+            <p class="anno" style="margin-top:20px">回路靠这两个"再来一张"驱动:你损我一句,我必还你一句;群友看了也想整。立传不在这儿抢戏。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ 认领主页 -->
+  <section class="screen" id="s-claim">
+    <div class="panel">
+      <div class="phead"><div class="ptitle">认领你的列传主页</div><span class="pill keep">留存层 · Personal MD</span></div>
+      <div class="pbody">
+        <p class="anno"><b>立传在这里、而且只在这里出现</b> —— 以"认领 + 聚合"的姿态,不redundant、不过早。朋友给的判词变成你主页上"世人列传"的内容,病毒回路顺手喂饱了长期资产。正史那版仍走<b>零后端</b>(你自己的 AI)。</p>
+        <div class="home">
+          <div class="home-name">韶华</div>
+          <div class="home-url">列传主页 · simaqian.caojuege.com/韶华</div>
+
+          <div class="home-sec">
+            <div class="home-sec-t">正史 · 你亲笔（缺）</div>
+            <div class="home-empty">还没有正史列传 <button class="btn" data-act="self">用你自己的 AI 生成（零后端）</button></div>
+          </div>
+
+          <div class="home-sec">
+            <div class="home-sec-t">世人列传 · 朋友给的判词（<span id="claimCount">3</span>）</div>
+            <div class="vlist" id="claimList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const toastEl = $('toast');
+
+  // 关于"韶华"已积累的判词(传播层产物 → 留存层内容)
+  const VERDICTS = [
+    { q:'世人只记得他那句「等我三分钟」，没人替他说出：项目说退就退，新 Idea 三天一换。', e:'损友供词：等我三分钟（半小时起）；嘴上躺平，见卡顿比谁都急' },
+    { q:'一个反风口的人，把自己活成了风口最敏锐的观测站。', e:'损友供词：口称慢生活；盯 GPT/DeepSeek 如盯股票' },
+    { q:'教天下立传，己传犹草稿——非谦逊，是策展人永不开幕的瘾。', e:'损友供词：催别人交稿；自己的主页填了一半' }
+  ];
+
+  /* ---------- 判词卡渲染(Canvas 2D) ---------- */
+  const RATIO=2, W=1080, H=1080;
+  function clean(s){ return String(s||'').replace(/\s+/g,' ').trim(); }
+  function stripTail(s){ return clean(s).replace(/[。.!！；;，,]+$/,''); }
+  function shorten(s,n){ const a=Array.from(String(s||'')); return a.length>n?a.slice(0,n-1).join('')+'…':a.join(''); }
+  function hash(seed){ let h=2166136261; for(const c of String(seed)){ h^=c.charCodeAt(0); h=Math.imul(h,16777619);} return Math.abs(h); }
+  function vol(seed){ return String(hash(seed)%899+100); }
+
+  let tplOffset=0;
+  function buildLine(name,b1,b2){
+    const q=stripTail(b1).replace(/[（(].*$/,'').trim()||'等我三分钟';
+    const fc=stripTail(b2)||'想法太多，三天换一个新坑';
+    const tpls=[
+      `世人只记得他那句「${q}」，没人替他说出：${fc}。`,
+      `${name}最大的破绽，不是「${q}」，是${fc}。`,
+      `嘴上「${q}」，身体却很诚实——${fc}。`,
+      `别信他那句「${q}」。真相是，${fc}。`,
+      `一个把「${q}」挂在嘴边的人，偏偏${fc}。这才是他。`
+    ];
+    return tpls[(hash(name+b1+b2)+tplOffset)%tpls.length];
+  }
+
+  function wrap(ctx,text,maxW,maxLines){
+    const toks=String(text||'').match(/[A-Za-z0-9_.:#%+\-]+|\s+|./gu)||[];
+    const lines=[]; let line='';
+    const push=()=>{ if(line.trim()) lines.push(line.trim()); line=''; };
+    for(const t of toks){
+      const cand=line+t;
+      if(ctx.measureText(cand).width<=maxW){ line=cand; continue; }
+      if(line) push();
+      if(!/^\s+$/.test(t)) line=t;
+      if(maxLines&&lines.length>=maxLines) break;
+    }
+    if(line&&(!maxLines||lines.length<maxLines)) push();
+    if(maxLines&&lines.length===maxLines){
+      let last=lines[maxLines-1];
+      while(last&&ctx.measureText(last+'…').width>maxW) last=last.slice(0,-1);
+      if(last&&text.trim()!==lines.join('').trim()) lines[maxLines-1]=last+'…';
+    }
+    return lines;
+  }
+
+  function seal(ctx,x,y,s){
+    ctx.save();
+    ctx.fillStyle='#aa302c'; ctx.fillRect(x,y,s,s);
+    ctx.strokeStyle='#76201d'; ctx.lineWidth=5; ctx.strokeRect(x+2,y+2,s-4,s-4);
+    ctx.strokeStyle='rgba(240,223,196,.6)'; ctx.lineWidth=3; ctx.strokeRect(x+11,y+11,s-22,s-22);
+    ctx.fillStyle='#f0dfc4'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.font=`700 ${Math.round(s*.3)}px "Songti SC","STSong",serif`;
+    ctx.fillText('司馬',x+s/2,y+s*.32); ctx.fillText('毒判',x+s/2,y+s*.7);
+    ctx.restore();
+  }
+
+  function drawVerdict(canvas,data){
+    if(!canvas) return;
+    const ctx=canvas.getContext('2d');
+    ctx.setTransform(RATIO,0,0,RATIO,0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#f1eadc'; ctx.fillRect(0,0,W,H);
+    ctx.save();
+    ctx.fillStyle='rgba(132,104,61,.09)'; ctx.font='900 560px "Songti SC","STSong",serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('判',W*.54,H*.66); ctx.restore();
+    ctx.save();
+    ctx.strokeStyle='rgba(25,25,25,.36)'; ctx.lineWidth=2; ctx.strokeRect(72,70,176,54);
+    ctx.fillStyle='#574f45'; ctx.font='600 30px "Songti SC","STSong",serif';
+    ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(`毒判·${data.vol}`,92,98);
+    ctx.fillStyle='#756f66'; ctx.font='600 32px "Songti SC","STSong",serif';
+    ctx.textAlign='right'; ctx.fillText('太史公曰',W-72,99); ctx.restore();
+    ctx.save();
+    ctx.fillStyle='#191919'; ctx.font='700 60px "Songti SC","STSong",serif';
+    ctx.textAlign='left'; ctx.textBaseline='top';
+    const lineH=88, maxLines=5;
+    const lines=wrap(ctx,`「${data.line}」`,806,maxLines);
+    const zT=300, zB=712;
+    let y=Math.max(zT,(zT+zB)/2-(lines.length*lineH)/2);
+    for(const ln of lines){ ctx.fillText(ln,134,y); y+=lineH; }
+    ctx.restore();
+    ctx.save();
+    ctx.fillStyle='rgba(25,25,25,.14)'; ctx.fillRect(134,760,W-268,3);
+    ctx.fillStyle='#8a7b68'; ctx.font='500 25px "Songti SC","STSong",serif';
+    ctx.textAlign='left'; ctx.textBaseline='top';
+    let ey=786; for(const ln of wrap(ctx,data.ev,812,2)){ ctx.fillText(ln,134,ey); ey+=37; }
+    ctx.restore();
+    ctx.save();
+    ctx.fillStyle='#191919'; ctx.font='700 36px "Songti SC","STSong",serif';
+    ctx.textAlign='left'; ctx.fillText(`${data.name}毒判`,134,944);
+    ctx.fillStyle='rgba(25,25,25,.56)'; ctx.font='500 26px "Songti SC","STSong",serif';
+    ctx.fillText('司马迁.skill · 太史判词 · 回敬一张',134,986);
+    ctx.font='500 24px ui-monospace,Menlo,monospace'; ctx.textAlign='right';
+    ctx.fillText('simaqian.caojuege.com',W-72,1016); ctx.restore();
+    seal(ctx,W-206,856,116);
+  }
+
+  function resultData(){
+    const name=clean($('rname').value)||'某某';
+    return {
+      name,
+      line:buildLine(name,$('b1').value,$('b2').value),
+      ev:`损友供词：${shorten(stripTail($('b1').value)||'—',16)}；${shorten(stripTail($('b2').value)||'—',18)}`,
+      vol:vol(name+$('b1').value+$('b2').value)
+    };
+  }
+  function renderResult(){ const d=resultData(); drawVerdict($('cardResult'),d); drawVerdict($('cardResult2'),d); }
+
+  /* ---------- 列表渲染 ---------- */
+  function fillList(el){
+    if(!el) return;
+    el.innerHTML=VERDICTS.map(v=>`<div class="vitem"><div class="q">「${v.q}」</div><div class="e">${v.e}</div></div>`).join('');
+  }
+
+  /* ---------- 屏幕切换 ---------- */
+  function showScreen(name){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===`s-${name}`));
+    document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.go===name));
+    if(name==='result') renderResult();
+    if(name==='land') drawVerdict($('cardLand'),{ name:'韶华', line:VERDICTS[0].q, ev:VERDICTS[0].e, vol:vol('韶华-land') });
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',()=>showScreen(el.dataset.go)));
+
+  function toast(m){ toastEl.textContent=m; toastEl.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>toastEl.classList.remove('show'),2400); }
+
+  async function download(){
+    const c=$('cardResult2'); const blob=await new Promise(r=>c.toBlob(r,'image/png',0.96)); if(!blob) return;
+    const url=URL.createObjectURL(blob); const a=document.createElement('a');
+    a.href=url; a.download=`taishi-${clean($('rname').value)||'verdict'}.png`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
+
+  ['rname','b1','b2'].forEach(id=>$(id).addEventListener('input',renderResult));
+  $('synth').addEventListener('click',()=>{ tplOffset++; renderResult(); });
+  $('download').addEventListener('click',download);
+  document.querySelectorAll('[data-act="self"]').forEach(b=>b.addEventListener('click',()=>toast('进入"给自己立传"流程:零后端,用你自己的 AI(Kimi/DeepSeek/豆包)从你的长期记忆生成正史列传。')));
+
+  /* init */
+  fillList($('subjectList')); fillList($('claimList'));
+  $('vcount').textContent=VERDICTS.length; $('claimCount').textContent=VERDICTS.length;
+  renderResult();
+  showScreen('land');
+})();
+</script>
+</body>
+</html>
