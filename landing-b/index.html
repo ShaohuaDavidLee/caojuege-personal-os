@@ -69,10 +69,10 @@ button{font:inherit;cursor:pointer}
 .label-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
 .label{font-size:14.5px;color:var(--c-ink)}
 .hint{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted)}
-input,textarea{width:100%;border:0;border-bottom:1px solid var(--c-border-strong);background:var(--c-surface-40);padding:12px 13px;color:var(--c-ink);font-family:var(--font-serif);font-size:17px;line-height:1.7;outline:none;border-radius:0;transition:border-color .25s,background .25s}
-.subject input{font-weight:700;font-size:19px;padding:6px 8px}
+input,textarea{width:100%;border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:13px 14px;color:var(--c-ink);font-family:var(--font-serif);font-size:17px;line-height:1.7;outline:none;border-radius:0;transition:border-color .25s,background .25s}
+.subject input{font-weight:700;font-size:19px;padding:7px 11px}
 textarea{min-height:80px;resize:vertical}
-input:focus,textarea:focus{border-bottom-color:var(--c-seal);background:var(--c-surface)}
+input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface)}
 .note{font-family:var(--font-sans);font-size:11.5px;color:var(--c-muted);margin-top:4px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
 
@@ -221,6 +221,8 @@ input:focus,textarea:focus{border-bottom-color:var(--c-seal);background:var(--c-
   }
 
   function setLS(ctx,px){ try{ ctx.letterSpacing = px+'px'; }catch(e){} }
+  const NO_START='」』）】》〉。，、；：！？·…％”’';  // 不能出现在行首
+  const NO_END='「『（【《〈“‘';                      // 不能出现在行尾
   function wrap(ctx,text,maxW,maxLines){
     const toks=String(text||'').match(/[A-Za-z0-9_.:#%+\-]+|\s+|./gu)||[];
     const lines=[]; let line='';
@@ -233,6 +235,15 @@ input:focus,textarea:focus{border-bottom-color:var(--c-seal);background:var(--c-
       if(maxLines&&lines.length>=maxLines) break;
     }
     if(line&&(!maxLines||lines.length<maxLines)) push();
+    // 避头尾：只往下挪字（上行变短、不会超宽），消除行首禁则标点与行尾孤立开引号
+    for(let i=0;i<lines.length-1;i++){
+      while(lines[i].length>1 && lines[i+1] && NO_START.indexOf(lines[i+1][0])>=0){
+        lines[i+1]=lines[i].slice(-1)+lines[i+1]; lines[i]=lines[i].slice(0,-1);
+      }
+      while(lines[i].length>1 && NO_END.indexOf(lines[i].slice(-1))>=0){
+        lines[i+1]=lines[i].slice(-1)+lines[i+1]; lines[i]=lines[i].slice(0,-1);
+      }
+    }
     if(maxLines&&lines.length===maxLines){
       let last=lines[maxLines-1];
       while(last&&ctx.measureText(last+'…').width>maxW) last=last.slice(0,-1);
