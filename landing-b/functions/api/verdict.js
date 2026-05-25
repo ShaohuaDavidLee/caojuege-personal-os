@@ -47,7 +47,7 @@ export async function onRequestPost({ request, env }) {
     const user = '对象称呼：' + name + '\n口头禅：' + (b1 || '（未填）') + '\n反差/隐藏bug：' + (b2 || '（未填）');
 
     const ctrl = new AbortController();
-    const timer = setTimeout(function () { ctrl.abort(); }, 22000);
+    const timer = setTimeout(function () { ctrl.abort(); }, 15000);
 
     let resp;
     try {
