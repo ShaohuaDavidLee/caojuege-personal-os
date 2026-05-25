@@ -88,12 +88,8 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
 .stage{position:sticky;top:96px}
 .stage-frame{border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:14px}
 .vcard{width:100%;height:auto;display:block;box-shadow:0 16px 40px rgba(0,0,0,.16)}
-.cta-stack{margin-top:16px;display:flex;flex-direction:column;border:1px solid var(--c-border-soft)}
-.cta-stack .btn{width:100%;border:0;border-bottom:1px solid var(--c-border-soft);background:transparent;color:var(--c-ink);padding:16px 22px}
-.cta-stack .btn:last-child{border-bottom:0}
-.cta-stack .btn:hover{background:var(--c-btn);color:var(--c-on-dark)}
-.cta-stack .btn.primary{background:var(--c-btn);color:var(--c-on-dark)}
-.cta-stack .btn.primary:hover{background:var(--c-ink-pure)}
+.cta-stack{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.cta-stack .btn{width:100%;padding:16px 22px}
 .savehint{margin-top:10px;font-family:var(--font-serif);font-size:12.5px;color:var(--c-muted);text-align:center}
 .savehint b{color:var(--c-ink);font-weight:500}
 
