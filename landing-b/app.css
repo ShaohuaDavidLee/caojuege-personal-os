@@ -124,3 +124,27 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
   .stage{position:static}
   .recv{padding:28px 0 48px}
 }
+
+/* ===== 底色 swatch 圆点 ===== */
+.swatch{display:flex;gap:12px;margin-top:4px}
+.swatch button{width:32px;height:32px;border-radius:50%;border:1px solid var(--c-border-strong);cursor:pointer;padding:0;transition:box-shadow .15s}
+.swatch button[data-v=a]{background:#e5e5e5}
+.swatch button[data-v=b]{background:#fff}
+.swatch button[data-v=c]{background:#1a1a1a}
+.swatch button.on{box-shadow:0 0 0 2px var(--c-bg),0 0 0 4px var(--c-ink)}
+.ctl-label{display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-muted);margin:0 0 9px}
+
+/* 选中的气泡黑底白字 */
+.chip.on{background:var(--c-btn);color:var(--c-on-dark);border-color:var(--c-btn)}
+
+/* recall 横幅（回敬入口） */
+.recall{margin:0 0 22px;padding:13px 16px;border:1px solid var(--c-seal);background:rgba(168,48,45,.06);font-family:var(--font-serif);font-size:14.5px;line-height:1.6;display:none}
+.recall.on{display:block}
+.recall b{color:var(--c-seal)}
+
+/* ===== 移动端单屏：卡片置顶为主角 ===== */
+@media(max-width:880px){
+  .flow-grid .stage{order:-1}
+  .hero{padding:24px 0 20px}
+  .hook{font-size:15.5px;margin-bottom:20px}
+}

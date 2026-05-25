@@ -46,7 +46,7 @@
     <div class="eyebrow">怎么玩 · 三步</div>
     <div class="steps-grid">
       <div class="step"><div class="n">壹</div><h3>填两栏</h3><p>TA 的一句口头禅，和一个最可爱的反差。越具体越好。</p></div>
-      <div class="step"><div class="n">贰</div><h3>出一张判词卡</h3><p>太史公落一句判词，配上「损友供词」与朱印，竖版可存图。</p></div>
+      <div class="step"><div class="n">贰</div><h3>换一句判词</h3><p>太史公落一句判词，配「损友供词」与朱印；不够狠就再换一句。</p></div>
       <div class="step"><div class="n">叁</div><h3>甩回群里</h3><p>发回给 TA，或群里一甩。被损的人想回敬，群友也想整一张。</p></div>
     </div>
   </div>
@@ -58,58 +58,11 @@
   </div>
 </footer>
 
-<script>
-window.VerdictCard=(function(){
-  'use strict';
-  var SERIF='"Noto Serif SC","Songti SC","STSong",serif', MONO='ui-monospace,Menlo,monospace';
-  var RATIO=2,W=1080,H=1440,P=84;
-  var NO_START='」』）】》〉。，、；：！？·…％”’', NO_END='「『（【《〈“‘';
-  function clean(s){return String(s==null?'':s).replace(/\s+/g,' ').trim();}
-  function stripTail(s){return clean(s).replace(/[。.!！；;，,]+$/,'');}
-  function shorten(s,n){var a=Array.from(String(s||''));return a.length>n?a.slice(0,n-1).join('')+'…':a.join('');}
-  function hash(seed){var h=2166136261,s=String(seed);for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return Math.abs(h);}
-  function vol(seed){return String(hash(seed)%899+100);}
-  function buildLine(name,b1,b2,off){
-    var q=stripTail(b1).replace(/[（(].*$/,'').trim()||'在吗', fc=stripTail(b2)||'想法太多，三天换一个新坑';
-    var t=['世人只记得他那句「'+q+'」，没人替他说出：'+fc+'。',name+'最大的破绽，不是「'+q+'」，是'+fc+'。','嘴上「'+q+'」，身体却很诚实——'+fc+'。','别信他那句「'+q+'」。真相是，'+fc+'。','一个把「'+q+'」挂在嘴边的人，偏偏'+fc+'。这才是他。'];
-    return t[(hash(name+b1+b2)+(off||0))%t.length];
-  }
-  function buildData(name,b1,b2,off){name=clean(name)||'某某';return {name:name,line:buildLine(name,b1,b2,off),ev:'损友供词　'+shorten(stripTail(b1)||'—',16)+'；'+shorten(stripTail(b2)||'—',18)+'。',vol:vol(name+b1+b2)};}
-  function setLS(ctx,px){try{ctx.letterSpacing=px+'px';}catch(e){}}
-  function wrap(ctx,text,maxW,maxLines){
-    var toks=String(text||'').match(/[A-Za-z0-9_.:#%+\-]+|\s+|./gu)||[],lines=[],line='';
-    function push(){if(line.trim())lines.push(line.trim());line='';}
-    for(var i=0;i<toks.length;i++){var t=toks[i];if(ctx.measureText(line+t).width<=maxW){line+=t;continue;}if(line)push();if(!/^\s+$/.test(t))line=t;if(maxLines&&lines.length>=maxLines)break;}
-    if(line&&(!maxLines||lines.length<maxLines))push();
-    for(var k=0;k<lines.length-1;k++){
-      while(lines[k].length>1&&lines[k+1]&&NO_START.indexOf(lines[k+1][0])>=0){lines[k+1]=lines[k].slice(-1)+lines[k+1];lines[k]=lines[k].slice(0,-1);}
-      while(lines[k].length>1&&NO_END.indexOf(lines[k].slice(-1))>=0){lines[k+1]=lines[k].slice(-1)+lines[k+1];lines[k]=lines[k].slice(0,-1);}
-    }
-    if(maxLines&&lines.length===maxLines){var last=lines[maxLines-1];while(last&&ctx.measureText(last+'…').width>maxW)last=last.slice(0,-1);if(last&&text.trim()!==lines.join('').trim())lines[maxLines-1]=last+'…';}
-    return lines;
-  }
-  function drawSeal(ctx,x,y,w,h){var ch=['司','馬','毒','判'];ctx.save();ctx.fillStyle='#a8302d';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#7d211e';ctx.lineWidth=4;ctx.strokeRect(x+2,y+2,w-4,h-4);ctx.strokeStyle='rgba(240,223,196,.5)';ctx.lineWidth=2.5;ctx.strokeRect(x+11,y+11,w-22,h-22);ctx.fillStyle='#f0dfc4';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 '+Math.round(Math.min(w,h)*0.34)+'px '+SERIF;setLS(ctx,0);ctx.fillText(ch[0],x+w*0.3,y+h*0.3);ctx.fillText(ch[1],x+w*0.7,y+h*0.3);ctx.fillText(ch[2],x+w*0.3,y+h*0.7);ctx.fillText(ch[3],x+w*0.7,y+h*0.7);ctx.restore();}
-  function drawQR(ctx,x,y,s){ctx.save();ctx.fillStyle='#fff';ctx.fillRect(x,y,s,s);var pad=Math.round(s*0.08),n=21,cell=(s-pad*2)/n,ox=x+pad,oy=y+pad,h=hash('s.caojuege.com');ctx.fillStyle='#1a1a1a';for(var r=0;r<n;r++)for(var c=0;c<n;c++){if((r<8&&c<8)||(r<8&&c>=n-8)||(r>=n-8&&c<8))continue;h=(h*1103515245+12345)&0x7fffffff;if(h%100<46)ctx.fillRect(ox+c*cell,oy+r*cell,cell,cell);}function f(fx,fy){ctx.fillStyle='#1a1a1a';ctx.fillRect(ox+fx*cell,oy+fy*cell,cell*7,cell*7);ctx.fillStyle='#fff';ctx.fillRect(ox+(fx+1)*cell,oy+(fy+1)*cell,cell*5,cell*5);ctx.fillStyle='#1a1a1a';ctx.fillRect(ox+(fx+2)*cell,oy+(fy+2)*cell,cell*3,cell*3);}f(0,0);f(n-7,0);f(0,n-7);ctx.restore();}
-  function draw(canvas,d){
-    if(!canvas)return;var ctx=canvas.getContext('2d');
-    ctx.setTransform(RATIO,0,0,RATIO,0,0);ctx.clearRect(0,0,W,H);ctx.fillStyle='#e5e5e5';ctx.fillRect(0,0,W,H);
-    ctx.save();ctx.fillStyle='rgba(0,0,0,.06)';ctx.font='900 440px '+SERIF;setLS(ctx,0);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('判',W*0.66,H*0.33);ctx.fillText('詞',W*0.66,H*0.63);ctx.restore();
-    ctx.save();ctx.textBaseline='top';ctx.fillStyle='#1a1a1a';ctx.font='700 46px '+SERIF;setLS(ctx,0);ctx.textAlign='left';ctx.fillText(d.name,P,78);ctx.fillStyle='#5c5e60';ctx.font='500 20px '+SERIF;setLS(ctx,1);ctx.fillText('毒判 · 第 '+d.vol+' 卷',P,140);ctx.fillStyle='#5c5e60';ctx.font='500 19px '+MONO;setLS(ctx,4);ctx.textAlign='right';ctx.textBaseline='alphabetic';ctx.fillText('PERSONAL ANNAL · 判',W-P,110);ctx.restore();
-    drawSeal(ctx,W-P-150,180,150,172);
-    ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='700 72px '+SERIF;setLS(ctx,1);ctx.textAlign='left';ctx.textBaseline='top';var lineH=108,lines=wrap(ctx,'「'+d.line+'」',W-2*P,6),zT=440,zB=1012,y=Math.max(zT,(zT+zB)/2-(lines.length*lineH)/2);for(var i=0;i<lines.length;i++){ctx.fillText(lines[i],P,y);y+=lineH;}ctx.restore();
-    ctx.save();ctx.fillStyle='rgba(0,0,0,.16)';ctx.fillRect(P,1078,W-2*P,2);ctx.fillStyle='#5c5e60';ctx.font='400 25px '+SERIF;setLS(ctx,0);ctx.textAlign='left';ctx.textBaseline='top';var ey=1108,evl=wrap(ctx,d.ev,W-2*P,2);for(var j=0;j<evl.length;j++){ctx.fillText(evl[j],P,ey);ey+=38;}ctx.restore();
-    drawQR(ctx,W-P-158,H-P-158,158);
-    ctx.save();ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillStyle='#5c5e60';ctx.font='400 22px '+SERIF;setLS(ctx,0);ctx.fillText('司马迁.skill · 太史判词',P,H-P-104);ctx.fillStyle='#1a1a1a';ctx.font='600 38px '+MONO;setLS(ctx,1);ctx.fillText('s.caojuege.com',P,H-P-52);ctx.fillStyle='#5c5e60';ctx.font='500 17px '+MONO;setLS(ctx,2);ctx.fillText('扫码也给朋友定一句',P,H-P-16);ctx.restore();
-  }
-  function ensureFonts(){if(document.fonts&&document.fonts.load){return Promise.all([document.fonts.load('700 72px "Noto Serif SC"'),document.fonts.load('900 200px "Noto Serif SC"'),document.fonts.load('500 25px "Noto Serif SC"')]).catch(function(){});}return Promise.resolve();}
-  function download(canvas,filename){return new Promise(function(resolve){canvas.toBlob(function(blob){if(!blob){resolve(false);return;}var file=new File([blob],filename,{type:'image/png'});function fallback(){var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);resolve(true);}if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'太史判词'}).then(function(){resolve(true);}).catch(function(e){if(e&&e.name==='AbortError'){resolve(true);return;}fallback();});return;}fallback();},'image/png',0.96);});}
-  return {W:W,H:H,buildLine:buildLine,buildData:buildData,draw:draw,ensureFonts:ensureFonts,download:download,clean:clean,vol:vol};
-})();
-</script>
+<script src="./verdict-card.js"></script>
 <script>
 (function(){
   var c=document.getElementById('sample');
-  var d=VerdictCard.buildData('老周','在吗？（然后消失俩小时）','嘴上说要戒手机，朋友圈半夜三点还在线',3);
+  var d=VerdictCard.buildData({name:'老周',b1:'在吗？（然后消失俩小时）',b2:'嘴上说要戒手机，朋友圈半夜三点还在线',off:3,variant:'a'});
   function go(){VerdictCard.draw(c,d);}
   go();VerdictCard.ensureFonts().then(go);
 })();

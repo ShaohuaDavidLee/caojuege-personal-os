@@ -22,48 +22,62 @@
   </div>
 </nav>
 
-<section class="hero" style="padding-bottom:36px">
+<section class="hero" style="padding-bottom:30px">
   <div class="hero-wm">判詞</div>
   <div class="container">
     <div class="eyebrow">Personal Annal · 太史判词</div>
     <h1 style="margin-bottom:10px">给朋友定<em>一句判词</em>。</h1>
-    <p class="lead" style="margin-bottom:0">填两栏，出一张能甩回群里的卡。损得越具体，TA 越想转发。</p>
+    <p class="lead" style="margin-bottom:0">填两栏，点「换一句」让太史公落笔。损得越具体，TA 越想转发。</p>
   </div>
 </section>
 
 <div class="flow">
   <div class="container">
+    <div class="recall" id="recall"></div>
     <div class="flow-grid">
-      <section>
+      <section class="controls">
         <p class="hook">你越具体，TA 越想转发；你越客套，它越像年会颁奖词。</p>
         <div class="dice-row">
           <button class="btn ghost" id="dice" type="button">没头绪？随机抽一组</button>
-          <span class="dice-hint">点下面的示例就能填，改两个字更像 TA</span>
+          <span class="dice-hint">点示例就能填，改两个字更像 TA</span>
         </div>
+
         <div class="field">
           <div class="label-row"><span class="label">你正在为谁定判词</span><span class="hint">写 TA 愿意被这样叫的名字</span></div>
-          <input id="name" value="老周" maxlength="6" autocomplete="off" style="max-width:240px" />
+          <input id="name" value="老周" maxlength="8" autocomplete="off" style="max-width:240px" />
         </div>
+
         <div class="field">
           <div class="label-row"><span class="label">TA 最让你受不了的口头禅</span><span class="hint">越具体越好</span></div>
           <input id="b1" value="在吗？（然后消失俩小时）" autocomplete="off" />
           <div class="chips" id="chips-b1"></div>
         </div>
+
         <div class="field">
           <div class="label-row"><span class="label">TA 最可爱的反差 / 隐藏 bug</span><span class="hint">当面也能说的那种</span></div>
           <textarea id="b2">嘴上说要戒手机，朋友圈半夜三点还在线</textarea>
           <div class="chips" id="chips-b2"></div>
         </div>
-        <div class="actions"><button class="btn" id="reroll">有请太史公写判词</button></div>
+
+        <div class="field">
+          <span class="ctl-label">卡片底色</span>
+          <div class="swatch" id="swatch">
+            <button data-v="a" class="on" type="button" title="灰底·正典"></button>
+            <button data-v="b" type="button" title="白纸·判书"></button>
+            <button data-v="c" type="button" title="黑底·夜判"></button>
+          </div>
+        </div>
       </section>
 
       <aside class="stage">
         <div class="stage-frame"><canvas id="card" class="vcard" width="2160" height="2880" aria-label="太史判词预览"></canvas></div>
         <div class="cta-stack">
-          <button class="btn" id="download">下载 / 发回群里</button>
-          <button class="btn ghost" id="again">再损一个朋友</button>
+          <button class="btn" id="reroll">有请太史公·换一句</button>
+          <button class="btn" id="download">保存 / 发回群里</button>
+          <button class="btn ghost" id="copyMsg">复制「甩给 TA」群消息</button>
+          <button class="btn ghost" id="again">再损一个</button>
         </div>
-        <div class="savehint"><b>长按图片</b>保存到相册，或点「下载 / 发回群里」</div>
+        <div class="savehint"><b>长按图片</b>也能存到相册</div>
       </aside>
     </div>
   </div>
@@ -76,89 +90,92 @@
 </footer>
 <div class="toast" id="toast"></div>
 
-<script>
-/* === 太史判词卡 · Canvas 渲染器（内联，避免外部脚本被预览环境拦截）=== */
-window.VerdictCard=(function(){
-  'use strict';
-  var SERIF='"Noto Serif SC","Songti SC","STSong",serif', MONO='ui-monospace,Menlo,monospace';
-  var RATIO=2,W=1080,H=1440,P=84;
-  var NO_START='」』）】》〉。，、；：！？·…％”’', NO_END='「『（【《〈“‘';
-  function clean(s){return String(s==null?'':s).replace(/\s+/g,' ').trim();}
-  function stripTail(s){return clean(s).replace(/[。.!！；;，,]+$/,'');}
-  function shorten(s,n){var a=Array.from(String(s||''));return a.length>n?a.slice(0,n-1).join('')+'…':a.join('');}
-  function hash(seed){var h=2166136261,s=String(seed);for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return Math.abs(h);}
-  function vol(seed){return String(hash(seed)%899+100);}
-  function buildLine(name,b1,b2,off){
-    var q=stripTail(b1).replace(/[（(].*$/,'').trim()||'在吗', fc=stripTail(b2)||'想法太多，三天换一个新坑';
-    var t=['世人只记得他那句「'+q+'」，没人替他说出：'+fc+'。',name+'最大的破绽，不是「'+q+'」，是'+fc+'。','嘴上「'+q+'」，身体却很诚实——'+fc+'。','别信他那句「'+q+'」。真相是，'+fc+'。','一个把「'+q+'」挂在嘴边的人，偏偏'+fc+'。这才是他。'];
-    return t[(hash(name+b1+b2)+(off||0))%t.length];
-  }
-  function buildData(name,b1,b2,off){name=clean(name)||'某某';return {name:name,line:buildLine(name,b1,b2,off),ev:'损友供词　'+shorten(stripTail(b1)||'—',16)+'；'+shorten(stripTail(b2)||'—',18)+'。',vol:vol(name+b1+b2)};}
-  function setLS(ctx,px){try{ctx.letterSpacing=px+'px';}catch(e){}}
-  function wrap(ctx,text,maxW,maxLines){
-    var toks=String(text||'').match(/[A-Za-z0-9_.:#%+\-]+|\s+|./gu)||[],lines=[],line='';
-    function push(){if(line.trim())lines.push(line.trim());line='';}
-    for(var i=0;i<toks.length;i++){var t=toks[i];if(ctx.measureText(line+t).width<=maxW){line+=t;continue;}if(line)push();if(!/^\s+$/.test(t))line=t;if(maxLines&&lines.length>=maxLines)break;}
-    if(line&&(!maxLines||lines.length<maxLines))push();
-    for(var k=0;k<lines.length-1;k++){
-      while(lines[k].length>1&&lines[k+1]&&NO_START.indexOf(lines[k+1][0])>=0){lines[k+1]=lines[k].slice(-1)+lines[k+1];lines[k]=lines[k].slice(0,-1);}
-      while(lines[k].length>1&&NO_END.indexOf(lines[k].slice(-1))>=0){lines[k+1]=lines[k].slice(-1)+lines[k+1];lines[k]=lines[k].slice(0,-1);}
-    }
-    if(maxLines&&lines.length===maxLines){var last=lines[maxLines-1];while(last&&ctx.measureText(last+'…').width>maxW)last=last.slice(0,-1);if(last&&text.trim()!==lines.join('').trim())lines[maxLines-1]=last+'…';}
-    return lines;
-  }
-  function drawSeal(ctx,x,y,w,h){var ch=['司','馬','毒','判'];ctx.save();ctx.fillStyle='#a8302d';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#7d211e';ctx.lineWidth=4;ctx.strokeRect(x+2,y+2,w-4,h-4);ctx.strokeStyle='rgba(240,223,196,.5)';ctx.lineWidth=2.5;ctx.strokeRect(x+11,y+11,w-22,h-22);ctx.fillStyle='#f0dfc4';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='700 '+Math.round(Math.min(w,h)*0.34)+'px '+SERIF;setLS(ctx,0);ctx.fillText(ch[0],x+w*0.3,y+h*0.3);ctx.fillText(ch[1],x+w*0.7,y+h*0.3);ctx.fillText(ch[2],x+w*0.3,y+h*0.7);ctx.fillText(ch[3],x+w*0.7,y+h*0.7);ctx.restore();}
-  function drawQR(ctx,x,y,s){ctx.save();ctx.fillStyle='#fff';ctx.fillRect(x,y,s,s);var pad=Math.round(s*0.08),n=21,cell=(s-pad*2)/n,ox=x+pad,oy=y+pad,h=hash('s.caojuege.com');ctx.fillStyle='#1a1a1a';for(var r=0;r<n;r++)for(var c=0;c<n;c++){if((r<8&&c<8)||(r<8&&c>=n-8)||(r>=n-8&&c<8))continue;h=(h*1103515245+12345)&0x7fffffff;if(h%100<46)ctx.fillRect(ox+c*cell,oy+r*cell,cell,cell);}function f(fx,fy){ctx.fillStyle='#1a1a1a';ctx.fillRect(ox+fx*cell,oy+fy*cell,cell*7,cell*7);ctx.fillStyle='#fff';ctx.fillRect(ox+(fx+1)*cell,oy+(fy+1)*cell,cell*5,cell*5);ctx.fillStyle='#1a1a1a';ctx.fillRect(ox+(fx+2)*cell,oy+(fy+2)*cell,cell*3,cell*3);}f(0,0);f(n-7,0);f(0,n-7);ctx.restore();}
-  function draw(canvas,d){
-    if(!canvas)return;var ctx=canvas.getContext('2d');
-    ctx.setTransform(RATIO,0,0,RATIO,0,0);ctx.clearRect(0,0,W,H);ctx.fillStyle='#e5e5e5';ctx.fillRect(0,0,W,H);
-    ctx.save();ctx.fillStyle='rgba(0,0,0,.06)';ctx.font='900 440px '+SERIF;setLS(ctx,0);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('判',W*0.66,H*0.33);ctx.fillText('詞',W*0.66,H*0.63);ctx.restore();
-    ctx.save();ctx.textBaseline='top';ctx.fillStyle='#1a1a1a';ctx.font='700 46px '+SERIF;setLS(ctx,0);ctx.textAlign='left';ctx.fillText(d.name,P,78);ctx.fillStyle='#5c5e60';ctx.font='500 20px '+SERIF;setLS(ctx,1);ctx.fillText('毒判 · 第 '+d.vol+' 卷',P,140);ctx.fillStyle='#5c5e60';ctx.font='500 19px '+MONO;setLS(ctx,4);ctx.textAlign='right';ctx.textBaseline='alphabetic';ctx.fillText('PERSONAL ANNAL · 判',W-P,110);ctx.restore();
-    drawSeal(ctx,W-P-150,180,150,172);
-    ctx.save();ctx.fillStyle='#1a1a1a';ctx.font='700 72px '+SERIF;setLS(ctx,1);ctx.textAlign='left';ctx.textBaseline='top';var lineH=108,lines=wrap(ctx,'「'+d.line+'」',W-2*P,6),zT=440,zB=1012,y=Math.max(zT,(zT+zB)/2-(lines.length*lineH)/2);for(var i=0;i<lines.length;i++){ctx.fillText(lines[i],P,y);y+=lineH;}ctx.restore();
-    ctx.save();ctx.fillStyle='rgba(0,0,0,.16)';ctx.fillRect(P,1078,W-2*P,2);ctx.fillStyle='#5c5e60';ctx.font='400 25px '+SERIF;setLS(ctx,0);ctx.textAlign='left';ctx.textBaseline='top';var ey=1108,evl=wrap(ctx,d.ev,W-2*P,2);for(var j=0;j<evl.length;j++){ctx.fillText(evl[j],P,ey);ey+=38;}ctx.restore();
-    drawQR(ctx,W-P-158,H-P-158,158);
-    ctx.save();ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.fillStyle='#5c5e60';ctx.font='400 22px '+SERIF;setLS(ctx,0);ctx.fillText('司马迁.skill · 太史判词',P,H-P-104);ctx.fillStyle='#1a1a1a';ctx.font='600 38px '+MONO;setLS(ctx,1);ctx.fillText('s.caojuege.com',P,H-P-52);ctx.fillStyle='#5c5e60';ctx.font='500 17px '+MONO;setLS(ctx,2);ctx.fillText('扫码也给朋友定一句',P,H-P-16);ctx.restore();
-  }
-  function ensureFonts(){if(document.fonts&&document.fonts.load){return Promise.all([document.fonts.load('700 72px "Noto Serif SC"'),document.fonts.load('900 200px "Noto Serif SC"'),document.fonts.load('500 25px "Noto Serif SC"')]).catch(function(){});}return Promise.resolve();}
-  function download(canvas,filename){return new Promise(function(resolve){canvas.toBlob(function(blob){if(!blob){resolve(false);return;}var file=new File([blob],filename,{type:'image/png'});function fallback(){var url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1000);resolve(true);}if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'太史判词'}).then(function(){resolve(true);}).catch(function(e){if(e&&e.name==='AbortError'){resolve(true);return;}fallback();});return;}fallback();},'image/png',0.96);});}
-  return {W:W,H:H,buildLine:buildLine,buildData:buildData,draw:draw,ensureFonts:ensureFonts,download:download,clean:clean,vol:vol};
-})();
-</script>
+<script src="./verdict-card.js"></script>
 <script>
 (function(){
   var $=function(id){return document.getElementById(id);};
-  var toastEl=$('toast'),off=0;
+  var val=function(id){return $(id).value;};
+  var toastEl=$('toast');
   function toast(m,ms){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.classList.remove('show');},ms||2800);}
-  function tmpl(){VerdictCard.draw($('card'),VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off));}
-  ['name','b1','b2'].forEach(function(id){$(id).addEventListener('input',tmpl);});
+
+  var variant='a', off=0, aiLines=[], aiIdx=0, aiKey='', shownLine='';
+  function inputsKey(){return val('name')+'|'+val('b1')+'|'+val('b2');}
+  function aiActive(){return aiKey===inputsKey() && aiLines.length>0 && aiIdx<aiLines.length;}
+  function redraw(){
+    var line = aiActive()? aiLines[aiIdx] : null;
+    var d = VerdictCard.buildData({name:val('name'),b1:val('b1'),b2:val('b2'),off:off,line:line,variant:variant});
+    VerdictCard.draw($('card'), d); shownLine=d.line;
+  }
+
+  // 输入：清掉 AI 缓存，回到模板实时预览
+  ['name','b1','b2'].forEach(function(id){$(id).addEventListener('input',function(){ aiLines=[]; redraw(); clearChipSel(id); });});
+
+  // 底色 swatch
+  $('swatch').addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    [].forEach.call(this.children,function(c){c.classList.remove('on');});
+    b.classList.add('on'); variant=b.getAttribute('data-v'); redraw();
+  });
+
+  // 换一句：AI 一次返回3句，先本地切，切完再调；失败回退模板
   var gen=$('reroll');
   gen.addEventListener('click',function(){
+    if(aiActive() && aiIdx < aiLines.length-1){ aiIdx++; redraw(); return; }
     var label=gen.textContent; gen.disabled=true; gen.textContent='太史公落笔中…';
-    fetch('/api/verdict',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:$('name').value,b1:$('b1').value,b2:$('b2').value})})
-      .then(function(r){ return r.text().then(function(t){ return {ok:r.ok,status:r.status,text:t}; }); })
-      .then(function(res){
-        var j=null; try{ j=JSON.parse(res.text); }catch(e){}
-        if(res.ok && j && j.line){
-          var d=VerdictCard.buildData($('name').value,$('b1').value,$('b2').value,off); d.line=j.line; VerdictCard.draw($('card'),d); return;
-        }
-        var msg = (j && j.error) ? (j.error + (j.status?(' '+j.status):'') + (j.detail?(' — '+j.detail):'')) : ('HTTP '+res.status+'：未返回JSON（可能没路由到 /api/verdict）');
-        off++; tmpl(); toast('AI失败：'+msg, 8000);
+    fetch('/api/verdict',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name:val('name'),b1:val('b1'),b2:val('b2')})})
+      .then(function(r){return r.json();})
+      .then(function(j){
+        var ls=(j&&j.lines)||(j&&j.line?[j.line]:null);
+        if(!ls||!ls.length) throw new Error(j&&j.error||'no_line');
+        aiLines=ls; aiIdx=0; aiKey=inputsKey(); redraw();
       })
-      .catch(function(e){ off++; tmpl(); toast('网络错误：'+(e&&e.message||e), 8000); })
+      .catch(function(){ off++; aiLines=[]; redraw(); toast('太史公一时走神，先用模板写一句（接上 DeepSeek 后即真）。'); })
       .finally(function(){ gen.disabled=false; gen.textContent=label; });
   });
-  $('download').addEventListener('click',function(){var n=VerdictCard.clean($('name').value)||'verdict';VerdictCard.download($('card'),'taishi-'+n+'.png');});
-  $('again').addEventListener('click',function(){$('name').value='';$('b1').value='';$('b2').value='';off=0;$('name').focus();tmpl();toast('换个人再损。');});
 
+  $('download').addEventListener('click',function(){ VerdictCard.download($('card'),'taishi-'+(VerdictCard.clean(val('name'))||'verdict')+'.png'); });
+
+  function recallURL(){ return location.origin+location.pathname+'?from='+encodeURIComponent(VerdictCard.clean(val('name'))||'某君'); }
+  function copy(text,ok){ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){toast(ok);}).catch(function(){toast('复制失败，请手动选择');}); } else { var t=document.createElement('textarea'); t.value=text; document.body.appendChild(t); t.select(); try{document.execCommand('copy');toast(ok);}catch(e){toast('复制失败，请手动选择');} t.remove(); } }
+  $('copyMsg').addEventListener('click',function(){
+    var who=VerdictCard.clean(val('name'))||'TA';
+    var msg='@'+who+' 太史公给你下了判词：\n「'+shownLine+'」\n不服？扫码回敬我一张 👉 '+recallURL();
+    copy(msg,'已复制群消息，去群里 @TA');
+  });
+
+  $('again').addEventListener('click',function(){ $('name').value=''; $('b1').value=''; $('b2').value=''; off=0; aiLines=[]; clearChipSel('b1'); clearChipSel('b2'); $('name').focus(); redraw(); toast('换个人再损。'); });
+
+  // 示例气泡（点选=黑底，并填入字段）
   var CHIPS_B1=['在吗','等我五分钟','这事我熟','下次一定','我马上到','不熬夜了','随便都行'];
   var CHIPS_B2=['嘴上躺平，加班最狠','说要减肥，半夜点外卖','天天哭穷，又总抢着买单','喊着断舍离，购物车堆成山','说不熬夜，三点还在刷手机','朋友圈很佛，抢红包最快'];
   var PRESETS=[{name:'老周',b1:'等我五分钟',b2:'每次都迟到，还总怪路上堵'},{name:'阿强',b1:'这事我熟',b2:'吹得最响，干得最少'},{name:'室友',b1:'随便吃点',b2:'说随便，又把每家都嫌一遍'},{name:'老板',b1:'马上就好',b2:'说马上，让人等到天荒地老'},{name:'我妈',b1:'我没事',b2:'嘴上没事，电话里能念叨半小时'},{name:'老王',b1:'下次一定',b2:'答应的事永远在下次，从没下次'}];
-  function chips(boxId,list,targetId){var box=$(boxId);if(!box)return;list.forEach(function(t){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=t;b.addEventListener('click',function(){$(targetId).value=t;tmpl();});box.appendChild(b);});}
-  chips('chips-b1',CHIPS_B1,'b1');chips('chips-b2',CHIPS_B2,'b2');
-  $('dice').addEventListener('click',function(){var p=PRESETS[Math.floor(Math.random()*PRESETS.length)];$('name').value=p.name;$('b1').value=p.b1;$('b2').value=p.b2;tmpl();toast('抽了一组，改两个字更像 TA。');});
+  function clearChipSel(targetId){ var box=$('chips-'+targetId); if(box) [].forEach.call(box.children,function(c){c.classList.remove('on');}); }
+  function chips(boxId,list,targetId){
+    var box=$(boxId); if(!box) return;
+    list.forEach(function(t){
+      var b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=t;
+      b.addEventListener('click',function(){
+        [].forEach.call(box.children,function(c){c.classList.remove('on');}); b.classList.add('on');
+        $(targetId).value=t; aiLines=[]; redraw();
+      });
+      box.appendChild(b);
+    });
+  }
+  chips('chips-b1',CHIPS_B1,'b1'); chips('chips-b2',CHIPS_B2,'b2');
+  $('dice').addEventListener('click',function(){
+    var p=PRESETS[Math.floor(Math.random()*PRESETS.length)];
+    $('name').value=p.name; $('b1').value=p.b1; $('b2').value=p.b2;
+    off=0; aiLines=[]; clearChipSel('b1'); clearChipSel('b2'); redraw();
+    toast('抽了一组，点「换一句」让太史公落笔。');
+  });
 
-  tmpl();VerdictCard.ensureFonts().then(tmpl);
+  // 回敬入口：?from=X
+  (function(){
+    var from=new URLSearchParams(location.search).get('from');
+    if(from){ var r=$('recall'); r.classList.add('on'); r.innerHTML='<b>「'+VerdictCard.clean(from).replace(/[<>&]/g,'')+'」</b> 刚判了你一句——轮到你回敬了。下面填两条，给 TA 也下一判。'; }
+  })();
+
+  redraw(); VerdictCard.ensureFonts().then(redraw);
 })();
 </script>
 </body>

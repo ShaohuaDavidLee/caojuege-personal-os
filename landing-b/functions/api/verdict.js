@@ -1,10 +1,10 @@
 // Cloudflare Pages Function — /api/verdict
 // GET  → 健康检查（不泄露 key）：{ ok, hasKey, model }
-// POST { name, b1, b2 } → { line } 或可读的 { error, ... }
+// POST { name, b1, b2 } → { lines:[..3] } 或可读的 { error, ... }
 // key 仅从环境变量读取，绝不写入代码库。
 
 const SYSTEM = [
-  '你是「司马迁.skill · 太史判词」。损友给了关于某人的两条线索（一句口头禅、一个反差），你只写一句判词——能直接甩进群里、让人「卧槽有点准」的那种。',
+  '你是「司马迁.skill · 太史判词」。损友给了关于某人的两条线索（一句口头禅、一个反差），你要写判词——能直接甩进群里、让人「卧槽有点准」的那种。',
   '',
   '【狠度·最重要】要扎心、一针见血、出其不意。点破他自己都不愿承认的那件事，让他被冒犯又无法反驳。',
   '【禁止】鸡汤、漂亮话、升华；尤其禁止同情式洗白的软收尾（如「他怕的不是X，是Y」这种把人哄好的句式）；禁止套路、禁止泛泛而谈、禁止只是复述线索。',
@@ -16,7 +16,7 @@ const SYSTEM = [
   '· 对世界有一万个主意，对自己一个交代都欠着。',
   '· 永远在「下周开始」，把自己活成了最大的烂尾工程。',
   '',
-  '硬规则：一句话，≤30字；不加引号；不写「太史公曰」；只输出这一句，不要解释、不要任何多余内容。'
+  '硬规则：输出【3 句角度各不相同】的判词，每句一行、各 ≤30 字；不加引号、不加序号或符号、不写「太史公曰」；除这 3 行外不要任何内容。'
 ].join('\n');
 
 function json(obj, status) {
@@ -26,17 +26,27 @@ function json(obj, status) {
   });
 }
 
-function clip(s) {
-  return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().slice(0, 80);
-}
+function clip(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().slice(0, 80); }
 
-function unwrap(line) {
-  line = String(line).trim();
+function cleanLine(s) {
+  s = String(s).trim()
+    .replace(/^[\s\-—·•*\d.、。)）]+/, '')   // 去掉行首序号/项目符号
+    .trim();
   for (var i = 0; i < 2; i++) {
-    if (/^[「『"'“”].*[」』"'“”]$/.test(line)) line = line.slice(1, -1).trim();
+    if (/^[「『"'“”].*[」』"'“”]$/.test(s)) s = s.slice(1, -1).trim();
     else break;
   }
-  return line;
+  if (Array.from(s).length > 40) s = Array.from(s).slice(0, 40).join('');
+  return s;
+}
+
+function extractLines(text) {
+  var out = [], seen = {};
+  String(text || '').split(/\r?\n/).forEach(function (raw) {
+    var s = cleanLine(raw);
+    if (s && !seen[s]) { seen[s] = 1; out.push(s); }
+  });
+  return out.slice(0, 3);
 }
 
 export async function onRequestGet({ env }) {
@@ -68,18 +78,12 @@ export async function onRequestPost({ request, env }) {
     try {
       resp = await fetch('https://api.deepseek.com/chat/completions', {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          'authorization': 'Bearer ' + env.DEEPSEEK_API_KEY
-        },
+        headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + env.DEEPSEEK_API_KEY },
         body: JSON.stringify({
           model: env.DEEPSEEK_MODEL || 'deepseek-chat',
-          messages: [
-            { role: 'system', content: SYSTEM },
-            { role: 'user', content: user }
-          ],
+          messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: user }],
           temperature: 1.2,
-          max_tokens: 800,
+          max_tokens: 900,
           stream: false
         }),
         signal: ctrl.signal
@@ -98,20 +102,15 @@ export async function onRequestPost({ request, env }) {
     try { data = JSON.parse(raw); } catch (e) { return json({ error: 'bad_upstream_json', detail: raw.slice(0, 200) }, 502); }
 
     const msg = data && data.choices && data.choices[0] && data.choices[0].message;
-    // 思考型模型答案在 content；万一 content 空，退而取 reasoning_content 的最后一句
-    let line = (msg && msg.content) || '';
-    if (!line && msg && msg.reasoning_content) {
-      const parts = String(msg.reasoning_content).split(/[\n。！？]/).map(function (s) { return s.trim(); }).filter(Boolean);
-      line = parts.length ? parts[parts.length - 1] : '';
-    }
-    line = unwrap(line);
-    if (!line) {
+    let content = (msg && msg.content) || '';
+    if (!content && msg && msg.reasoning_content) content = String(msg.reasoning_content);
+
+    const lines = extractLines(content);
+    if (!lines.length) {
       const fr = data && data.choices && data.choices[0] && data.choices[0].finish_reason;
       return json({ error: 'empty_output', finish_reason: fr || null }, 502);
     }
-    if (Array.from(line).length > 40) line = Array.from(line).slice(0, 40).join('');
-
-    return json({ line: line });
+    return json({ lines: lines, line: lines[0] });
   } catch (e) {
     return json({ error: 'exception', detail: String((e && e.stack) || (e && e.message) || e).slice(0, 400) }, 500);
   }
