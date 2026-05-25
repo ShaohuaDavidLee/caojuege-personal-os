@@ -180,16 +180,15 @@
     <div class="panel">
       <div class="phead"><div class="ptitle">判词出炉</div><span class="pill spread">传播层 · 产物</span></div>
       <div class="pbody">
-        <p class="anno spread">判词卡的钩子要<b>看人下菜</b>:本人 → 回敬;群友 → 我也来。<b>这里故意不放"给自己立传"按钮</b> —— 那是攒够判词后在主页里以"认领"出现的事。</p>
+        <p class="anno spread">此刻在看这屏的是<b>刚做完卡的作者</b>(你刚损了老周)。所以只有「发回群里」和「再损一个」——<b>"回敬"是接收方(被损的老周)打开卡那一侧的事(见屏②)</b>,作者不需要回敬。也不放"给自己立传"(那在攒够判词后于主页认领)。</p>
         <div class="row">
           <aside><div class="stage"><canvas id="cardResult2" width="2160" height="2160"></canvas></div></aside>
           <div>
             <div class="actions" style="flex-direction:column;align-items:stretch;gap:14px">
-              <div class="cta-wrap"><span class="cta-for">给所有人</span><button class="btn red big" id="download">下载 / 发回群里</button></div>
-              <div class="cta-wrap"><span class="cta-for">给被损的本人</span><button class="btn big" data-go="roast" id="again1">回敬一张</button></div>
-              <div class="cta-wrap"><span class="cta-for">给路过的群友</span><button class="btn big" data-go="roast" id="again2">我也给别人来一张</button></div>
+              <div class="cta-wrap"><span class="cta-for">主动作</span><button class="btn red big" id="download">下载 / 发回群里</button></div>
+              <div class="cta-wrap"><span class="cta-for">继续传播</span><button class="btn big" data-go="roast" id="again2">再损一个朋友</button></div>
             </div>
-            <p class="anno" style="margin-top:20px">回路靠这两个"再来一张"驱动:你损我一句,我必还你一句;群友看了也想整。立传不在这儿抢戏。</p>
+            <p class="anno" style="margin-top:20px">回路靠两头驱动:作者「再损一个」,接收方「回敬」(屏②)。你损我、我还你,群友看了也想整。立传不在这儿抢戏。</p>
           </div>
         </div>
       </div>
@@ -201,18 +200,18 @@
     <div class="panel">
       <div class="phead"><div class="ptitle">认领你的列传主页</div><span class="pill keep">留存层 · Personal MD</span></div>
       <div class="pbody">
-        <p class="anno"><b>立传在这里、而且只在这里出现</b> —— 以"认领 + 聚合"的姿态,不redundant、不过早。朋友给的判词变成你主页上"世人列传"的内容,病毒回路顺手喂饱了长期资产。正史那版仍走<b>零后端</b>(你自己的 AI)。</p>
+        <p class="anno"><b>不是"两块并排",是一篇完整列传</b>:卷一 <b>事迹</b>(你的正史,来自你的 AI 记忆) + 卷末 <b>世人曰</b>(朋友给的判词,众人版的太史公曰)。点「生成正史」时会把卷末判词<b>喂给你的 AI</b>,让正文回应世人之评 —— 这才叫"合到一起"。<br>架构:正史走<b>零后端</b>(你的 AI);判词的收集需要<b>轻持久化</b>(按被损者 id 存 + 认领身份),这是留存层第一次需要真后端,等传播验证后再建。</p>
         <div class="home">
-          <div class="home-name">韶华</div>
-          <div class="home-url">列传主页 · simaqian.caojuege.com/韶华</div>
+          <div class="home-name">韶华 · 列传</div>
+          <div class="home-url">simaqian.caojuege.com/韶华</div>
 
           <div class="home-sec">
-            <div class="home-sec-t">正史 · 你亲笔（缺）</div>
-            <div class="home-empty">还没有正史列传 <button class="btn" data-act="self">用你自己的 AI 生成（零后端）</button></div>
+            <div class="home-sec-t">卷一 · 事迹（正史 · 你亲笔）</div>
+            <div id="zhengshi" class="home-empty">还没有正史 <button class="btn" data-act="self">用你的 AI 生成（自动读入卷末判词并回应）</button></div>
           </div>
 
           <div class="home-sec">
-            <div class="home-sec-t">世人列传 · 朋友给的判词（<span id="claimCount">3</span>）</div>
+            <div class="home-sec-t">卷末 · 世人曰（朋友给的判词 · <span id="claimCount">3</span>）</div>
             <div class="vlist" id="claimList"></div>
           </div>
         </div>
@@ -367,7 +366,15 @@
   ['rname','b1','b2'].forEach(id=>$(id).addEventListener('input',renderResult));
   $('synth').addEventListener('click',()=>{ tplOffset++; renderResult(); });
   $('download').addEventListener('click',download);
-  document.querySelectorAll('[data-act="self"]').forEach(b=>b.addEventListener('click',()=>toast('进入"给自己立传"流程:零后端,用你自己的 AI(Kimi/DeepSeek/豆包)从你的长期记忆生成正史列传。')));
+  document.querySelectorAll('[data-act="self"]').forEach(b=>b.addEventListener('click',()=>{
+    const z=$('zhengshi');
+    if(z){
+      z.className='';
+      z.innerHTML='<div style="font-family:var(--serif);font-size:15.5px;line-height:1.95;color:var(--ink)">韶华者，华夏人也。少习语言之事，后入翻译、机器翻译与产品诸业；逢 AI 之兴，去其执事，自结草诀歌之社，聚非技术之士，授以 AI 为笔。<br>世人讥其「反风口却最怕错过」「教人立传，己传犹草稿」——其不辩，曰：策源者未必先成己。</div>'
+        +'<div style="font-family:var(--sans);font-size:11.5px;color:var(--muted);margin-top:10px">↑ 示意:正史由你的 AI 写,已读入卷末「世人曰」三条并作回应 —— 正史与判词就此合成一篇列传。</div>';
+    }
+    toast('零后端:把卷末判词作为"世人评价"喂给你的 AI,它写正史时回应这些评价,正史与判词合成一篇列传。');
+  }));
 
   /* init */
   fillList($('subjectList')); fillList($('claimList'));
