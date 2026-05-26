@@ -73,9 +73,8 @@
         <div class="stage-frame"><canvas id="card" class="vcard" width="2160" height="2880" aria-label="太史判词预览"></canvas></div>
         <div class="cta-stack">
           <button class="btn" id="reroll">有请太史公·换一句</button>
-          <button class="btn" id="download">保存 / 发回群里</button>
+          <button class="btn" id="download">保存图片</button>
           <button class="btn ghost" id="copyMsg">复制「甩给 TA」群消息</button>
-          <button class="btn ghost" id="again">再损一个</button>
         </div>
         <div class="savehint"><b>长按图片</b>也能存到相册</div>
       </aside>
@@ -142,8 +141,6 @@
     var msg='@'+who+' 太史公给你下了判词：\n「'+shownLine+'」\n不服？扫码回敬我一张 👉 '+recallURL();
     copy(msg,'已复制群消息，去群里 @TA');
   });
-
-  $('again').addEventListener('click',function(){ $('name').value=''; $('b1').value=''; $('b2').value=''; off=0; aiLines=[]; clearChipSel('b1'); clearChipSel('b2'); $('name').focus(); redraw(); toast('换个人再损。'); });
 
   // 示例气泡（点选=黑底，并填入字段）
   var CHIPS_B1=['在吗','等我五分钟','这事我熟','下次一定','我马上到','不熬夜了','随便都行'];

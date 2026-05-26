@@ -142,9 +142,8 @@ input:focus,textarea:focus{border-color:var(--c-seal);background:var(--c-surface
 .recall.on{display:block}
 .recall b{color:var(--c-seal)}
 
-/* ===== 移动端单屏：卡片置顶为主角 ===== */
+/* ===== 移动端：输入在上、卡片在下（自然顺序）===== */
 @media(max-width:880px){
-  .flow-grid .stage{order:-1}
   .hero{padding:24px 0 20px}
   .hook{font-size:15.5px;margin-bottom:20px}
 }
