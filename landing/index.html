@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>司马迁.skill · 轻列传</title>
-<meta name="description" content="一分钟生成你的三张轻列传：列传、毒撰、诊断。">
-<meta property="og:title" content="司马迁.skill · 轻列传">
-<meta property="og:description" content="当司马迁走进你的 AI 里。一条提示词，一个链接，三张卡。">
+<title>司马迁.skill · 愿人人都有自己的司马迁</title>
+<meta name="description" content="司马迁.skill —— 一个 skill，两种深度。轻列传 30 秒一张图，精列传 30 分钟一套个人 OS。给正在寻找自己和自己作品的你。">
+<meta property="og:title" content="司马迁.skill · 愿人人都有自己的司马迁">
+<meta property="og:description" content="一个 skill，两种深度。轻列传 30 秒一张图，精列传 30 分钟一套个人 OS。">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://simaqian.caojuege.com/og-card.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -110,6 +110,34 @@ button{font:inherit;cursor:pointer}
 /* Watermark on hero — vertical 列傳 */
 .hero-wm{position:absolute;right:-32px;top:8%;font-family:var(--font-serif);font-weight:900;font-size:clamp(220px,32vw,460px);line-height:.9;letter-spacing:-.16em;color:rgba(0,0,0,calc(0.045 * var(--wm-mult)));writing-mode:vertical-rl;pointer-events:none;user-select:none;z-index:0}
 .hero-inner > *{position:relative;z-index:1}
+
+/* centered hero (unified home) */
+.hero-c{position:relative;z-index:1;max-width:880px;margin:0 auto;text-align:center;padding:104px 0 116px}
+@media(min-width:960px){.hero-c{padding:140px 0 148px}}
+.hero-c .hero-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:7px 14px;margin-bottom:40px}
+.hero-c .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#3f7d4e}
+.hero-c h1{font-family:var(--font-serif);font-weight:700;font-size:clamp(46px,8vw,104px);line-height:.98;letter-spacing:-.03em;margin:0;color:var(--c-ink)}
+.hero-c h1 .ext{font-weight:500;color:var(--c-btn)}
+.hero-c .slogan{font-family:var(--font-serif);font-size:clamp(24px,3.4vw,40px);font-weight:500;line-height:1.35;letter-spacing:-.01em;margin:34px 0 0;color:var(--c-ink)}
+.hero-c .slogan em{font-style:italic;font-weight:500;color:var(--c-btn)}
+.hero-c .lead{font-family:var(--font-serif);font-size:clamp(16px,1.9vw,20px);font-weight:300;line-height:1.8;color:var(--c-muted);max-width:640px;margin:22px auto 0}
+.hero-c .tag-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0;margin:40px auto 0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);font-family:var(--font-mono)}
+.hero-c .tag-row span{padding:0 20px;border-right:1px solid var(--c-border-strong)}
+.hero-c .tag-row span:last-child{border-right:0}
+.hero-c .hero-actions{justify-content:center;margin-top:48px}
+.btn.lg{padding:20px 32px}
+.btn .sub{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;opacity:.62;text-transform:uppercase}
+
+/* closing band (unified home) */
+.closing{padding:96px 0;background:var(--c-btn);color:var(--c-on-dark);position:relative;overflow:hidden;border-top:1px solid var(--c-border-soft)}
+.closing .closing-inner{position:relative;z-index:1;text-align:center;max-width:760px;margin:0 auto}
+.closing h2{font-family:var(--font-serif);font-weight:700;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-.02em;margin:0 0 18px}
+.closing h2 em{font-style:italic;font-weight:500;color:var(--c-on-dark-80)}
+.closing p{font-family:var(--font-serif);font-weight:300;color:var(--c-on-dark-80);font-size:17px;line-height:1.8;margin:0 0 40px}
+.closing .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:0;margin-top:0}
+.closing .btn.ghost{color:var(--c-on-dark);border-color:var(--c-on-dark-border)}
+.closing .btn.ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:var(--c-on-dark-60)}
+.closing-wm{position:absolute;right:-28px;top:50%;transform:translateY(-50%);font-family:var(--font-serif);font-weight:900;font-size:clamp(180px,26vw,360px);line-height:.85;color:rgba(255,255,255,calc(.05 * var(--wm-mult)));pointer-events:none;user-select:none;letter-spacing:-.1em;writing-mode:vertical-rl}
 
 /* Hero side card */
 .hero-side{position:relative;z-index:1;border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:32px}
@@ -384,6 +412,9 @@ body.render-mode .card-hint{display:block}
 .foot .left{font-family:var(--font-serif);font-size:16px}
 .foot .left b{font-weight:700}
 .foot .right{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-on-dark-60)}
+.foot-links{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--c-on-dark-80)}
+.foot-links a{transition:color .3s}
+.foot-links a:hover{color:#fff}
 
 /* ===== Result Page ===== */
 .render-page{display:none;min-height:100vh;padding:0 0 0}
@@ -602,35 +633,36 @@ body.render-mode #landing{display:none}
     <div class="nav-inner">
       <div class="lockup">
         <span class="mark">司马迁<span style="font-family:var(--font-sans);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--c-muted)">.skill</span></span>
-        <span class="tag">轻列傳</span>
+        <span class="tag">Personal Historiography</span>
       </div>
       <div class="nav-links">
-        <a href="#samples">样张</a>
+        <a href="#samples">轻列传</a>
         <a href="#generate">生成</a>
         <a href="#depth">精列传</a>
+        <!-- 宣言：明天发布的公众号文章，发布后把 href="#" 改为文章链接 -->
+        <a href="#" data-manifesto>宣言</a>
+        <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">开源</a>
+        <a href="https://www.caojuege.com/" target="_blank" rel="noopener">草诀歌</a>
       </div>
-      <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
-        <iconify-icon icon="lucide:arrow-left"></iconify-icon>
-        草诀歌 AI Labs
-      </a>
     </div>
   </nav>
 
   <section class="hero">
     <div class="hero-wm">列傳</div>
     <div class="container">
-      <div class="hero-inner hero-slim">
-        <div>
-          <div class="hero-eyebrow">
-            <span class="dot"></span>
-            <span class="eyebrow">Personal Annal · 轻列傳 v4</span>
-          </div>
-          <h1>当司马迁，<em>住进你的 AI 里。</em></h1>
-          <p class="lead">一分钟，写你的三张轻列传。<br>一条提示词 → 一个链接 → 三张卡。</p>
-          <div class="hero-actions">
-            <a class="btn" href="#generate">开始立传 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a>
-            <a class="btn ghost" href="#samples" style="margin-left:-1px">先看样张</a>
-          </div>
+      <div class="hero-c">
+        <span class="hero-badge"><span class="dot"></span>司马迁.skill · v0.3.0 Ready</span>
+        <h1>司马迁<span class="ext">.skill</span></h1>
+        <p class="slogan">愿人人都有<em>自己的司马迁</em>。</p>
+        <p class="lead">帮你写 AI 时代的个人使用说明书，<br>一份给 AI 看，一份给人看。</p>
+        <div class="tag-row">
+          <span>朋友圈一张图</span>
+          <span>给 AI 用的 Persona</span>
+          <span>给人看的主页</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn ghost lg" href="#generate"><iconify-icon icon="lucide:image"></iconify-icon>轻列传<span class="sub">30 秒 · 一张图</span></a>
+          <a class="btn lg" href="#depth" style="margin-left:-1px"><iconify-icon icon="lucide:scroll-text"></iconify-icon>精列传<span class="sub">30 分钟 · 完整 OS</span></a>
         </div>
       </div>
     </div>
@@ -640,7 +672,7 @@ body.render-mode #landing{display:none}
     <div class="container">
       <div class="section-head">
         <span class="section-num">01</span>
-        <h2 class="section-q">先看样张。<em>同一个人，三种判词。</em></h2>
+        <h2 class="section-q">轻列传。<em>AI 眼中的你，太史公的毒舌。</em></h2>
         <p class="section-lead">列传要体面，毒撰要刺痛，诊断要破防但不冒犯。<br>三张明显不同，这套立传才算写对了。</p>
       </div>
       <div class="swipe-hint">← 左右滑动查看三张 →</div>
@@ -652,7 +684,7 @@ body.render-mode #landing{display:none}
     <div class="container">
       <div class="section-head">
         <span class="section-num">02</span>
-        <h2 class="section-q">给谁立传？<em>你，或 TA。</em></h2>
+        <h2 class="section-q">给你自己，或朋友。<em>一份轻列传。</em></h2>
         <p class="section-lead">给自己立传，AI 调你的长期记忆。<br>给好友立传，你写几句，AI 替你下笔。</p>
       </div>
       <div class="gen">
@@ -704,8 +736,8 @@ body.render-mode #landing{display:none}
     <div class="container">
       <div class="section-head">
         <span class="section-num">03</span>
-        <h2 class="section-q">想再深一层？<em>精列传。</em></h2>
-        <p class="section-lead">轻列传是入口，精列传才是个人操作系统。<br>一份给 AI 看，一份给人看。</p>
+        <h2 class="section-q">精列传。<em>AI 时代，你的「个人使用说明书」。</em></h2>
+        <p class="section-lead">访谈你、提炼你，立一篇能长期用的传：<br>给 AI 一份档案，给人一个主页。</p>
       </div>
 
       <div class="fine-assets">
@@ -783,11 +815,31 @@ body.render-mode #landing{display:none}
     </div>
   </section>
 
+  <section class="closing">
+    <div class="closing-wm">遷</div>
+    <div class="container">
+      <div class="closing-inner">
+        <h2>愿人人都有<em>自己的司马迁</em>。</h2>
+        <p>给正在寻找自己和自己作品的你。</p>
+        <div class="hero-actions">
+          <a class="btn light lg" href="#generate"><iconify-icon icon="lucide:image"></iconify-icon>30 秒 · 轻列传</a>
+          <a class="btn ghost lg" href="#depth" style="margin-left:-1px"><iconify-icon icon="lucide:scroll-text"></iconify-icon>30 分钟 · 精列传</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <footer class="foot">
     <div class="container">
       <div class="foot-inner">
-        <div class="left"><b>司马迁.skill</b> · 轻列传是入口，精列传是个人操作系统。</div>
-        <div class="right">草诀歌 AI Labs · 2026</div>
+        <div class="left"><b>司马迁.skill</b> · 愿人人都有自己的司马迁</div>
+        <div class="foot-links">
+          <!-- 宣言：明天发布的公众号文章，发布后把 href="#" 改为文章链接 -->
+          <a href="#" data-manifesto>宣言</a>
+          <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">开源 · GitHub</a>
+          <a href="https://www.caojuege.com/" target="_blank" rel="noopener">草诀歌 AI Labs</a>
+        </div>
+        <div class="right">© 2026</div>
       </div>
     </div>
   </footer>
