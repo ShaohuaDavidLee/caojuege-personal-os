@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>司马迁.skill · 愿人人都有自己的司马迁</title>
+<meta name="description" content="司马迁.skill —— 一个 skill，两种深度。轻列传 30 秒一张图，精列传 30 分钟一套个人 OS。">
+<link rel="icon" type="image/png" sizes="64x64" href="./favicon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+/* ===== Tokens — 草诀歌 AI Labs ===== */
+:root{
+  --c-bg:#e5e5e5;
+  --c-surface:#ffffff;
+  --c-surface-40:rgba(255,255,255,0.40);
+  --c-ink:#1a1a1a;
+  --c-ink-pure:#000;
+  --c-btn:#47494b;
+  --c-border-soft:rgba(71,73,75,0.20);
+  --c-border-strong:rgba(71,73,75,0.45);
+  --c-muted:#5c5e60;
+  --c-on-dark:#e5e5e5;
+  --c-on-dark-60:rgba(229,229,229,0.60);
+  --c-on-dark-80:rgba(229,229,229,0.80);
+  --c-on-dark-border:rgba(255,255,255,0.18);
+  --c-seal:#a8302d;
+  --font-sans:"Inter","PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei","WenQuanYi Zen Hei",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --font-serif:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun","FangSong",Georgia,"Times New Roman",serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --container:1280px;
+  --pad-x:24px;
+  --pad-x-lg:48px;
+  --section-pad:104px;
+  --wm-mult:1;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--c-bg);color:var(--c-ink);font-family:var(--font-sans);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--c-btn);color:var(--c-on-dark)}
+button{font:inherit;cursor:pointer}
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
+@media(min-width:960px){.container{padding:0 var(--pad-x-lg)}}
+.eyebrow{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.2em;color:var(--c-muted)}
+
+/* ===== Nav ===== */
+.nav{position:sticky;top:0;z-index:30;background:rgba(229,229,229,.86);backdrop-filter:blur(8px);border-bottom:1px solid var(--c-border-soft)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;height:64px;max-width:var(--container);margin:0 auto;padding:0 var(--pad-x)}
+@media(min-width:960px){.nav-inner{padding:0 var(--pad-x-lg);height:72px}}
+.lockup{display:flex;align-items:baseline;gap:10px}
+.lockup .mark{font-family:var(--font-serif);font-weight:700;font-size:18px;letter-spacing:.04em}
+.lockup .tag{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--c-muted)}
+.nav-links{display:none;gap:28px;font-size:13px;color:var(--c-muted)}
+.nav-links a{transition:color .3s}
+.nav-links a:hover{color:var(--c-ink)}
+@media(min-width:760px){.nav-links{display:flex}}
+.nav-ver{font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;color:var(--c-muted);border:1px solid var(--c-border-soft);padding:5px 10px;display:inline-flex;align-items:center;gap:7px}
+.nav-ver .dot{width:6px;height:6px;border-radius:50%;background:#3f7d4e}
+
+/* ===== Hero (centered) ===== */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--c-border-soft)}
+.hero-wm{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font-family:var(--font-serif);font-weight:900;font-size:clamp(360px,52vw,720px);line-height:.82;letter-spacing:-.1em;color:rgba(0,0,0,calc(.035 * var(--wm-mult)));pointer-events:none;user-select:none;z-index:0;white-space:nowrap}
+.hero-c{position:relative;z-index:1;max-width:880px;margin:0 auto;text-align:center;padding:104px 0 116px}
+@media(min-width:960px){.hero-c{padding:140px 0 148px}}
+.hero-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);border:1px solid var(--c-border-soft);background:var(--c-surface-40);padding:7px 14px;margin-bottom:40px}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:#3f7d4e}
+.hero h1{font-family:var(--font-serif);font-weight:700;font-size:clamp(64px,11vw,148px);line-height:.98;letter-spacing:-.03em;margin:0;color:var(--c-ink)}
+.hero h1 .en{font-weight:500}
+.hero .slogan{font-family:var(--font-serif);font-size:clamp(24px,3.4vw,40px);font-weight:500;line-height:1.35;letter-spacing:-.01em;margin:36px 0 0;color:var(--c-ink)}
+.hero .slogan em{font-style:italic;font-weight:500;color:var(--c-btn)}
+.hero .lead{font-family:var(--font-serif);font-size:clamp(16px,1.9vw,20px);font-weight:300;line-height:1.8;color:var(--c-muted);max-width:640px;margin:22px auto 0}
+.tag-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0;margin:40px auto 0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--c-muted);font-family:var(--font-mono)}
+.tag-row span{padding:0 20px;border-right:1px solid var(--c-border-strong)}
+.tag-row span:last-child{border-right:0}
+.hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:0;margin-top:48px}
+
+/* ===== Buttons ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font-sans);font-weight:500;font-size:14px;letter-spacing:.02em;padding:18px 28px;border:1px solid var(--c-btn);background:var(--c-btn);color:var(--c-on-dark);transition:background .3s,color .3s,border-color .3s;border-radius:0}
+.btn .sub{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;opacity:.62;text-transform:uppercase}
+.btn:hover{background:var(--c-ink-pure);border-color:var(--c-ink-pure)}
+.btn.ghost{background:transparent;color:var(--c-ink);border-color:var(--c-btn)}
+.btn.ghost:hover{background:var(--c-btn);color:var(--c-on-dark)}
+.btn iconify-icon{font-size:17px;transition:transform .3s}
+.btn:hover iconify-icon{transform:translateX(3px)}
+.btn.lg{padding:20px 32px}
+
+/* ===== Sections ===== */
+.section{padding:var(--section-pad) 0;border-bottom:1px solid var(--c-border-soft);position:relative;overflow:hidden}
+.section-head{display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:64px;align-items:end}
+@media(min-width:960px){.section-head{grid-template-columns:auto 1fr;gap:48px}}
+.section-num{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:20px;color:var(--c-muted);white-space:nowrap}
+.section-q{font-family:var(--font-serif);font-weight:700;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.02em;margin:0;color:var(--c-ink)}
+.section-q em{font-style:italic;font-weight:500;color:var(--c-btn)}
+.section-lead{font-family:var(--font-serif);font-size:18px;color:var(--c-muted);line-height:1.75;max-width:620px;margin:14px 0 0;font-weight:300}
+
+/* ===== The fork: 两种深度 ===== */
+.fork{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--c-border-soft)}
+@media(min-width:960px){.fork{grid-template-columns:1fr 1fr}}
+.fork-panel{padding:44px 40px 40px;background:var(--c-surface-40);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.fork-panel + .fork-panel{border-top:1px solid var(--c-border-soft)}
+@media(min-width:960px){.fork-panel + .fork-panel{border-top:0;border-left:1px solid var(--c-border-soft)}}
+.fork-panel.dark{background:var(--c-btn);color:var(--c-on-dark)}
+.fork-kicker{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--c-muted);margin-bottom:22px}
+.fork-panel.dark .fork-kicker{color:var(--c-on-dark-60)}
+.fork-kicker b{font-weight:500;color:var(--c-ink)}
+.fork-panel.dark .fork-kicker b{color:var(--c-on-dark)}
+.fork-panel h3{font-family:var(--font-serif);font-weight:700;font-size:40px;letter-spacing:-.02em;margin:0 0 10px}
+.fork-panel .deck{font-family:var(--font-serif);font-size:15.5px;line-height:1.8;color:var(--c-muted);margin:0 0 28px;max-width:42ch;font-weight:300}
+.fork-panel.dark .deck{color:var(--c-on-dark-80)}
+.fork-list{list-style:none;padding:0;margin:0 0 32px}
+.fork-list li{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:15px 0;border-top:1px solid var(--c-border-soft);font-family:var(--font-serif);font-size:16px}
+.fork-panel.dark .fork-list li{border-color:var(--c-on-dark-border)}
+.fork-list li:last-child{border-bottom:1px solid var(--c-border-soft)}
+.fork-panel.dark .fork-list li:last-child{border-bottom-color:var(--c-on-dark-border)}
+.fork-list li small{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-muted)}
+.fork-panel.dark .fork-list li small{color:var(--c-on-dark-60)}
+.fork-cta{margin-top:auto}
+.fork-link{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.06em;color:var(--c-ink);border-bottom:1px solid var(--c-border-strong);padding-bottom:5px;transition:color .3s,border-color .3s}
+.fork-panel.dark .fork-link{color:var(--c-on-dark);border-color:var(--c-on-dark-border)}
+.fork-link:hover{color:var(--c-btn)}
+.fork-panel.dark .fork-link:hover{color:#fff}
+.fork-link iconify-icon{transition:transform .3s}
+.fork-link:hover iconify-icon{transform:translateX(3px)}
+.fork-wm{position:absolute;right:-24px;bottom:-72px;font-family:var(--font-serif);font-weight:900;font-size:280px;line-height:.82;color:rgba(0,0,0,calc(.04 * var(--wm-mult)));pointer-events:none;user-select:none;letter-spacing:-.08em}
+.fork-panel.dark .fork-wm{color:rgba(255,255,255,calc(.05 * var(--wm-mult)))}
+
+/* ===== Outputs / 产物 ===== */
+.outs{display:grid;grid-template-columns:1fr;border-top:1px solid var(--c-border-soft);border-left:1px solid var(--c-border-soft)}
+@media(min-width:760px){.outs{grid-template-columns:repeat(3,1fr)}}
+.out{padding:38px 30px 42px;border-right:1px solid var(--c-border-soft);border-bottom:1px solid var(--c-border-soft);transition:background .4s}
+.out:hover{background:var(--c-surface-40)}
+.out .seal-row{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.out .glyph{width:42px;height:42px;flex:0 0 42px;background:var(--c-seal);color:#f0dfc4;font-family:var(--font-serif);font-weight:700;font-size:22px;display:flex;align-items:center;justify-content:center;border:1.5px solid #7d211e;box-shadow:inset 0 0 0 1px #7d211e}
+.out .glyph.ink{background:var(--c-btn);color:var(--c-on-dark);border-color:#2c2d2e;box-shadow:none}
+.out .kind{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--c-muted)}
+.out h4{font-family:var(--font-serif);font-weight:700;font-size:22px;margin:0 0 10px;letter-spacing:-.01em}
+.out p{margin:0;font-size:14px;color:var(--c-muted);line-height:1.75;max-width:34ch}
+.out .file{font-family:var(--font-mono);font-size:11.5px;color:var(--c-ink);background:rgba(71,73,75,.08);padding:2px 8px;margin-top:16px;display:inline-block}
+
+/* ===== Sample band ===== */
+.sample{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+@media(min-width:960px){.sample{grid-template-columns:1.1fr .9fr;gap:64px}}
+.sample-img{border:1px solid var(--c-border-soft);background:var(--c-surface);overflow:hidden;line-height:0}
+.sample-img img{width:100%;height:auto;display:block}
+.sample-copy h3{font-family:var(--font-serif);font-weight:700;font-size:clamp(28px,3.6vw,42px);line-height:1.12;letter-spacing:-.02em;margin:0 0 18px}
+.sample-copy h3 em{font-style:italic;font-weight:500;color:var(--c-btn)}
+.sample-copy p{font-family:var(--font-serif);font-size:16px;font-weight:300;color:var(--c-muted);line-height:1.85;margin:0 0 26px;max-width:46ch}
+.sample-tri{display:flex;gap:0;border:1px solid var(--c-border-soft);margin-bottom:30px}
+.sample-tri div{flex:1;padding:16px 14px;border-right:1px solid var(--c-border-soft);text-align:center}
+.sample-tri div:last-child{border-right:0}
+.sample-tri b{display:block;font-family:var(--font-serif);font-weight:700;font-size:17px;margin-bottom:5px}
+.sample-tri small{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-muted)}
+
+/* ===== Closing band ===== */
+.closing{padding:96px 0;background:var(--c-btn);color:var(--c-on-dark);position:relative;overflow:hidden;border-bottom:1px solid var(--c-border-soft)}
+.closing-inner{position:relative;z-index:1;text-align:center;max-width:760px;margin:0 auto}
+.closing h2{font-family:var(--font-serif);font-weight:700;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-.02em;margin:0 0 20px}
+.closing h2 em{font-style:italic;font-weight:500;color:var(--c-on-dark-80)}
+.closing p{font-family:var(--font-serif);font-weight:300;color:var(--c-on-dark-80);font-size:17px;line-height:1.8;margin:0 0 40px}
+.closing .hero-actions{margin-top:0}
+.closing .btn.ghost{color:var(--c-on-dark);border-color:var(--c-on-dark-border)}
+.closing .btn.ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:var(--c-on-dark-60)}
+.closing .btn.light{background:var(--c-on-dark);color:var(--c-ink);border-color:var(--c-on-dark)}
+.closing .btn.light:hover{background:#fff;border-color:#fff}
+.closing-wm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--font-serif);font-weight:900;font-size:clamp(300px,40vw,560px);line-height:.82;color:rgba(255,255,255,calc(.05 * var(--wm-mult)));pointer-events:none;user-select:none;letter-spacing:-.1em;white-space:nowrap}
+
+/* ===== Footer ===== */
+.foot{padding:52px 0 60px;background:var(--c-bg);color:var(--c-muted)}
+.foot-inner{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:20px}
+.foot .left{font-family:var(--font-serif);font-size:16px;color:var(--c-ink)}
+.foot .left b{font-weight:700}
+.foot .right{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted);font-family:var(--font-mono)}
+</style>
+</head>
+<body>
+
+<!-- ===== Nav ===== -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="lockup">
+      <span class="mark">司马迁.skill</span>
+      <span class="tag">Personal Historiography</span>
+    </div>
+    <div class="nav-links">
+      <a href="#light">轻列传</a>
+      <a href="#fine">精列传</a>
+      <a href="#sample">样张</a>
+      <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">开源</a>
+    </div>
+    <span class="nav-ver"><span class="dot"></span>v0.3.0 Ready</span>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-wm">史</div>
+  <div class="container">
+    <div class="hero-c">
+      <span class="hero-badge"><span class="dot"></span>司马迁.skill · v0.3.0 Ready</span>
+      <h1>司马迁 <span class="en">Skill</span></h1>
+      <p class="slogan">愿人人都有<em>自己的司马迁</em>。</p>
+      <p class="lead">从一段聊天记忆，写一篇《史记·列传》；<br>从一份材料，做一套完整的个人 OS。</p>
+      <div class="tag-row">
+        <span>朋友圈一张图</span>
+        <span>给 AI 用的 Persona</span>
+        <span>给人看的主页</span>
+      </div>
+      <div class="hero-actions">
+        <a class="btn ghost lg" href="#light"><iconify-icon icon="lucide:image"></iconify-icon>轻列传<span class="sub">30 秒 · 一张图</span></a>
+        <a class="btn lg" href="#fine" style="margin-left:-1px"><iconify-icon icon="lucide:scroll-text"></iconify-icon>精列传<span class="sub">30 分钟 · 完整 OS</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 01 · the fork ===== -->
+<section class="section" id="light">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <div>
+        <h2 class="section-q">一个 skill，<em>两种深度。</em></h2>
+        <p class="section-lead">同一位司马迁，住进你的 AI。想轻，就一张图发朋友圈；想深，就一套能交给 Agent 的个人操作系统。</p>
+      </div>
+    </div>
+
+    <div class="fork">
+      <div class="fork-panel">
+        <div class="fork-kicker"><b>轻列传</b> · Light · 30 秒</div>
+        <h3>一张图，先被看见</h3>
+        <p class="deck">一条提示词 → 一个链接 → 三张卡。AI 调你的长期记忆，写成可以直接发朋友圈的你。</p>
+        <ul class="fork-list">
+          <li>列传<small>体面 · 正史腔</small></li>
+          <li>毒撰<small>传播 · 精准的损</small></li>
+          <li>诊断<small>破防 · 一针见血</small></li>
+        </ul>
+        <div class="fork-cta"><a class="fork-link" href="#sample">看三张样张 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a></div>
+        <div class="fork-wm">輕</div>
+      </div>
+
+      <div class="fork-panel dark" id="fine">
+        <div class="fork-kicker"><b>精列传</b> · Fine · 30 分钟</div>
+        <h3>一套个人操作系统</h3>
+        <p class="deck">从一份材料，访谈、提炼、立传。产出一份给 AI 看的 Persona，一份给人看的主页，装进 ~/.claude 长期可用。</p>
+        <ul class="fork-list">
+          <li>persona-agent.md<small>给 AI 看</small></li>
+          <li>personal-homepage<small>给人看</small></li>
+          <li>simaqian.skill<small>装进 Agent</small></li>
+        </ul>
+        <div class="fork-cta"><a class="fork-link" href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">在 GitHub 安装 <iconify-icon icon="lucide:arrow-right"></iconify-icon></a></div>
+        <div class="fork-wm">精</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 02 · outputs ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <div>
+        <h2 class="section-q">五种产物，<em>一个你。</em></h2>
+        <p class="section-lead">轻列传给你三张卡，精列传再多两份文档。从一张图，到一整套可以交给 AI 的人物档案。</p>
+      </div>
+    </div>
+
+    <div class="outs">
+      <div class="out">
+        <div class="seal-row"><span class="glyph">傳</span><span class="kind">轻列传 · Card 01</span></div>
+        <h4>列传</h4>
+        <p>正史腔，体面克制，有仪式感。「○○者，○○人也」，给你一个被认真书写的版本。</p>
+      </div>
+      <div class="out">
+        <div class="seal-row"><span class="glyph">毒</span><span class="kind">轻列传 · Card 02</span></div>
+        <h4>毒撰</h4>
+        <p>精准、带刺、好笑但不刻薄。把优点损成具体称号，专为转发而写。</p>
+      </div>
+      <div class="out">
+        <div class="seal-row"><span class="glyph">診</span><span class="kind">轻列传 · Card 03</span></div>
+        <h4>诊断</h4>
+        <p>像一张温柔又锋利的处方，点破你最会逃避的那件事。负责破防，但不冒犯。</p>
+      </div>
+      <div class="out">
+        <div class="seal-row"><span class="glyph ink">AI</span><span class="kind">精列传 · Asset</span></div>
+        <h4>给 AI 的 Persona</h4>
+        <p>事实、动机、判断、边界、表达风格、禁区与校准题。让任何 Agent 一秒读懂你。</p>
+        <span class="file">persona-agent.md</span>
+      </div>
+      <div class="out">
+        <div class="seal-row"><span class="glyph ink">頁</span><span class="kind">精列传 · Asset</span></div>
+        <h4>给人的主页</h4>
+        <p>你是谁、你能提供什么、你正在寻找什么合作。一个单文件、可直接上线的个人主页。</p>
+        <span class="file">personal-homepage.html</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Section 03 · sample ===== -->
+<section class="section" id="sample">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <div>
+        <h2 class="section-q">先看样张。<em>同一个人，三种判词。</em></h2>
+        <p class="section-lead">列传要体面，毒撰要刺痛，诊断要破防但不冒犯。三张明显不同，这套立传才算写对了。</p>
+      </div>
+    </div>
+
+    <div class="sample">
+      <div class="sample-img">
+        <img src="./og-card.png" alt="司马迁.skill 样张" />
+      </div>
+      <div class="sample-copy">
+        <h3>不是简历，<em>是判词。</em></h3>
+        <p>司马迁不夸你，也不黑你——他只是太准。三张卡用同一套事实，写出三种语气：被记住的体面、被转发的犀利、被点破的清醒。</p>
+        <div class="sample-tri">
+          <div><b>列传</b><small>体面</small></div>
+          <div><b>毒撰</b><small>传播</small></div>
+          <div><b>诊断</b><small>破防</small></div>
+        </div>
+        <a class="btn" href="#light"><iconify-icon icon="lucide:sparkles"></iconify-icon>生成我的轻列传</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Closing ===== -->
+<section class="closing">
+  <div class="closing-wm">遷</div>
+  <div class="closing-inner">
+    <h2>愿人人都有<em>自己的司马迁</em>。</h2>
+    <p>司马迁来不及为还活着的年轻人立传。<br>现在，这件事可以由你自己开始。</p>
+    <div class="hero-actions">
+      <a class="btn light lg" href="#light"><iconify-icon icon="lucide:image"></iconify-icon>30 秒 · 轻列传</a>
+      <a class="btn ghost lg" href="#fine" style="margin-left:-1px"><iconify-icon icon="lucide:scroll-text"></iconify-icon>30 分钟 · 精列传</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="foot">
+  <div class="container">
+    <div class="foot-inner">
+      <div class="left"><b>司马迁.skill</b> · 轻列传是入口，精列传是个人操作系统。</div>
+      <div class="right">草诀歌 AI Labs · 2026</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
