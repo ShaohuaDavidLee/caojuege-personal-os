@@ -1,4 +1,5 @@
-<img width="1100" height="797" alt="image" src="https://github.com/user-attachments/assets/46cf35f1-101a-4df2-9e43-226d316d6f75" />
+<img width="1537" height="725" alt="image" src="https://github.com/user-attachments/assets/1bfda347-f363-499c-a106-c62687c0afce" />
+
 
 # 司马迁.skill
 
