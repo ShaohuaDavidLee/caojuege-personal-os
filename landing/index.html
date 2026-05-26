@@ -412,6 +412,9 @@ body.render-mode .card-hint{display:block}
 .foot .left{font-family:var(--font-serif);font-size:16px}
 .foot .left b{font-weight:700}
 .foot .right{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-on-dark-60)}
+.foot-links{display:flex;flex-wrap:wrap;gap:24px;font-size:13px;color:var(--c-on-dark-80)}
+.foot-links a{transition:color .3s}
+.foot-links a:hover{color:#fff}
 
 /* ===== Result Page ===== */
 .render-page{display:none;min-height:100vh;padding:0 0 0}
@@ -633,14 +636,14 @@ body.render-mode #landing{display:none}
         <span class="tag">Personal Historiography</span>
       </div>
       <div class="nav-links">
-        <a href="#samples">样张</a>
+        <a href="#samples">轻列传</a>
         <a href="#generate">生成</a>
         <a href="#depth">精列传</a>
+        <!-- 宣言：明天发布的公众号文章，发布后把 href="#" 改为文章链接 -->
+        <a href="#" data-manifesto>宣言</a>
+        <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">开源</a>
+        <a href="https://www.caojuege.com/" target="_blank" rel="noopener">草诀歌</a>
       </div>
-      <a class="nav-back" href="https://www.caojuege.com/" target="_blank" rel="noopener">
-        <iconify-icon icon="lucide:arrow-left"></iconify-icon>
-        草诀歌 AI Labs
-      </a>
     </div>
   </nav>
 
@@ -651,7 +654,7 @@ body.render-mode #landing{display:none}
         <span class="hero-badge"><span class="dot"></span>司马迁.skill · v0.3.0 Ready</span>
         <h1>司马迁<span class="ext">.skill</span></h1>
         <p class="slogan">愿人人都有<em>自己的司马迁</em>。</p>
-        <p class="lead">从一段聊天记忆，写一篇《史记·列传》；<br>从一份材料，做一套完整的个人 OS。</p>
+        <p class="lead">帮你写 AI 时代的个人使用说明书，<br>一份给 AI 看，一份给人看。</p>
         <div class="tag-row">
           <span>朋友圈一张图</span>
           <span>给 AI 用的 Persona</span>
@@ -734,7 +737,7 @@ body.render-mode #landing{display:none}
       <div class="section-head">
         <span class="section-num">03</span>
         <h2 class="section-q">精列传。<em>AI 时代，你的「个人使用说明书」。</em></h2>
-        <p class="section-lead">轻列传是入口，精列传才是个人操作系统。<br>一份给 AI 看，一份给人看。</p>
+        <p class="section-lead">访谈你、提炼你，立一篇能长期用的传：<br>给 AI 一份档案，给人一个主页。</p>
       </div>
 
       <div class="fine-assets">
@@ -829,8 +832,14 @@ body.render-mode #landing{display:none}
   <footer class="foot">
     <div class="container">
       <div class="foot-inner">
-        <div class="left"><b>司马迁.skill</b> · 轻列传是入口，精列传是个人操作系统。</div>
-        <div class="right">草诀歌 AI Labs · 2026</div>
+        <div class="left"><b>司马迁.skill</b> · 愿人人都有自己的司马迁</div>
+        <div class="foot-links">
+          <!-- 宣言：明天发布的公众号文章，发布后把 href="#" 改为文章链接 -->
+          <a href="#" data-manifesto>宣言</a>
+          <a href="https://github.com/ShaohuaDavidLee/simaqian" target="_blank" rel="noopener">开源 · GitHub</a>
+          <a href="https://www.caojuege.com/" target="_blank" rel="noopener">草诀歌 AI Labs</a>
+        </div>
+        <div class="right">© 2026</div>
       </div>
     </div>
   </footer>
