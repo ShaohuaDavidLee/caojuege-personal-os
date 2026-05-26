@@ -103,11 +103,26 @@
     ctx.restore();
   }
 
-  // 占位二维码（正式版本地生成真码，指向 s.caojuege.com）
+  // 真二维码：同源 ./qr.png（不污染 canvas，导出干净）；缺失时退占位
+  var QRIMG = null, QRTRIED = false;
+  function loadQR() {
+    return new Promise(function (res) {
+      if (QRTRIED || typeof location === 'undefined' || !/^https?:$/.test(location.protocol)) { res(); return; }
+      QRTRIED = true;
+      try {
+        var im = new Image();
+        im.onload = function () { if (im.naturalWidth > 0) QRIMG = im; res(); };
+        im.onerror = function () { res(); };
+        im.src = './qr.png';
+      } catch (e) { res(); }
+    });
+  }
   function drawQR(ctx, x, y, s) {
     ctx.save();
     ctx.fillStyle = '#fff'; ctx.fillRect(x, y, s, s);
-    var pad = Math.round(s * 0.08), n = 21, cell = (s - pad * 2) / n, ox = x + pad, oy = y + pad, h = hash('s.caojuege.com');
+    var pad = Math.round(s * 0.08);
+    if (QRIMG) { ctx.drawImage(QRIMG, x + pad, y + pad, s - 2 * pad, s - 2 * pad); ctx.restore(); return; }
+    var n = 21, cell = (s - pad * 2) / n, ox = x + pad, oy = y + pad, h = hash('s.caojuege.com');
     ctx.fillStyle = '#1a1a1a';
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
       if ((r < 8 && c < 8) || (r < 8 && c >= n - 8) || (r >= n - 8 && c < 8)) continue;
@@ -192,14 +207,12 @@
   }
 
   function ensureFonts() {
-    if (document.fonts && document.fonts.load) {
-      return Promise.all([
-        document.fonts.load('700 70px "Noto Serif SC"'),
-        document.fonts.load('900 200px "Noto Serif SC"'),
-        document.fonts.load('400 24px "Noto Serif SC"')
-      ]).catch(function () {});
-    }
-    return Promise.resolve();
+    var f = (document.fonts && document.fonts.load) ? Promise.all([
+      document.fonts.load('700 70px "Noto Serif SC"'),
+      document.fonts.load('900 200px "Noto Serif SC"'),
+      document.fonts.load('400 24px "Noto Serif SC"')
+    ]).catch(function () {}) : Promise.resolve();
+    return Promise.all([f, loadQR()]).catch(function () {});
   }
 
   function download(canvas, filename) {
