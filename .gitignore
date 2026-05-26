@@ -1,0 +1,14 @@
+# 用户私人材料 —— 不要提交到公开仓库
+me/
+/persona-agent.md
+/personal-homepage.html
+
+# 操作系统 / 编辑器
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# 工具链
+node_modules/

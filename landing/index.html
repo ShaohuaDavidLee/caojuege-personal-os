@@ -651,7 +651,7 @@ body.render-mode #landing{display:none}
     <div class="hero-wm">列傳</div>
     <div class="container">
       <div class="hero-c">
-        <span class="hero-badge"><span class="dot"></span>司马迁.skill · v0.3.0 Ready</span>
+        <span class="hero-badge"><span class="dot"></span>司马迁.skill · v0.3.4 Ready</span>
         <h1>司马迁<span class="ext">.skill</span></h1>
         <p class="slogan">愿人人都有<em>自己的司马迁</em>。</p>
         <p class="lead">帮你写 AI 时代的个人使用说明书，<br>一份给 AI 看，一份给人看。</p>
@@ -1207,10 +1207,9 @@ function revokeRendered(key){
 
 async function renderOneCard(c){
   currentCards.set(c.style, {...c});
-  const img = document.querySelector(`[data-card-img="${c.style}"]`);
-  if(!img) return;
-  img.alt = c.label || c.title || '轻列传';
-  const frame = img.closest('.card-image-frame');
+  const cell = document.querySelector(`.card-cell[data-key="${c.style}"]`);
+  const frame = cell?.querySelector('.card-image-frame');
+  if(!frame) return;
   try{
     // 本地 file:// 预览时，部分浏览器会因为 canvas 安全策略导致 toBlob/Blob URL 不显示。
     // 先直接渲染 canvas 挂到页面上，保证「打开 HTML 就能看见」。下载时仍走 Blob。
@@ -1286,6 +1285,21 @@ function canonicaliseRenderHash(q, params){
   history.replaceState(null, '', `${location.pathname}${location.search}#render?${canonical}`);
 }
 
+function smartDecode(value){
+  if(value == null) return '';
+  let out = String(value);
+  // 有的模型（如 DeepSeek）会把字段值重复百分号编码；URLSearchParams 只解一次，
+  // 这里反复解码直到稳定，避免出现 %E8%80%81 这种乱码。
+  for(let i = 0; i < 3 && /%[0-9A-Fa-f]{2}/.test(out); i++){
+    try{
+      const dec = decodeURIComponent(out);
+      if(dec === out) break;
+      out = dec;
+    }catch(_){ break; }
+  }
+  return out;
+}
+
 function parseCards(){
   if(!location.hash.startsWith('#render')) return null;
   const q = location.hash.includes('?') ? location.hash.slice(location.hash.indexOf('?')+1) : '';
@@ -1293,15 +1307,15 @@ function parseCards(){
   if(params.get('v') !== '2') return null;
   canonicaliseRenderHash(q, params);
   const isTemplate = params.get('mode') === 'template';
-  const globalWarn = params.get('warn') || (isTemplate ? '这是模板版——具体信息还不多，修改一下就是你的' : '');
+  const globalWarn = smartDecode(params.get('warn')) || (isTemplate ? '这是模板版——具体信息还不多，修改一下就是你的' : '');
   const map = [
     {style:'classic',legacy:'classic',prefix:'c1',label:'列传',watermark:'傳',volumeLabel:'列傳',sealChars:['司','馬','遷','撰'],fallbackTitle:'今人列传'},
     {style:'roast',legacy:'roast',prefix:'c2',label:'毒撰',watermark:'毒',volumeLabel:'毒撰',sealChars:['司','馬','毒','撰'],fallbackTitle:'今人毒撰'},
     {style:'diagnosis',legacy:'observer',prefix:'c3',label:'诊断',watermark:'診',volumeLabel:'診斷',sealChars:['太','史','診','斷'],fallbackTitle:'今人诊断'}
   ];
-  const get = (m, field, fallback='') => params.get(`${m.prefix}_${field}`) || params.get(`${m.legacy}_${field}`) || fallback;
+  const get = (m, field, fallback='') => smartDecode(params.get(`${m.prefix}_${field}`)) || smartDecode(params.get(`${m.legacy}_${field}`)) || fallback;
   const titleSeed = map.map(m=>get(m,'title','')).filter(Boolean).join('|');
-  const seed = params.get('name') || titleSeed || params.get('from_relation') || q;
+  const seed = smartDecode(params.get('name')) || titleSeed || smartDecode(params.get('from_relation')) || q;
   const volume = normaliseVolumeParam(params.get('volume'), seed);
   return map.map(m=>({
     ...m,

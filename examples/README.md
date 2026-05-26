@@ -6,7 +6,8 @@
 
 ## 当前样例
 
-- [`david-persona-agent.public.md`](./david-persona-agent.public.md)：草诀歌 AI Labs 主理人 David 的 persona 公开版。
+- [`david-persona-agent.public.md`](./david-persona-agent.public.md)：草诀歌 AI Labs 主理人 David 的 persona 公开版（给 AI 看）。
+- [`david-personal-homepage.public.html`](./david-personal-homepage.public.html)：对应的个人主页公开版（给人看），联系方式已替换为社区入口。
 
 ## 我的输出是默认私有的吗？
 
